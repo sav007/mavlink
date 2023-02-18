@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -254,6 +256,21 @@ public final class FollowTarget {
                  + ", rates=" + rates
                  + ", positionCov=" + positionCov
                  + ", customState=" + customState + "}";
+    }
+
+    public static FollowTarget deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger customState = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> vel = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> acc = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> attitudeQ = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        List<Float> rates = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> positionCov = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        int estCapabilities = PayloadFieldDecoder.decodeUint8(input);
+        return new FollowTarget(timestamp, estCapabilities, lat, lon, alt, vel, acc, attitudeQ, rates, positionCov, customState);
     }
 
     public static final class Builder {

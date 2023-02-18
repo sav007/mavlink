@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -225,6 +227,20 @@ public final class SlugsNavigation {
                  + ", fromwp=" + fromwp
                  + ", towp=" + towp
                  + ", hC=" + hC + "}";
+    }
+
+    public static SlugsNavigation deserialize(ByteBuffer input) {
+        float uM = PayloadFieldDecoder.decodeFloat(input);
+        float phiC = PayloadFieldDecoder.decodeFloat(input);
+        float thetaC = PayloadFieldDecoder.decodeFloat(input);
+        float psidotC = PayloadFieldDecoder.decodeFloat(input);
+        float ayBody = PayloadFieldDecoder.decodeFloat(input);
+        float totaldist = PayloadFieldDecoder.decodeFloat(input);
+        float dist2go = PayloadFieldDecoder.decodeFloat(input);
+        int hC = PayloadFieldDecoder.decodeUint16(input);
+        int fromwp = PayloadFieldDecoder.decodeUint8(input);
+        int towp = PayloadFieldDecoder.decodeUint8(input);
+        return new SlugsNavigation(uM, phiC, thetaC, psidotC, ayBody, totaldist, dist2go, fromwp, towp, hC);
     }
 
     public static final class Builder {

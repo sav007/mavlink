@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -236,6 +238,20 @@ public final class Deepstall {
                  + ", expectedTravelDistance=" + expectedTravelDistance
                  + ", crossTrackError=" + crossTrackError
                  + ", stage=" + stage + "}";
+    }
+
+    public static Deepstall deserialize(ByteBuffer input) {
+        int landingLat = PayloadFieldDecoder.decodeInt32(input);
+        int landingLon = PayloadFieldDecoder.decodeInt32(input);
+        int pathLat = PayloadFieldDecoder.decodeInt32(input);
+        int pathLon = PayloadFieldDecoder.decodeInt32(input);
+        int arcEntryLat = PayloadFieldDecoder.decodeInt32(input);
+        int arcEntryLon = PayloadFieldDecoder.decodeInt32(input);
+        float altitude = PayloadFieldDecoder.decodeFloat(input);
+        float expectedTravelDistance = PayloadFieldDecoder.decodeFloat(input);
+        float crossTrackError = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<DeepstallStage> stage = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.DeepstallStage.class, input, 1);
+        return new Deepstall(landingLat, landingLon, pathLat, pathLon, arcEntryLat, arcEntryLon, altitude, expectedTravelDistance, crossTrackError, stage);
     }
 
     public static final class Builder {

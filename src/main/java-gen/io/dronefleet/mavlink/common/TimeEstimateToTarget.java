@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -154,6 +156,15 @@ public final class TimeEstimateToTarget {
                  + ", missionNextItem=" + missionNextItem
                  + ", missionEnd=" + missionEnd
                  + ", commandedAction=" + commandedAction + "}";
+    }
+
+    public static TimeEstimateToTarget deserialize(ByteBuffer input) {
+        int safeReturn = PayloadFieldDecoder.decodeInt32(input);
+        int land = PayloadFieldDecoder.decodeInt32(input);
+        int missionNextItem = PayloadFieldDecoder.decodeInt32(input);
+        int missionEnd = PayloadFieldDecoder.decodeInt32(input);
+        int commandedAction = PayloadFieldDecoder.decodeInt32(input);
+        return new TimeEstimateToTarget(safeReturn, land, missionNextItem, missionEnd, commandedAction);
     }
 
     public static final class Builder {

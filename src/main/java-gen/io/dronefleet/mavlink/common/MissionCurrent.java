@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -131,6 +133,14 @@ public final class MissionCurrent {
                  + ", total=" + total
                  + ", missionState=" + missionState
                  + ", missionMode=" + missionMode + "}";
+    }
+
+    public static MissionCurrent deserialize(ByteBuffer input) {
+        int seq = PayloadFieldDecoder.decodeUint16(input);
+        int total = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MissionState> missionState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MissionState.class, input, 1);
+        int missionMode = PayloadFieldDecoder.decodeUint8(input);
+        return new MissionCurrent(seq, total, missionState, missionMode);
     }
 
     public static final class Builder {

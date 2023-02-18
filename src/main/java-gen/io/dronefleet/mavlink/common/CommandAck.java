@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -169,6 +171,16 @@ public final class CommandAck {
                  + ", resultParam2=" + resultParam2
                  + ", targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent + "}";
+    }
+
+    public static CommandAck deserialize(ByteBuffer input) {
+        EnumValue<MavCmd> command = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCmd.class, input, 2);
+        EnumValue<MavResult> result = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavResult.class, input, 1);
+        int progress = PayloadFieldDecoder.decodeUint8(input);
+        int resultParam2 = PayloadFieldDecoder.decodeInt32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new CommandAck(command, result, progress, resultParam2, targetSystem, targetComponent);
     }
 
     public static final class Builder {

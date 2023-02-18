@@ -3,6 +3,8 @@ package io.dronefleet.mavlink.generator;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -190,6 +192,35 @@ public class MessageGenerator {
                 .build();
     }
 
+    public MethodSpec generateDeserialize() {
+        final String inputArgName = "input";
+
+        CodeBlock.Builder deserializeCode = CodeBlock.builder();
+        fields.stream().sorted().forEachOrdered(
+                f -> f.addDeserializationStatement(deserializeCode, inputArgName)
+        );
+
+        CodeBlock.Builder returnStatement = CodeBlock.builder();
+        returnStatement.add("return new $T(", className);
+        for (int i = 0; i < fields.size(); ++i){
+            FieldGenerator f = fields.get(i);
+            returnStatement.add("$L", f.getNameCamelCase());
+            if (i < fields.size()-1)
+                returnStatement.add(", ");
+            else
+                returnStatement.add(")");
+        }
+
+        deserializeCode.addStatement(returnStatement.build());
+
+        return MethodSpec.methodBuilder("deserialize")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(ByteBuffer.class, inputArgName)
+                .returns(className)
+                .addCode(deserializeCode.build())
+                .build();
+    }
+
     public TypeSpec generate() {
         return TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -223,6 +254,7 @@ public class MessageGenerator {
                 .addMethod(generateEquals())
                 .addMethod(generateHashCode())
                 .addMethod(generateToString())
+                .addMethod(generateDeserialize())
                 .build();
     }
 }

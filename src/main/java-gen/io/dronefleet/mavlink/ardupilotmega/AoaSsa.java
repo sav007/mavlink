@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class AoaSsa {
         return "AoaSsa{timeUsec=" + timeUsec
                  + ", aoa=" + aoa
                  + ", ssa=" + ssa + "}";
+    }
+
+    public static AoaSsa deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float aoa = PayloadFieldDecoder.decodeFloat(input);
+        float ssa = PayloadFieldDecoder.decodeFloat(input);
+        return new AoaSsa(timeUsec, aoa, ssa);
     }
 
     public static final class Builder {

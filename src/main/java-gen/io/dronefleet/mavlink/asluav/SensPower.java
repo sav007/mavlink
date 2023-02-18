@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -117,6 +119,14 @@ public final class SensPower {
                  + ", adc121CspbAmp=" + adc121CspbAmp
                  + ", adc121Cs1Amp=" + adc121Cs1Amp
                  + ", adc121Cs2Amp=" + adc121Cs2Amp + "}";
+    }
+
+    public static SensPower deserialize(ByteBuffer input) {
+        float adc121VspbVolt = PayloadFieldDecoder.decodeFloat(input);
+        float adc121CspbAmp = PayloadFieldDecoder.decodeFloat(input);
+        float adc121Cs1Amp = PayloadFieldDecoder.decodeFloat(input);
+        float adc121Cs2Amp = PayloadFieldDecoder.decodeFloat(input);
+        return new SensPower(adc121VspbVolt, adc121CspbAmp, adc121Cs1Amp, adc121Cs2Amp);
     }
 
     public static final class Builder {

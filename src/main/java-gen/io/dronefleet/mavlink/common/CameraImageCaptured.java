@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -270,6 +272,21 @@ public final class CameraImageCaptured {
                  + ", imageIndex=" + imageIndex
                  + ", captureResult=" + captureResult
                  + ", fileUrl=" + fileUrl + "}";
+    }
+
+    public static CameraImageCaptured deserialize(ByteBuffer input) {
+        BigInteger timeUtc = PayloadFieldDecoder.decodeUint64(input);
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int relativeAlt = PayloadFieldDecoder.decodeInt32(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        int imageIndex = PayloadFieldDecoder.decodeInt32(input);
+        int cameraId = PayloadFieldDecoder.decodeUint8(input);
+        int captureResult = PayloadFieldDecoder.decodeInt8(input);
+        String fileUrl = PayloadFieldDecoder.decodeString(input, 205);
+        return new CameraImageCaptured(timeBootMs, timeUtc, cameraId, lat, lon, alt, relativeAlt, q, imageIndex, captureResult, fileUrl);
     }
 
     public static final class Builder {

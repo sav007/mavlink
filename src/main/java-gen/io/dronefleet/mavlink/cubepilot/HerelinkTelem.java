@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.cubepilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -167,6 +169,17 @@ public final class HerelinkTelem {
                  + ", linkRate=" + linkRate
                  + ", cpuTemp=" + cpuTemp
                  + ", boardTemp=" + boardTemp + "}";
+    }
+
+    public static HerelinkTelem deserialize(ByteBuffer input) {
+        long rfFreq = PayloadFieldDecoder.decodeUint32(input);
+        long linkBw = PayloadFieldDecoder.decodeUint32(input);
+        long linkRate = PayloadFieldDecoder.decodeUint32(input);
+        int snr = PayloadFieldDecoder.decodeInt16(input);
+        int cpuTemp = PayloadFieldDecoder.decodeInt16(input);
+        int boardTemp = PayloadFieldDecoder.decodeInt16(input);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        return new HerelinkTelem(rssi, snr, rfFreq, linkBw, linkRate, cpuTemp, boardTemp);
     }
 
     public static final class Builder {

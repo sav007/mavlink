@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -213,6 +215,19 @@ public final class PidTuning {
                  + ", d=" + d
                  + ", srate=" + srate
                  + ", pdmod=" + pdmod + "}";
+    }
+
+    public static PidTuning deserialize(ByteBuffer input) {
+        float desired = PayloadFieldDecoder.decodeFloat(input);
+        float achieved = PayloadFieldDecoder.decodeFloat(input);
+        float ff = PayloadFieldDecoder.decodeFloat(input);
+        float p = PayloadFieldDecoder.decodeFloat(input);
+        float i = PayloadFieldDecoder.decodeFloat(input);
+        float d = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<PidTuningAxis> axis = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.PidTuningAxis.class, input, 1);
+        float srate = PayloadFieldDecoder.decodeFloat(input);
+        float pdmod = PayloadFieldDecoder.decodeFloat(input);
+        return new PidTuning(axis, desired, achieved, ff, p, i, d, srate, pdmod);
     }
 
     public static final class Builder {

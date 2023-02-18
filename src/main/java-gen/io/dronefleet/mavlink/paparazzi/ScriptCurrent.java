@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.paparazzi;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -62,6 +64,11 @@ public final class ScriptCurrent {
     @Override
     public String toString() {
         return "ScriptCurrent{seq=" + seq + "}";
+    }
+
+    public static ScriptCurrent deserialize(ByteBuffer input) {
+        int seq = PayloadFieldDecoder.decodeUint16(input);
+        return new ScriptCurrent(seq);
     }
 
     public static final class Builder {

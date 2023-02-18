@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -100,6 +102,13 @@ public final class NamedValueFloat {
         return "NamedValueFloat{timeBootMs=" + timeBootMs
                  + ", name=" + name
                  + ", value=" + value + "}";
+    }
+
+    public static NamedValueFloat deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float value = PayloadFieldDecoder.decodeFloat(input);
+        String name = PayloadFieldDecoder.decodeString(input, 10);
+        return new NamedValueFloat(timeBootMs, name, value);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class ButtonChange {
         return "ButtonChange{timeBootMs=" + timeBootMs
                  + ", lastChangeMs=" + lastChangeMs
                  + ", state=" + state + "}";
+    }
+
+    public static ButtonChange deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        long lastChangeMs = PayloadFieldDecoder.decodeUint32(input);
+        int state = PayloadFieldDecoder.decodeUint8(input);
+        return new ButtonChange(timeBootMs, lastChangeMs, state);
     }
 
     public static final class Builder {

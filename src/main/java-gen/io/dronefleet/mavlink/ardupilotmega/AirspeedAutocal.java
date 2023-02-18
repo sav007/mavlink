@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -262,6 +264,22 @@ public final class AirspeedAutocal {
                  + ", pax=" + pax
                  + ", pby=" + pby
                  + ", pcz=" + pcz + "}";
+    }
+
+    public static AirspeedAutocal deserialize(ByteBuffer input) {
+        float vx = PayloadFieldDecoder.decodeFloat(input);
+        float vy = PayloadFieldDecoder.decodeFloat(input);
+        float vz = PayloadFieldDecoder.decodeFloat(input);
+        float diffPressure = PayloadFieldDecoder.decodeFloat(input);
+        float eas2tas = PayloadFieldDecoder.decodeFloat(input);
+        float ratio = PayloadFieldDecoder.decodeFloat(input);
+        float stateX = PayloadFieldDecoder.decodeFloat(input);
+        float stateY = PayloadFieldDecoder.decodeFloat(input);
+        float stateZ = PayloadFieldDecoder.decodeFloat(input);
+        float pax = PayloadFieldDecoder.decodeFloat(input);
+        float pby = PayloadFieldDecoder.decodeFloat(input);
+        float pcz = PayloadFieldDecoder.decodeFloat(input);
+        return new AirspeedAutocal(vx, vy, vz, diffPressure, eas2tas, ratio, stateX, stateY, stateZ, pax, pby, pcz);
     }
 
     public static final class Builder {

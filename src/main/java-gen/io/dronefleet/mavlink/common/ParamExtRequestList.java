@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -81,6 +83,12 @@ public final class ParamExtRequestList {
     public String toString() {
         return "ParamExtRequestList{targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent + "}";
+    }
+
+    public static ParamExtRequestList deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new ParamExtRequestList(targetSystem, targetComponent);
     }
 
     public static final class Builder {

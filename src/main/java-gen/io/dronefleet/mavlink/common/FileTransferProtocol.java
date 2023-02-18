@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -120,6 +122,14 @@ public final class FileTransferProtocol {
                  + ", targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent
                  + ", payload=" + payload + "}";
+    }
+
+    public static FileTransferProtocol deserialize(ByteBuffer input) {
+        int targetNetwork = PayloadFieldDecoder.decodeUint8(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] payload = PayloadFieldDecoder.decodeUint8Array(input, 251);
+        return new FileTransferProtocol(targetNetwork, targetSystem, targetComponent, payload);
     }
 
     public static final class Builder {

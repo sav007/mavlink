@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -241,6 +243,20 @@ public final class CameraTrackingImageStatus {
                  + ", recTopY=" + recTopY
                  + ", recBottomX=" + recBottomX
                  + ", recBottomY=" + recBottomY + "}";
+    }
+
+    public static CameraTrackingImageStatus deserialize(ByteBuffer input) {
+        float pointX = PayloadFieldDecoder.decodeFloat(input);
+        float pointY = PayloadFieldDecoder.decodeFloat(input);
+        float radius = PayloadFieldDecoder.decodeFloat(input);
+        float recTopX = PayloadFieldDecoder.decodeFloat(input);
+        float recTopY = PayloadFieldDecoder.decodeFloat(input);
+        float recBottomX = PayloadFieldDecoder.decodeFloat(input);
+        float recBottomY = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<CameraTrackingStatusFlags> trackingStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraTrackingStatusFlags.class, input, 1);
+        EnumValue<CameraTrackingMode> trackingMode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraTrackingMode.class, input, 1);
+        EnumValue<CameraTrackingTargetData> targetData = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraTrackingTargetData.class, input, 1);
+        return new CameraTrackingImageStatus(trackingStatus, trackingMode, targetData, pointX, pointY, radius, recTopX, recTopY, recBottomX, recBottomY);
     }
 
     public static final class Builder {

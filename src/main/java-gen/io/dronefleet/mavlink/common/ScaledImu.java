@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -256,6 +258,21 @@ public final class ScaledImu {
                  + ", ymag=" + ymag
                  + ", zmag=" + zmag
                  + ", temperature=" + temperature + "}";
+    }
+
+    public static ScaledImu deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int xacc = PayloadFieldDecoder.decodeInt16(input);
+        int yacc = PayloadFieldDecoder.decodeInt16(input);
+        int zacc = PayloadFieldDecoder.decodeInt16(input);
+        int xgyro = PayloadFieldDecoder.decodeInt16(input);
+        int ygyro = PayloadFieldDecoder.decodeInt16(input);
+        int zgyro = PayloadFieldDecoder.decodeInt16(input);
+        int xmag = PayloadFieldDecoder.decodeInt16(input);
+        int ymag = PayloadFieldDecoder.decodeInt16(input);
+        int zmag = PayloadFieldDecoder.decodeInt16(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        return new ScaledImu(timeBootMs, xacc, yacc, zacc, xgyro, ygyro, zgyro, xmag, ymag, zmag, temperature);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -137,6 +139,15 @@ public final class DebugVect {
                  + ", x=" + x
                  + ", y=" + y
                  + ", z=" + z + "}";
+    }
+
+    public static DebugVect deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        String name = PayloadFieldDecoder.decodeString(input, 10);
+        return new DebugVect(name, timeUsec, x, y, z);
     }
 
     public static final class Builder {

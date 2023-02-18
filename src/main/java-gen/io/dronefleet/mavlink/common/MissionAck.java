@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -124,6 +126,14 @@ public final class MissionAck {
                  + ", targetComponent=" + targetComponent
                  + ", type=" + type
                  + ", missionType=" + missionType + "}";
+    }
+
+    public static MissionAck deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavMissionResult> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavMissionResult.class, input, 1);
+        EnumValue<MavMissionType> missionType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavMissionType.class, input, 1);
+        return new MissionAck(targetSystem, targetComponent, type, missionType);
     }
 
     public static final class Builder {

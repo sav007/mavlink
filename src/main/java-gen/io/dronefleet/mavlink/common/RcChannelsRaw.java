@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -247,6 +249,21 @@ public final class RcChannelsRaw {
                  + ", chan7Raw=" + chan7Raw
                  + ", chan8Raw=" + chan8Raw
                  + ", rssi=" + rssi + "}";
+    }
+
+    public static RcChannelsRaw deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int chan1Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan2Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan3Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan4Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan5Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan6Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan7Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan8Raw = PayloadFieldDecoder.decodeUint16(input);
+        int port = PayloadFieldDecoder.decodeUint8(input);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        return new RcChannelsRaw(timeBootMs, port, chan1Raw, chan2Raw, chan3Raw, chan4Raw, chan5Raw, chan6Raw, chan7Raw, chan8Raw, rssi);
     }
 
     public static final class Builder {

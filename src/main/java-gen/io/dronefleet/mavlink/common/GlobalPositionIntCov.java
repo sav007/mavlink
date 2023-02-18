@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -245,6 +247,20 @@ public final class GlobalPositionIntCov {
                  + ", vy=" + vy
                  + ", vz=" + vz
                  + ", covariance=" + covariance + "}";
+    }
+
+    public static GlobalPositionIntCov deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int relativeAlt = PayloadFieldDecoder.decodeInt32(input);
+        float vx = PayloadFieldDecoder.decodeFloat(input);
+        float vy = PayloadFieldDecoder.decodeFloat(input);
+        float vz = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> covariance = PayloadFieldDecoder.decodeFloatArray(input, 144);
+        EnumValue<MavEstimatorType> estimatorType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavEstimatorType.class, input, 1);
+        return new GlobalPositionIntCov(timeUsec, estimatorType, lat, lon, alt, relativeAlt, vx, vy, vz, covariance);
     }
 
     public static final class Builder {

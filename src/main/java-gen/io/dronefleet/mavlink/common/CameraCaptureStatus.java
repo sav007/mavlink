@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -176,6 +178,17 @@ public final class CameraCaptureStatus {
                  + ", recordingTimeMs=" + recordingTimeMs
                  + ", availableCapacity=" + availableCapacity
                  + ", imageCount=" + imageCount + "}";
+    }
+
+    public static CameraCaptureStatus deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float imageInterval = PayloadFieldDecoder.decodeFloat(input);
+        long recordingTimeMs = PayloadFieldDecoder.decodeUint32(input);
+        float availableCapacity = PayloadFieldDecoder.decodeFloat(input);
+        int imageStatus = PayloadFieldDecoder.decodeUint8(input);
+        int videoStatus = PayloadFieldDecoder.decodeUint8(input);
+        int imageCount = PayloadFieldDecoder.decodeInt32(input);
+        return new CameraCaptureStatus(timeBootMs, imageStatus, videoStatus, imageInterval, recordingTimeMs, availableCapacity, imageCount);
     }
 
     public static final class Builder {

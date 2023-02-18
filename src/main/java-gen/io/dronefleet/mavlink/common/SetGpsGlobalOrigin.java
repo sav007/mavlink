@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -145,6 +147,15 @@ public final class SetGpsGlobalOrigin {
                  + ", longitude=" + longitude
                  + ", altitude=" + altitude
                  + ", timeUsec=" + timeUsec + "}";
+    }
+
+    public static SetGpsGlobalOrigin deserialize(ByteBuffer input) {
+        int latitude = PayloadFieldDecoder.decodeInt32(input);
+        int longitude = PayloadFieldDecoder.decodeInt32(input);
+        int altitude = PayloadFieldDecoder.decodeInt32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        return new SetGpsGlobalOrigin(targetSystem, latitude, longitude, altitude, timeUsec);
     }
 
     public static final class Builder {

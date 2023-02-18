@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -467,6 +469,33 @@ public final class SimState {
                  + ", vd=" + vd
                  + ", latInt=" + latInt
                  + ", lonInt=" + lonInt + "}";
+    }
+
+    public static SimState deserialize(ByteBuffer input) {
+        float q1 = PayloadFieldDecoder.decodeFloat(input);
+        float q2 = PayloadFieldDecoder.decodeFloat(input);
+        float q3 = PayloadFieldDecoder.decodeFloat(input);
+        float q4 = PayloadFieldDecoder.decodeFloat(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float xacc = PayloadFieldDecoder.decodeFloat(input);
+        float yacc = PayloadFieldDecoder.decodeFloat(input);
+        float zacc = PayloadFieldDecoder.decodeFloat(input);
+        float xgyro = PayloadFieldDecoder.decodeFloat(input);
+        float ygyro = PayloadFieldDecoder.decodeFloat(input);
+        float zgyro = PayloadFieldDecoder.decodeFloat(input);
+        float lat = PayloadFieldDecoder.decodeFloat(input);
+        float lon = PayloadFieldDecoder.decodeFloat(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        float stdDevHorz = PayloadFieldDecoder.decodeFloat(input);
+        float stdDevVert = PayloadFieldDecoder.decodeFloat(input);
+        float vn = PayloadFieldDecoder.decodeFloat(input);
+        float ve = PayloadFieldDecoder.decodeFloat(input);
+        float vd = PayloadFieldDecoder.decodeFloat(input);
+        int latInt = PayloadFieldDecoder.decodeInt32(input);
+        int lonInt = PayloadFieldDecoder.decodeInt32(input);
+        return new SimState(q1, q2, q3, q4, roll, pitch, yaw, xacc, yacc, zacc, xgyro, ygyro, zgyro, lat, lon, alt, stdDevHorz, stdDevVert, vn, ve, vd, latInt, lonInt);
     }
 
     public static final class Builder {

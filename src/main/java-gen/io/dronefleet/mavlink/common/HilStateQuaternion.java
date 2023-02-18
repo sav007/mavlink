@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -350,6 +352,26 @@ public final class HilStateQuaternion {
                  + ", xacc=" + xacc
                  + ", yacc=" + yacc
                  + ", zacc=" + zacc + "}";
+    }
+
+    public static HilStateQuaternion deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> attitudeQuaternion = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float rollspeed = PayloadFieldDecoder.decodeFloat(input);
+        float pitchspeed = PayloadFieldDecoder.decodeFloat(input);
+        float yawspeed = PayloadFieldDecoder.decodeFloat(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int vx = PayloadFieldDecoder.decodeInt16(input);
+        int vy = PayloadFieldDecoder.decodeInt16(input);
+        int vz = PayloadFieldDecoder.decodeInt16(input);
+        int indAirspeed = PayloadFieldDecoder.decodeUint16(input);
+        int trueAirspeed = PayloadFieldDecoder.decodeUint16(input);
+        int xacc = PayloadFieldDecoder.decodeInt16(input);
+        int yacc = PayloadFieldDecoder.decodeInt16(input);
+        int zacc = PayloadFieldDecoder.decodeInt16(input);
+        return new HilStateQuaternion(timeUsec, attitudeQuaternion, rollspeed, pitchspeed, yawspeed, lat, lon, alt, vx, vy, vz, indAirspeed, trueAirspeed, xacc, yacc, zacc);
     }
 
     public static final class Builder {

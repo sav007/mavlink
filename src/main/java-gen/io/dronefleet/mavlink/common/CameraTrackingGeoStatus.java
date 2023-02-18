@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -287,6 +289,23 @@ public final class CameraTrackingGeoStatus {
                  + ", dist=" + dist
                  + ", hdg=" + hdg
                  + ", hdgAcc=" + hdgAcc + "}";
+    }
+
+    public static CameraTrackingGeoStatus deserialize(ByteBuffer input) {
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        float hAcc = PayloadFieldDecoder.decodeFloat(input);
+        float vAcc = PayloadFieldDecoder.decodeFloat(input);
+        float velN = PayloadFieldDecoder.decodeFloat(input);
+        float velE = PayloadFieldDecoder.decodeFloat(input);
+        float velD = PayloadFieldDecoder.decodeFloat(input);
+        float velAcc = PayloadFieldDecoder.decodeFloat(input);
+        float dist = PayloadFieldDecoder.decodeFloat(input);
+        float hdg = PayloadFieldDecoder.decodeFloat(input);
+        float hdgAcc = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<CameraTrackingStatusFlags> trackingStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraTrackingStatusFlags.class, input, 1);
+        return new CameraTrackingGeoStatus(trackingStatus, lat, lon, alt, hAcc, vAcc, velN, velE, velD, velAcc, dist, hdg, hdgAcc);
     }
 
     public static final class Builder {

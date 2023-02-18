@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -502,6 +504,34 @@ public final class HighLatency {
                  + ", failsafe=" + failsafe
                  + ", wpNum=" + wpNum
                  + ", wpDistance=" + wpDistance + "}";
+    }
+
+    public static HighLatency deserialize(ByteBuffer input) {
+        long customMode = PayloadFieldDecoder.decodeUint32(input);
+        int latitude = PayloadFieldDecoder.decodeInt32(input);
+        int longitude = PayloadFieldDecoder.decodeInt32(input);
+        int roll = PayloadFieldDecoder.decodeInt16(input);
+        int pitch = PayloadFieldDecoder.decodeInt16(input);
+        int heading = PayloadFieldDecoder.decodeUint16(input);
+        int headingSp = PayloadFieldDecoder.decodeInt16(input);
+        int altitudeAmsl = PayloadFieldDecoder.decodeInt16(input);
+        int altitudeSp = PayloadFieldDecoder.decodeInt16(input);
+        int wpDistance = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavModeFlag> baseMode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavModeFlag.class, input, 1);
+        EnumValue<MavLandedState> landedState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavLandedState.class, input, 1);
+        int throttle = PayloadFieldDecoder.decodeInt8(input);
+        int airspeed = PayloadFieldDecoder.decodeUint8(input);
+        int airspeedSp = PayloadFieldDecoder.decodeUint8(input);
+        int groundspeed = PayloadFieldDecoder.decodeUint8(input);
+        int climbRate = PayloadFieldDecoder.decodeInt8(input);
+        int gpsNsat = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<GpsFixType> gpsFixType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GpsFixType.class, input, 1);
+        int batteryRemaining = PayloadFieldDecoder.decodeUint8(input);
+        int temperature = PayloadFieldDecoder.decodeInt8(input);
+        int temperatureAir = PayloadFieldDecoder.decodeInt8(input);
+        int failsafe = PayloadFieldDecoder.decodeUint8(input);
+        int wpNum = PayloadFieldDecoder.decodeUint8(input);
+        return new HighLatency(baseMode, customMode, landedState, roll, pitch, heading, throttle, headingSp, latitude, longitude, altitudeAmsl, altitudeSp, airspeed, airspeedSp, groundspeed, climbRate, gpsNsat, gpsFixType, batteryRemaining, temperature, temperatureAir, failsafe, wpNum, wpDistance);
     }
 
     public static final class Builder {

@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -177,6 +179,17 @@ public final class GsmLinkStatus {
                  + ", rsrpRscp=" + rsrpRscp
                  + ", sinrEcio=" + sinrEcio
                  + ", rsrq=" + rsrq + "}";
+    }
+
+    public static GsmLinkStatus deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        EnumValue<GsmModemType> gsmModemType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.asluav.GsmModemType.class, input, 1);
+        EnumValue<GsmLinkType> gsmLinkType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.asluav.GsmLinkType.class, input, 1);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        int rsrpRscp = PayloadFieldDecoder.decodeUint8(input);
+        int sinrEcio = PayloadFieldDecoder.decodeUint8(input);
+        int rsrq = PayloadFieldDecoder.decodeUint8(input);
+        return new GsmLinkStatus(timestamp, gsmModemType, gsmLinkType, rssi, rsrpRscp, sinrEcio, rsrq);
     }
 
     public static final class Builder {

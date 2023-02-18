@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -212,6 +214,19 @@ public final class CameraStatus {
                  + ", p2=" + p2
                  + ", p3=" + p3
                  + ", p4=" + p4 + "}";
+    }
+
+    public static CameraStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float p1 = PayloadFieldDecoder.decodeFloat(input);
+        float p2 = PayloadFieldDecoder.decodeFloat(input);
+        float p3 = PayloadFieldDecoder.decodeFloat(input);
+        float p4 = PayloadFieldDecoder.decodeFloat(input);
+        int imgIdx = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int camIdx = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<CameraStatusTypes> eventId = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.CameraStatusTypes.class, input, 1);
+        return new CameraStatus(timeUsec, targetSystem, camIdx, imgIdx, eventId, p1, p2, p3, p4);
     }
 
     public static final class Builder {

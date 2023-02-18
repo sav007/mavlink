@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -148,6 +150,15 @@ public final class ProtocolVersion {
                  + ", maxVersion=" + maxVersion
                  + ", specVersionHash=" + specVersionHash
                  + ", libraryVersionHash=" + libraryVersionHash + "}";
+    }
+
+    public static ProtocolVersion deserialize(ByteBuffer input) {
+        int version = PayloadFieldDecoder.decodeUint16(input);
+        int minVersion = PayloadFieldDecoder.decodeUint16(input);
+        int maxVersion = PayloadFieldDecoder.decodeUint16(input);
+        byte[] specVersionHash = PayloadFieldDecoder.decodeUint8Array(input, 8);
+        byte[] libraryVersionHash = PayloadFieldDecoder.decodeUint8Array(input, 8);
+        return new ProtocolVersion(version, minVersion, maxVersion, specVersionHash, libraryVersionHash);
     }
 
     public static final class Builder {

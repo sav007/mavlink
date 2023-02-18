@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Integer;
 import java.lang.Long;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -449,6 +451,30 @@ public final class OnboardComputerStatus {
                  + ", linkRxRate=" + linkRxRate
                  + ", linkTxMax=" + linkTxMax
                  + ", linkRxMax=" + linkRxMax + "}";
+    }
+
+    public static OnboardComputerStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long uptime = PayloadFieldDecoder.decodeUint32(input);
+        long ramUsage = PayloadFieldDecoder.decodeUint32(input);
+        long ramTotal = PayloadFieldDecoder.decodeUint32(input);
+        List<Long> storageType = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        List<Long> storageUsage = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        List<Long> storageTotal = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        List<Long> linkType = PayloadFieldDecoder.decodeUint32Array(input, 24);
+        List<Long> linkTxRate = PayloadFieldDecoder.decodeUint32Array(input, 24);
+        List<Long> linkRxRate = PayloadFieldDecoder.decodeUint32Array(input, 24);
+        List<Long> linkTxMax = PayloadFieldDecoder.decodeUint32Array(input, 24);
+        List<Long> linkRxMax = PayloadFieldDecoder.decodeUint32Array(input, 24);
+        List<Integer> fanSpeed = PayloadFieldDecoder.decodeInt16Array(input, 8);
+        int type = PayloadFieldDecoder.decodeUint8(input);
+        byte[] cpuCores = PayloadFieldDecoder.decodeUint8Array(input, 8);
+        byte[] cpuCombined = PayloadFieldDecoder.decodeUint8Array(input, 10);
+        byte[] gpuCores = PayloadFieldDecoder.decodeUint8Array(input, 4);
+        byte[] gpuCombined = PayloadFieldDecoder.decodeUint8Array(input, 10);
+        int temperatureBoard = PayloadFieldDecoder.decodeInt8(input);
+        List<Integer> temperatureCore = PayloadFieldDecoder.decodeInt8Array(input, 8);
+        return new OnboardComputerStatus(timeUsec, uptime, type, cpuCores, cpuCombined, gpuCores, gpuCombined, temperatureBoard, temperatureCore, fanSpeed, ramUsage, ramTotal, storageType, storageUsage, storageTotal, linkType, linkTxRate, linkRxRate, linkTxMax, linkRxMax);
     }
 
     public static final class Builder {

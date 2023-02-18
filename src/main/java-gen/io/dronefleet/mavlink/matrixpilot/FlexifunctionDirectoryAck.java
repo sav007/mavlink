@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -153,6 +155,16 @@ public final class FlexifunctionDirectoryAck {
                  + ", startIndex=" + startIndex
                  + ", count=" + count
                  + ", result=" + result + "}";
+    }
+
+    public static FlexifunctionDirectoryAck deserialize(ByteBuffer input) {
+        int result = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int directoryType = PayloadFieldDecoder.decodeUint8(input);
+        int startIndex = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        return new FlexifunctionDirectoryAck(targetSystem, targetComponent, directoryType, startIndex, count, result);
     }
 
     public static final class Builder {

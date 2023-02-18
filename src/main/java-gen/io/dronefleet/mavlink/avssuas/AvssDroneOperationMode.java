@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.avssuas;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class AvssDroneOperationMode {
         return "AvssDroneOperationMode{timeBootMs=" + timeBootMs
                  + ", m300OperationMode=" + m300OperationMode
                  + ", horseflyOperationMode=" + horseflyOperationMode + "}";
+    }
+
+    public static AvssDroneOperationMode deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int m300OperationMode = PayloadFieldDecoder.decodeUint8(input);
+        int horseflyOperationMode = PayloadFieldDecoder.decodeUint8(input);
+        return new AvssDroneOperationMode(timeBootMs, m300OperationMode, horseflyOperationMode);
     }
 
     public static final class Builder {

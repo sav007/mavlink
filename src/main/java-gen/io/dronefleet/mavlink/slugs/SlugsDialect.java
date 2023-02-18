@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class SlugsDialect extends AbstractMavlinkDialect {
     /**
@@ -43,7 +46,30 @@ public final class SlugsDialect extends AbstractMavlinkDialect {
             .put(197, Boot.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(CpuLoad.class, CpuLoad::deserialize)
+            .put(SensorBias.class, SensorBias::deserialize)
+            .put(Diagnostic.class, Diagnostic::deserialize)
+            .put(SlugsNavigation.class, SlugsNavigation::deserialize)
+            .put(DataLog.class, DataLog::deserialize)
+            .put(GpsDateTime.class, GpsDateTime::deserialize)
+            .put(MidLvlCmds.class, MidLvlCmds::deserialize)
+            .put(CtrlSrfcPt.class, CtrlSrfcPt::deserialize)
+            .put(SlugsCameraOrder.class, SlugsCameraOrder::deserialize)
+            .put(ControlSurface.class, ControlSurface::deserialize)
+            .put(SlugsMobileLocation.class, SlugsMobileLocation::deserialize)
+            .put(SlugsConfigurationCamera.class, SlugsConfigurationCamera::deserialize)
+            .put(IsrLocation.class, IsrLocation::deserialize)
+            .put(VoltSensor.class, VoltSensor::deserialize)
+            .put(PtzStatus.class, PtzStatus::deserialize)
+            .put(UavStatus.class, UavStatus::deserialize)
+            .put(StatusGps.class, StatusGps::deserialize)
+            .put(NovatelDiag.class, NovatelDiag::deserialize)
+            .put(SensorDiag.class, SensorDiag::deserialize)
+            .put(Boot.class, Boot::deserialize)
+            .build();
+
     public SlugsDialect() {
-        super("slugs", dependencies, messages);
+        super("slugs", dependencies, messages, deserializers);
     }
 }

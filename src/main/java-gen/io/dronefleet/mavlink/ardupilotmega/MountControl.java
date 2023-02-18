@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -156,6 +158,16 @@ public final class MountControl {
                  + ", inputB=" + inputB
                  + ", inputC=" + inputC
                  + ", savePosition=" + savePosition + "}";
+    }
+
+    public static MountControl deserialize(ByteBuffer input) {
+        int inputA = PayloadFieldDecoder.decodeInt32(input);
+        int inputB = PayloadFieldDecoder.decodeInt32(input);
+        int inputC = PayloadFieldDecoder.decodeInt32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int savePosition = PayloadFieldDecoder.decodeUint8(input);
+        return new MountControl(targetSystem, targetComponent, inputA, inputB, inputC, savePosition);
     }
 
     public static final class Builder {

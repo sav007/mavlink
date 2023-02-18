@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -126,6 +128,14 @@ public final class RequestEvent {
                  + ", targetComponent=" + targetComponent
                  + ", firstSequence=" + firstSequence
                  + ", lastSequence=" + lastSequence + "}";
+    }
+
+    public static RequestEvent deserialize(ByteBuffer input) {
+        int firstSequence = PayloadFieldDecoder.decodeUint16(input);
+        int lastSequence = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new RequestEvent(targetSystem, targetComponent, firstSequence, lastSequence);
     }
 
     public static final class Builder {

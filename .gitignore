@@ -56,6 +56,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+local.properties
+
 ### Intellij+all Patch ###
 # Ignores the whole .idea folder and all .iml files
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360

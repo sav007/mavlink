@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -191,6 +193,18 @@ public final class SensorpodStatus {
                  + ", recordingNodesCount=" + recordingNodesCount
                  + ", cpuTemp=" + cpuTemp
                  + ", freeSpace=" + freeSpace + "}";
+    }
+
+    public static SensorpodStatus deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        int freeSpace = PayloadFieldDecoder.decodeUint16(input);
+        int visensorRate1 = PayloadFieldDecoder.decodeUint8(input);
+        int visensorRate2 = PayloadFieldDecoder.decodeUint8(input);
+        int visensorRate3 = PayloadFieldDecoder.decodeUint8(input);
+        int visensorRate4 = PayloadFieldDecoder.decodeUint8(input);
+        int recordingNodesCount = PayloadFieldDecoder.decodeUint8(input);
+        int cpuTemp = PayloadFieldDecoder.decodeUint8(input);
+        return new SensorpodStatus(timestamp, visensorRate1, visensorRate2, visensorRate3, visensorRate4, recordingNodesCount, cpuTemp, freeSpace);
     }
 
     public static final class Builder {

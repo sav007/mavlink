@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -161,6 +163,16 @@ public final class GpsStatus {
                  + ", satelliteElevation=" + satelliteElevation
                  + ", satelliteAzimuth=" + satelliteAzimuth
                  + ", satelliteSnr=" + satelliteSnr + "}";
+    }
+
+    public static GpsStatus deserialize(ByteBuffer input) {
+        int satellitesVisible = PayloadFieldDecoder.decodeUint8(input);
+        byte[] satellitePrn = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        byte[] satelliteUsed = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        byte[] satelliteElevation = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        byte[] satelliteAzimuth = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        byte[] satelliteSnr = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        return new GpsStatus(satellitesVisible, satellitePrn, satelliteUsed, satelliteElevation, satelliteAzimuth, satelliteSnr);
     }
 
     public static final class Builder {

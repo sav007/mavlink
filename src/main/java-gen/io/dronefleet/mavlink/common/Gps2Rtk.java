@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -289,6 +291,23 @@ public final class Gps2Rtk {
                  + ", baselineCMm=" + baselineCMm
                  + ", accuracy=" + accuracy
                  + ", iarNumHypotheses=" + iarNumHypotheses + "}";
+    }
+
+    public static Gps2Rtk deserialize(ByteBuffer input) {
+        long timeLastBaselineMs = PayloadFieldDecoder.decodeUint32(input);
+        long tow = PayloadFieldDecoder.decodeUint32(input);
+        int baselineAMm = PayloadFieldDecoder.decodeInt32(input);
+        int baselineBMm = PayloadFieldDecoder.decodeInt32(input);
+        int baselineCMm = PayloadFieldDecoder.decodeInt32(input);
+        long accuracy = PayloadFieldDecoder.decodeUint32(input);
+        int iarNumHypotheses = PayloadFieldDecoder.decodeInt32(input);
+        int wn = PayloadFieldDecoder.decodeUint16(input);
+        int rtkReceiverId = PayloadFieldDecoder.decodeUint8(input);
+        int rtkHealth = PayloadFieldDecoder.decodeUint8(input);
+        int rtkRate = PayloadFieldDecoder.decodeUint8(input);
+        int nsats = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<RtkBaselineCoordinateSystem> baselineCoordsType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.RtkBaselineCoordinateSystem.class, input, 1);
+        return new Gps2Rtk(timeLastBaselineMs, rtkReceiverId, wn, tow, rtkHealth, rtkRate, nsats, baselineCoordsType, baselineAMm, baselineBMm, baselineCMm, accuracy, iarNumHypotheses);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -175,6 +177,17 @@ public final class TerrainReport {
                  + ", currentHeight=" + currentHeight
                  + ", pending=" + pending
                  + ", loaded=" + loaded + "}";
+    }
+
+    public static TerrainReport deserialize(ByteBuffer input) {
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        float terrainHeight = PayloadFieldDecoder.decodeFloat(input);
+        float currentHeight = PayloadFieldDecoder.decodeFloat(input);
+        int spacing = PayloadFieldDecoder.decodeUint16(input);
+        int pending = PayloadFieldDecoder.decodeUint16(input);
+        int loaded = PayloadFieldDecoder.decodeUint16(input);
+        return new TerrainReport(lat, lon, spacing, terrainHeight, currentHeight, pending, loaded);
     }
 
     public static final class Builder {

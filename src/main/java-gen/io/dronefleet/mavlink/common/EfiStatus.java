@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -395,6 +397,29 @@ public final class EfiStatus {
                  + ", ptCompensation=" + ptCompensation
                  + ", ignitionVoltage=" + ignitionVoltage
                  + ", fuelPressure=" + fuelPressure + "}";
+    }
+
+    public static EfiStatus deserialize(ByteBuffer input) {
+        float ecuIndex = PayloadFieldDecoder.decodeFloat(input);
+        float rpm = PayloadFieldDecoder.decodeFloat(input);
+        float fuelConsumed = PayloadFieldDecoder.decodeFloat(input);
+        float fuelFlow = PayloadFieldDecoder.decodeFloat(input);
+        float engineLoad = PayloadFieldDecoder.decodeFloat(input);
+        float throttlePosition = PayloadFieldDecoder.decodeFloat(input);
+        float sparkDwellTime = PayloadFieldDecoder.decodeFloat(input);
+        float barometricPressure = PayloadFieldDecoder.decodeFloat(input);
+        float intakeManifoldPressure = PayloadFieldDecoder.decodeFloat(input);
+        float intakeManifoldTemperature = PayloadFieldDecoder.decodeFloat(input);
+        float cylinderHeadTemperature = PayloadFieldDecoder.decodeFloat(input);
+        float ignitionTiming = PayloadFieldDecoder.decodeFloat(input);
+        float injectionTime = PayloadFieldDecoder.decodeFloat(input);
+        float exhaustGasTemperature = PayloadFieldDecoder.decodeFloat(input);
+        float throttleOut = PayloadFieldDecoder.decodeFloat(input);
+        float ptCompensation = PayloadFieldDecoder.decodeFloat(input);
+        int health = PayloadFieldDecoder.decodeUint8(input);
+        float ignitionVoltage = PayloadFieldDecoder.decodeFloat(input);
+        float fuelPressure = PayloadFieldDecoder.decodeFloat(input);
+        return new EfiStatus(health, ecuIndex, rpm, fuelConsumed, fuelFlow, engineLoad, throttlePosition, sparkDwellTime, barometricPressure, intakeManifoldPressure, intakeManifoldTemperature, cylinderHeadTemperature, ignitionTiming, injectionTime, exhaustGasTemperature, throttleOut, ptCompensation, ignitionVoltage, fuelPressure);
     }
 
     public static final class Builder {

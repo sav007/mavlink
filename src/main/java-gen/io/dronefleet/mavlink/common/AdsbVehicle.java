@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -292,6 +294,23 @@ public final class AdsbVehicle {
                  + ", tslc=" + tslc
                  + ", flags=" + flags
                  + ", squawk=" + squawk + "}";
+    }
+
+    public static AdsbVehicle deserialize(ByteBuffer input) {
+        long icaoAddress = PayloadFieldDecoder.decodeUint32(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int altitude = PayloadFieldDecoder.decodeInt32(input);
+        int heading = PayloadFieldDecoder.decodeUint16(input);
+        int horVelocity = PayloadFieldDecoder.decodeUint16(input);
+        int verVelocity = PayloadFieldDecoder.decodeInt16(input);
+        EnumValue<AdsbFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.AdsbFlags.class, input, 2);
+        int squawk = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<AdsbAltitudeType> altitudeType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.AdsbAltitudeType.class, input, 1);
+        String callsign = PayloadFieldDecoder.decodeString(input, 9);
+        EnumValue<AdsbEmitterType> emitterType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.AdsbEmitterType.class, input, 1);
+        int tslc = PayloadFieldDecoder.decodeUint8(input);
+        return new AdsbVehicle(icaoAddress, lat, lon, altitudeType, altitude, heading, horVelocity, verVelocity, callsign, emitterType, tslc, flags, squawk);
     }
 
     public static final class Builder {

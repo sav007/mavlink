@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -173,6 +175,17 @@ public final class LocalPositionNedSystemGlobalOffset {
                  + ", roll=" + roll
                  + ", pitch=" + pitch
                  + ", yaw=" + yaw + "}";
+    }
+
+    public static LocalPositionNedSystemGlobalOffset deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        return new LocalPositionNedSystemGlobalOffset(timeBootMs, x, y, z, roll, pitch, yaw);
     }
 
     public static final class Builder {

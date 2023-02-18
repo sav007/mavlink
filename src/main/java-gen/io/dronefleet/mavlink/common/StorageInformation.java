@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -286,6 +288,22 @@ public final class StorageInformation {
                  + ", type=" + type
                  + ", name=" + name
                  + ", storageUsage=" + storageUsage + "}";
+    }
+
+    public static StorageInformation deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float totalCapacity = PayloadFieldDecoder.decodeFloat(input);
+        float usedCapacity = PayloadFieldDecoder.decodeFloat(input);
+        float availableCapacity = PayloadFieldDecoder.decodeFloat(input);
+        float readSpeed = PayloadFieldDecoder.decodeFloat(input);
+        float writeSpeed = PayloadFieldDecoder.decodeFloat(input);
+        int storageId = PayloadFieldDecoder.decodeUint8(input);
+        int storageCount = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<StorageStatus> status = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.StorageStatus.class, input, 1);
+        EnumValue<StorageType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.StorageType.class, input, 1);
+        String name = PayloadFieldDecoder.decodeString(input, 32);
+        EnumValue<StorageUsageFlag> storageUsage = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.StorageUsageFlag.class, input, 1);
+        return new StorageInformation(timeBootMs, storageId, storageCount, status, totalCapacity, usedCapacity, availableCapacity, readSpeed, writeSpeed, type, name, storageUsage);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -142,6 +144,15 @@ public final class TerrainData {
                  + ", gridSpacing=" + gridSpacing
                  + ", gridbit=" + gridbit
                  + ", data=" + data + "}";
+    }
+
+    public static TerrainData deserialize(ByteBuffer input) {
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int gridSpacing = PayloadFieldDecoder.decodeUint16(input);
+        List<Integer> data = PayloadFieldDecoder.decodeInt16Array(input, 32);
+        int gridbit = PayloadFieldDecoder.decodeUint8(input);
+        return new TerrainData(lat, lon, gridSpacing, gridbit, data);
     }
 
     public static final class Builder {

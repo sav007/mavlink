@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -191,6 +193,18 @@ public final class SatcomLinkStatus {
                  + ", ringPending=" + ringPending
                  + ", txSessionPending=" + txSessionPending
                  + ", rxSessionPending=" + rxSessionPending + "}";
+    }
+
+    public static SatcomLinkStatus deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger lastHeartbeat = PayloadFieldDecoder.decodeUint64(input);
+        int failedSessions = PayloadFieldDecoder.decodeUint16(input);
+        int successfulSessions = PayloadFieldDecoder.decodeUint16(input);
+        int signalQuality = PayloadFieldDecoder.decodeUint8(input);
+        int ringPending = PayloadFieldDecoder.decodeUint8(input);
+        int txSessionPending = PayloadFieldDecoder.decodeUint8(input);
+        int rxSessionPending = PayloadFieldDecoder.decodeUint8(input);
+        return new SatcomLinkStatus(timestamp, lastHeartbeat, failedSessions, successfulSessions, signalQuality, ringPending, txSessionPending, rxSessionPending);
     }
 
     public static final class Builder {

@@ -1,10 +1,23 @@
 package io.dronefleet.mavlink.generator;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+
+import java.lang.reflect.Type;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import javax.lang.model.element.Modifier;
-import java.math.BigInteger;
-import java.util.*;
 
 public class FieldGenerator implements Comparable<FieldGenerator> {
     private static final ClassName MAVLINK_MESSAGE_FIELD = ClassName.get(
@@ -13,6 +26,10 @@ public class FieldGenerator implements Comparable<FieldGenerator> {
     private static final ClassName ENUM_VALUE = ClassName.get(
             "io.dronefleet.mavlink.util",
             "EnumValue");
+    private static final ClassName SERIALIZATION_HELPER = ClassName.get(
+            "io.dronefleet.mavlink.serialization.payload",
+            "PayloadFieldDecoder"
+    );
 
     private final PackageGenerator parentPackage;
     private final String name;
@@ -195,6 +212,41 @@ public class FieldGenerator implements Comparable<FieldGenerator> {
                 result,
                 Objects.class,
                 getNameCamelCase());
+    }
+
+
+    private static String mavlinkToTitleCaseJavaPrimitiveTypeName(String typeName){
+        if (typeName.endsWith("_t"))
+            typeName = typeName.substring(0, typeName.length()-2);
+        return Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1); // Title case
+    }
+
+    private String decodeMethodName(){
+        String simpleTypeName;
+        if (enumName != null){
+            simpleTypeName = "Enum";
+        }
+        else if (array){
+            if ("char".equals(type))
+                simpleTypeName = "String";
+            else
+                simpleTypeName = mavlinkToTitleCaseJavaPrimitiveTypeName(type) + "Array";
+        }
+        else
+            simpleTypeName = mavlinkToTitleCaseJavaPrimitiveTypeName(type);
+
+        return "decode" + simpleTypeName;
+    }
+
+    public void addDeserializationStatement(CodeBlock.Builder codeBuilder, String inputName){
+        String decodeMethodName = decodeMethodName();
+        int length = unitSize * Math.max(arraySize, 1);
+        if (enumName != null)
+            codeBuilder.addStatement("$T $N = $T.$L($L, $L, $L)", javaType(), nameCamelCase, SERIALIZATION_HELPER, decodeMethodName, enumType() + ".class"  , inputName, length);
+        else if (array)
+            codeBuilder.addStatement("$T $N = $T.$L($L, $L)", javaType(), nameCamelCase, SERIALIZATION_HELPER, decodeMethodName, inputName, length);
+        else
+            codeBuilder.addStatement("$T $N = $T.$L($L)", javaType(), nameCamelCase, SERIALIZATION_HELPER, decodeMethodName, inputName);
     }
 
     private boolean signed() {

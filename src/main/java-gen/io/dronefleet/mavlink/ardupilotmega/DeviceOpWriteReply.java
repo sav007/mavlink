@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class DeviceOpWriteReply {
     public String toString() {
         return "DeviceOpWriteReply{requestId=" + requestId
                  + ", result=" + result + "}";
+    }
+
+    public static DeviceOpWriteReply deserialize(ByteBuffer input) {
+        long requestId = PayloadFieldDecoder.decodeUint32(input);
+        int result = PayloadFieldDecoder.decodeUint8(input);
+        return new DeviceOpWriteReply(requestId, result);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -123,6 +125,14 @@ public final class PlayTune {
                  + ", targetComponent=" + targetComponent
                  + ", tune=" + tune
                  + ", tune2=" + tune2 + "}";
+    }
+
+    public static PlayTune deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        String tune = PayloadFieldDecoder.decodeString(input, 30);
+        String tune2 = PayloadFieldDecoder.decodeString(input, 200);
+        return new PlayTune(targetSystem, targetComponent, tune, tune2);
     }
 
     public static final class Builder {

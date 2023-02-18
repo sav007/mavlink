@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -138,6 +140,15 @@ public final class GimbalTorqueCmdReport {
                  + ", rlTorqueCmd=" + rlTorqueCmd
                  + ", elTorqueCmd=" + elTorqueCmd
                  + ", azTorqueCmd=" + azTorqueCmd + "}";
+    }
+
+    public static GimbalTorqueCmdReport deserialize(ByteBuffer input) {
+        int rlTorqueCmd = PayloadFieldDecoder.decodeInt16(input);
+        int elTorqueCmd = PayloadFieldDecoder.decodeInt16(input);
+        int azTorqueCmd = PayloadFieldDecoder.decodeInt16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new GimbalTorqueCmdReport(targetSystem, targetComponent, rlTorqueCmd, elTorqueCmd, azTorqueCmd);
     }
 
     public static final class Builder {

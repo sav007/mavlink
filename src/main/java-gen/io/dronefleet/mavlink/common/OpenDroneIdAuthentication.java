@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -226,6 +228,19 @@ public final class OpenDroneIdAuthentication {
                  + ", length=" + length
                  + ", timestamp=" + timestamp
                  + ", authenticationData=" + authenticationData + "}";
+    }
+
+    public static OpenDroneIdAuthentication deserialize(ByteBuffer input) {
+        long timestamp = PayloadFieldDecoder.decodeUint32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] idOrMac = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        EnumValue<MavOdidAuthType> authenticationType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidAuthType.class, input, 1);
+        int dataPage = PayloadFieldDecoder.decodeUint8(input);
+        int lastPageIndex = PayloadFieldDecoder.decodeUint8(input);
+        int length = PayloadFieldDecoder.decodeUint8(input);
+        byte[] authenticationData = PayloadFieldDecoder.decodeUint8Array(input, 23);
+        return new OpenDroneIdAuthentication(targetSystem, targetComponent, idOrMac, authenticationType, dataPage, lastPageIndex, length, timestamp, authenticationData);
     }
 
     public static final class Builder {

@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -356,6 +358,26 @@ public final class GpsRawInt {
                  + ", velAcc=" + velAcc
                  + ", hdgAcc=" + hdgAcc
                  + ", yaw=" + yaw + "}";
+    }
+
+    public static GpsRawInt deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int eph = PayloadFieldDecoder.decodeUint16(input);
+        int epv = PayloadFieldDecoder.decodeUint16(input);
+        int vel = PayloadFieldDecoder.decodeUint16(input);
+        int cog = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<GpsFixType> fixType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GpsFixType.class, input, 1);
+        int satellitesVisible = PayloadFieldDecoder.decodeUint8(input);
+        int altEllipsoid = PayloadFieldDecoder.decodeInt32(input);
+        long hAcc = PayloadFieldDecoder.decodeUint32(input);
+        long vAcc = PayloadFieldDecoder.decodeUint32(input);
+        long velAcc = PayloadFieldDecoder.decodeUint32(input);
+        long hdgAcc = PayloadFieldDecoder.decodeUint32(input);
+        int yaw = PayloadFieldDecoder.decodeUint16(input);
+        return new GpsRawInt(timeUsec, fixType, lat, lon, alt, eph, epv, vel, cog, satellitesVisible, altEllipsoid, hAcc, vAcc, velAcc, hdgAcc, yaw);
     }
 
     public static final class Builder {

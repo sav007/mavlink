@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class AvssuasDialect extends AbstractMavlinkDialect {
     /**
@@ -27,7 +30,14 @@ public final class AvssuasDialect extends AbstractMavlinkDialect {
             .put(60053, AvssDroneOperationMode.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(AvssPrsSysStatus.class, AvssPrsSysStatus::deserialize)
+            .put(AvssDronePosition.class, AvssDronePosition::deserialize)
+            .put(AvssDroneImu.class, AvssDroneImu::deserialize)
+            .put(AvssDroneOperationMode.class, AvssDroneOperationMode::deserialize)
+            .build();
+
     public AvssuasDialect() {
-        super("avssuas", dependencies, messages);
+        super("avssuas", dependencies, messages, deserializers);
     }
 }

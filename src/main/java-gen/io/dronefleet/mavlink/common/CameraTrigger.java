@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -83,6 +85,12 @@ public final class CameraTrigger {
     public String toString() {
         return "CameraTrigger{timeUsec=" + timeUsec
                  + ", seq=" + seq + "}";
+    }
+
+    public static CameraTrigger deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long seq = PayloadFieldDecoder.decodeUint32(input);
+        return new CameraTrigger(timeUsec, seq);
     }
 
     public static final class Builder {

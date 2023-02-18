@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -83,6 +85,12 @@ public final class TerrainCheck {
     public String toString() {
         return "TerrainCheck{lat=" + lat
                  + ", lon=" + lon + "}";
+    }
+
+    public static TerrainCheck deserialize(ByteBuffer input) {
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        return new TerrainCheck(lat, lon);
     }
 
     public static final class Builder {

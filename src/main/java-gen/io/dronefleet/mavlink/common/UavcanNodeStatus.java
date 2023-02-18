@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -163,6 +165,16 @@ public final class UavcanNodeStatus {
                  + ", mode=" + mode
                  + ", subMode=" + subMode
                  + ", vendorSpecificStatusCode=" + vendorSpecificStatusCode + "}";
+    }
+
+    public static UavcanNodeStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long uptimeSec = PayloadFieldDecoder.decodeUint32(input);
+        int vendorSpecificStatusCode = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<UavcanNodeHealth> health = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.UavcanNodeHealth.class, input, 1);
+        EnumValue<UavcanNodeMode> mode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.UavcanNodeMode.class, input, 1);
+        int subMode = PayloadFieldDecoder.decodeUint8(input);
+        return new UavcanNodeStatus(timeUsec, uptimeSec, health, mode, subMode, vendorSpecificStatusCode);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -139,6 +141,15 @@ public final class ResourceRequest {
                  + ", uri=" + uri
                  + ", transferType=" + transferType
                  + ", storage=" + storage + "}";
+    }
+
+    public static ResourceRequest deserialize(ByteBuffer input) {
+        int requestId = PayloadFieldDecoder.decodeUint8(input);
+        int uriType = PayloadFieldDecoder.decodeUint8(input);
+        byte[] uri = PayloadFieldDecoder.decodeUint8Array(input, 120);
+        int transferType = PayloadFieldDecoder.decodeUint8(input);
+        byte[] storage = PayloadFieldDecoder.decodeUint8Array(input, 120);
+        return new ResourceRequest(requestId, uriType, uri, transferType, storage);
     }
 
     public static final class Builder {

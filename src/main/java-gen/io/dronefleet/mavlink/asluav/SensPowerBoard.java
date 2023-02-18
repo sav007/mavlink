@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -264,6 +266,22 @@ public final class SensPowerBoard {
                  + ", pwrBrdDigitalAmp=" + pwrBrdDigitalAmp
                  + ", pwrBrdExtAmp=" + pwrBrdExtAmp
                  + ", pwrBrdAuxAmp=" + pwrBrdAuxAmp + "}";
+    }
+
+    public static SensPowerBoard deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float pwrBrdSystemVolt = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdServoVolt = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdDigitalVolt = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdMotLAmp = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdMotRAmp = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdAnalogAmp = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdDigitalAmp = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdExtAmp = PayloadFieldDecoder.decodeFloat(input);
+        float pwrBrdAuxAmp = PayloadFieldDecoder.decodeFloat(input);
+        int pwrBrdStatus = PayloadFieldDecoder.decodeUint8(input);
+        int pwrBrdLedStatus = PayloadFieldDecoder.decodeUint8(input);
+        return new SensPowerBoard(timestamp, pwrBrdStatus, pwrBrdLedStatus, pwrBrdSystemVolt, pwrBrdServoVolt, pwrBrdDigitalVolt, pwrBrdMotLAmp, pwrBrdMotRAmp, pwrBrdAnalogAmp, pwrBrdDigitalAmp, pwrBrdExtAmp, pwrBrdAuxAmp);
     }
 
     public static final class Builder {

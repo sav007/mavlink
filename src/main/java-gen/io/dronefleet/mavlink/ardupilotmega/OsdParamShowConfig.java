@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -135,6 +137,15 @@ public final class OsdParamShowConfig {
                  + ", requestId=" + requestId
                  + ", osdScreen=" + osdScreen
                  + ", osdIndex=" + osdIndex + "}";
+    }
+
+    public static OsdParamShowConfig deserialize(ByteBuffer input) {
+        long requestId = PayloadFieldDecoder.decodeUint32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int osdScreen = PayloadFieldDecoder.decodeUint8(input);
+        int osdIndex = PayloadFieldDecoder.decodeUint8(input);
+        return new OsdParamShowConfig(targetSystem, targetComponent, requestId, osdScreen, osdIndex);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -294,6 +296,23 @@ public final class SerialUdbExtraF20 {
                  + ", sueTrimValueInput10=" + sueTrimValueInput10
                  + ", sueTrimValueInput11=" + sueTrimValueInput11
                  + ", sueTrimValueInput12=" + sueTrimValueInput12 + "}";
+    }
+
+    public static SerialUdbExtraF20 deserialize(ByteBuffer input) {
+        int sueTrimValueInput1 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput2 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput3 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput4 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput5 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput6 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput7 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput8 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput9 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput10 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput11 = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrimValueInput12 = PayloadFieldDecoder.decodeInt16(input);
+        int sueNumberOfInputs = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialUdbExtraF20(sueNumberOfInputs, sueTrimValueInput1, sueTrimValueInput2, sueTrimValueInput3, sueTrimValueInput4, sueTrimValueInput5, sueTrimValueInput6, sueTrimValueInput7, sueTrimValueInput8, sueTrimValueInput9, sueTrimValueInput10, sueTrimValueInput11, sueTrimValueInput12);
     }
 
     public static final class Builder {

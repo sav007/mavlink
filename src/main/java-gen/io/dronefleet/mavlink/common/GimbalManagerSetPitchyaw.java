@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -204,6 +206,18 @@ public final class GimbalManagerSetPitchyaw {
                  + ", yaw=" + yaw
                  + ", pitchRate=" + pitchRate
                  + ", yawRate=" + yawRate + "}";
+    }
+
+    public static GimbalManagerSetPitchyaw deserialize(ByteBuffer input) {
+        EnumValue<GimbalManagerFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GimbalManagerFlags.class, input, 4);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float pitchRate = PayloadFieldDecoder.decodeFloat(input);
+        float yawRate = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int gimbalDeviceId = PayloadFieldDecoder.decodeUint8(input);
+        return new GimbalManagerSetPitchyaw(targetSystem, targetComponent, flags, gimbalDeviceId, pitch, yaw, pitchRate, yawRate);
     }
 
     public static final class Builder {

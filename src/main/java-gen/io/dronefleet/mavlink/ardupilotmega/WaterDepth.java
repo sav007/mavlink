@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -245,6 +247,21 @@ public final class WaterDepth {
                  + ", yaw=" + yaw
                  + ", distance=" + distance
                  + ", temperature=" + temperature + "}";
+    }
+
+    public static WaterDepth deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lng = PayloadFieldDecoder.decodeInt32(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float distance = PayloadFieldDecoder.decodeFloat(input);
+        float temperature = PayloadFieldDecoder.decodeFloat(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        int healthy = PayloadFieldDecoder.decodeUint8(input);
+        return new WaterDepth(timeBootMs, id, healthy, lat, lng, alt, roll, pitch, yaw, distance, temperature);
     }
 
     public static final class Builder {

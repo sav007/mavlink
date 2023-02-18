@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -556,6 +558,37 @@ public final class SerialUdbExtraF2A {
                  + ", sueMagfieldearth2=" + sueMagfieldearth2
                  + ", sueSvs=" + sueSvs
                  + ", sueHdop=" + sueHdop + "}";
+    }
+
+    public static SerialUdbExtraF2A deserialize(ByteBuffer input) {
+        long sueTime = PayloadFieldDecoder.decodeUint32(input);
+        int sueLatitude = PayloadFieldDecoder.decodeInt32(input);
+        int sueLongitude = PayloadFieldDecoder.decodeInt32(input);
+        int sueAltitude = PayloadFieldDecoder.decodeInt32(input);
+        int sueWaypointIndex = PayloadFieldDecoder.decodeUint16(input);
+        int sueRmat0 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat1 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat2 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat3 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat4 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat5 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat6 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat7 = PayloadFieldDecoder.decodeInt16(input);
+        int sueRmat8 = PayloadFieldDecoder.decodeInt16(input);
+        int sueCog = PayloadFieldDecoder.decodeUint16(input);
+        int sueSog = PayloadFieldDecoder.decodeInt16(input);
+        int sueCpuLoad = PayloadFieldDecoder.decodeUint16(input);
+        int sueAirSpeed3dimu = PayloadFieldDecoder.decodeUint16(input);
+        int sueEstimatedWind0 = PayloadFieldDecoder.decodeInt16(input);
+        int sueEstimatedWind1 = PayloadFieldDecoder.decodeInt16(input);
+        int sueEstimatedWind2 = PayloadFieldDecoder.decodeInt16(input);
+        int sueMagfieldearth0 = PayloadFieldDecoder.decodeInt16(input);
+        int sueMagfieldearth1 = PayloadFieldDecoder.decodeInt16(input);
+        int sueMagfieldearth2 = PayloadFieldDecoder.decodeInt16(input);
+        int sueSvs = PayloadFieldDecoder.decodeInt16(input);
+        int sueHdop = PayloadFieldDecoder.decodeInt16(input);
+        int sueStatus = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialUdbExtraF2A(sueTime, sueStatus, sueLatitude, sueLongitude, sueAltitude, sueWaypointIndex, sueRmat0, sueRmat1, sueRmat2, sueRmat3, sueRmat4, sueRmat5, sueRmat6, sueRmat7, sueRmat8, sueCog, sueSog, sueCpuLoad, sueAirSpeed3dimu, sueEstimatedWind0, sueEstimatedWind1, sueEstimatedWind2, sueMagfieldearth0, sueMagfieldearth1, sueMagfieldearth2, sueSvs, sueHdop);
     }
 
     public static final class Builder {

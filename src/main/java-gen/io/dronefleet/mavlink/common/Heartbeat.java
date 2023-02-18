@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -169,6 +171,16 @@ public final class Heartbeat {
                  + ", customMode=" + customMode
                  + ", systemStatus=" + systemStatus
                  + ", mavlinkVersion=" + mavlinkVersion + "}";
+    }
+
+    public static Heartbeat deserialize(ByteBuffer input) {
+        long customMode = PayloadFieldDecoder.decodeUint32(input);
+        EnumValue<MavType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavType.class, input, 1);
+        EnumValue<MavAutopilot> autopilot = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavAutopilot.class, input, 1);
+        EnumValue<MavModeFlag> baseMode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavModeFlag.class, input, 1);
+        EnumValue<MavState> systemStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavState.class, input, 1);
+        int mavlinkVersion = PayloadFieldDecoder.decodeUint8(input);
+        return new Heartbeat(type, autopilot, baseMode, customMode, systemStatus, mavlinkVersion);
     }
 
     public static final class Builder {

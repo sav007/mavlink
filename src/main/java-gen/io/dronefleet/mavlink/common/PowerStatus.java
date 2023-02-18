@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -102,6 +104,13 @@ public final class PowerStatus {
         return "PowerStatus{vcc=" + vcc
                  + ", vservo=" + vservo
                  + ", flags=" + flags + "}";
+    }
+
+    public static PowerStatus deserialize(ByteBuffer input) {
+        int vcc = PayloadFieldDecoder.decodeUint16(input);
+        int vservo = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavPowerStatus> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavPowerStatus.class, input, 2);
+        return new PowerStatus(vcc, vservo, flags);
     }
 
     public static final class Builder {

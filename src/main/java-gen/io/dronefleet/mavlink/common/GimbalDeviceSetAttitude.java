@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
@@ -10,6 +11,7 @@ import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -214,6 +216,17 @@ public final class GimbalDeviceSetAttitude {
                  + ", angularVelocityX=" + angularVelocityX
                  + ", angularVelocityY=" + angularVelocityY
                  + ", angularVelocityZ=" + angularVelocityZ + "}";
+    }
+
+    public static GimbalDeviceSetAttitude deserialize(ByteBuffer input) {
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float angularVelocityX = PayloadFieldDecoder.decodeFloat(input);
+        float angularVelocityY = PayloadFieldDecoder.decodeFloat(input);
+        float angularVelocityZ = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<GimbalDeviceFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GimbalDeviceFlags.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new GimbalDeviceSetAttitude(targetSystem, targetComponent, flags, q, angularVelocityX, angularVelocityY, angularVelocityZ);
     }
 
     public static final class Builder {

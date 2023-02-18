@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class SensAtmos {
         return "SensAtmos{timestamp=" + timestamp
                  + ", tempambient=" + tempambient
                  + ", humidity=" + humidity + "}";
+    }
+
+    public static SensAtmos deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float tempambient = PayloadFieldDecoder.decodeFloat(input);
+        float humidity = PayloadFieldDecoder.decodeFloat(input);
+        return new SensAtmos(timestamp, tempambient, humidity);
     }
 
     public static final class Builder {

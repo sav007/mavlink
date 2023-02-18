@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -252,6 +254,21 @@ public final class LinkNodeStatus {
                  + ", messagesSent=" + messagesSent
                  + ", messagesReceived=" + messagesReceived
                  + ", messagesLost=" + messagesLost + "}";
+    }
+
+    public static LinkNodeStatus deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        long txRate = PayloadFieldDecoder.decodeUint32(input);
+        long rxRate = PayloadFieldDecoder.decodeUint32(input);
+        long messagesSent = PayloadFieldDecoder.decodeUint32(input);
+        long messagesReceived = PayloadFieldDecoder.decodeUint32(input);
+        long messagesLost = PayloadFieldDecoder.decodeUint32(input);
+        int rxParseErr = PayloadFieldDecoder.decodeUint16(input);
+        int txOverflows = PayloadFieldDecoder.decodeUint16(input);
+        int rxOverflows = PayloadFieldDecoder.decodeUint16(input);
+        int txBuf = PayloadFieldDecoder.decodeUint8(input);
+        int rxBuf = PayloadFieldDecoder.decodeUint8(input);
+        return new LinkNodeStatus(timestamp, txBuf, rxBuf, txRate, rxRate, rxParseErr, txOverflows, rxOverflows, messagesSent, messagesReceived, messagesLost);
     }
 
     public static final class Builder {

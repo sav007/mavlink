@@ -5,9 +5,12 @@ import io.dronefleet.mavlink.MavlinkDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class IcarousDialect extends AbstractMavlinkDialect {
     /**
@@ -23,7 +26,12 @@ public final class IcarousDialect extends AbstractMavlinkDialect {
             .put(42001, IcarousKinematicBands.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(IcarousHeartbeat.class, IcarousHeartbeat::deserialize)
+            .put(IcarousKinematicBands.class, IcarousKinematicBands::deserialize)
+            .build();
+
     public IcarousDialect() {
-        super("icarous", dependencies, messages);
+        super("icarous", dependencies, messages, deserializers);
     }
 }

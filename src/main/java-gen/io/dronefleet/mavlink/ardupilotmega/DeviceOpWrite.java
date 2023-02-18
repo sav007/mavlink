@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -251,6 +253,21 @@ public final class DeviceOpWrite {
                  + ", count=" + count
                  + ", data=" + data
                  + ", bank=" + bank + "}";
+    }
+
+    public static DeviceOpWrite deserialize(ByteBuffer input) {
+        long requestId = PayloadFieldDecoder.decodeUint32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<DeviceOpBustype> bustype = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.DeviceOpBustype.class, input, 1);
+        int bus = PayloadFieldDecoder.decodeUint8(input);
+        int address = PayloadFieldDecoder.decodeUint8(input);
+        String busname = PayloadFieldDecoder.decodeString(input, 40);
+        int regstart = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 128);
+        int bank = PayloadFieldDecoder.decodeUint8(input);
+        return new DeviceOpWrite(targetSystem, targetComponent, requestId, bustype, bus, address, busname, regstart, count, data, bank);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.cubepilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -62,6 +64,11 @@ public final class CubepilotRawRc {
     @Override
     public String toString() {
         return "CubepilotRawRc{rcRaw=" + rcRaw + "}";
+    }
+
+    public static CubepilotRawRc deserialize(ByteBuffer input) {
+        byte[] rcRaw = PayloadFieldDecoder.decodeUint8Array(input, 32);
+        return new CubepilotRawRc(rcRaw);
     }
 
     public static final class Builder {

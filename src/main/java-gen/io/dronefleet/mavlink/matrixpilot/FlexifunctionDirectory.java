@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -157,6 +159,16 @@ public final class FlexifunctionDirectory {
                  + ", startIndex=" + startIndex
                  + ", count=" + count
                  + ", directoryData=" + directoryData + "}";
+    }
+
+    public static FlexifunctionDirectory deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int directoryType = PayloadFieldDecoder.decodeUint8(input);
+        int startIndex = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        List<Integer> directoryData = PayloadFieldDecoder.decodeInt8Array(input, 48);
+        return new FlexifunctionDirectory(targetSystem, targetComponent, directoryType, startIndex, count, directoryData);
     }
 
     public static final class Builder {

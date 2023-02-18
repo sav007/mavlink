@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -388,6 +390,28 @@ public final class UtmGlobalPosition {
                  + ", updateRate=" + updateRate
                  + ", flightState=" + flightState
                  + ", flags=" + flags + "}";
+    }
+
+    public static UtmGlobalPosition deserialize(ByteBuffer input) {
+        BigInteger time = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int relativeAlt = PayloadFieldDecoder.decodeInt32(input);
+        int nextLat = PayloadFieldDecoder.decodeInt32(input);
+        int nextLon = PayloadFieldDecoder.decodeInt32(input);
+        int nextAlt = PayloadFieldDecoder.decodeInt32(input);
+        int vx = PayloadFieldDecoder.decodeInt16(input);
+        int vy = PayloadFieldDecoder.decodeInt16(input);
+        int vz = PayloadFieldDecoder.decodeInt16(input);
+        int hAcc = PayloadFieldDecoder.decodeUint16(input);
+        int vAcc = PayloadFieldDecoder.decodeUint16(input);
+        int velAcc = PayloadFieldDecoder.decodeUint16(input);
+        int updateRate = PayloadFieldDecoder.decodeUint16(input);
+        byte[] uasId = PayloadFieldDecoder.decodeUint8Array(input, 18);
+        EnumValue<UtmFlightState> flightState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.UtmFlightState.class, input, 1);
+        EnumValue<UtmDataAvailFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.UtmDataAvailFlags.class, input, 1);
+        return new UtmGlobalPosition(time, uasId, lat, lon, alt, relativeAlt, vx, vy, vz, hAcc, vAcc, velAcc, nextLat, nextLon, nextAlt, updateRate, flightState, flags);
     }
 
     public static final class Builder {

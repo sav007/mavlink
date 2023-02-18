@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -245,6 +247,21 @@ public final class DigicamConfigure {
                  + ", engineCutOff=" + engineCutOff
                  + ", extraParam=" + extraParam
                  + ", extraValue=" + extraValue + "}";
+    }
+
+    public static DigicamConfigure deserialize(ByteBuffer input) {
+        float extraValue = PayloadFieldDecoder.decodeFloat(input);
+        int shutterSpeed = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int mode = PayloadFieldDecoder.decodeUint8(input);
+        int aperture = PayloadFieldDecoder.decodeUint8(input);
+        int iso = PayloadFieldDecoder.decodeUint8(input);
+        int exposureType = PayloadFieldDecoder.decodeUint8(input);
+        int commandId = PayloadFieldDecoder.decodeUint8(input);
+        int engineCutOff = PayloadFieldDecoder.decodeUint8(input);
+        int extraParam = PayloadFieldDecoder.decodeUint8(input);
+        return new DigicamConfigure(targetSystem, targetComponent, mode, shutterSpeed, aperture, iso, exposureType, commandId, engineCutOff, extraParam, extraValue);
     }
 
     public static final class Builder {

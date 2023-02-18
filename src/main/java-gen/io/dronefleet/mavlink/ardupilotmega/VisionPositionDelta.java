@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -142,6 +144,15 @@ public final class VisionPositionDelta {
                  + ", angleDelta=" + angleDelta
                  + ", positionDelta=" + positionDelta
                  + ", confidence=" + confidence + "}";
+    }
+
+    public static VisionPositionDelta deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger timeDeltaUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> angleDelta = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> positionDelta = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        float confidence = PayloadFieldDecoder.decodeFloat(input);
+        return new VisionPositionDelta(timeUsec, timeDeltaUsec, angleDelta, positionDelta, confidence);
     }
 
     public static final class Builder {

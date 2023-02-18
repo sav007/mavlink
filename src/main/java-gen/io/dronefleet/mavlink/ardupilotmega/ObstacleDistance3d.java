@@ -5,12 +5,14 @@ import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
 import io.dronefleet.mavlink.common.MavDistanceSensor;
 import io.dronefleet.mavlink.common.MavFrame;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -223,6 +225,19 @@ public final class ObstacleDistance3d {
                  + ", z=" + z
                  + ", minDistance=" + minDistance
                  + ", maxDistance=" + maxDistance + "}";
+    }
+
+    public static ObstacleDistance3d deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        float minDistance = PayloadFieldDecoder.decodeFloat(input);
+        float maxDistance = PayloadFieldDecoder.decodeFloat(input);
+        int obstacleId = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavDistanceSensor> sensorType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavDistanceSensor.class, input, 1);
+        EnumValue<MavFrame> frame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        return new ObstacleDistance3d(timeBootMs, sensorType, frame, obstacleId, x, y, z, minDistance, maxDistance);
     }
 
     public static final class Builder {

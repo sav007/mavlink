@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -238,6 +240,20 @@ public final class CameraFovStatus {
                  + ", q=" + q
                  + ", hfov=" + hfov
                  + ", vfov=" + vfov + "}";
+    }
+
+    public static CameraFovStatus deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int latCamera = PayloadFieldDecoder.decodeInt32(input);
+        int lonCamera = PayloadFieldDecoder.decodeInt32(input);
+        int altCamera = PayloadFieldDecoder.decodeInt32(input);
+        int latImage = PayloadFieldDecoder.decodeInt32(input);
+        int lonImage = PayloadFieldDecoder.decodeInt32(input);
+        int altImage = PayloadFieldDecoder.decodeInt32(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float hfov = PayloadFieldDecoder.decodeFloat(input);
+        float vfov = PayloadFieldDecoder.decodeFloat(input);
+        return new CameraFovStatus(timeBootMs, latCamera, lonCamera, altCamera, latImage, lonImage, altImage, q, hfov, vfov);
     }
 
     public static final class Builder {

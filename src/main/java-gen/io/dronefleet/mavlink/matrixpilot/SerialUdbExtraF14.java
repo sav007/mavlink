@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -247,6 +249,21 @@ public final class SerialUdbExtraF14 {
                  + ", sueOscFailCount=" + sueOscFailCount
                  + ", sueClockConfig=" + sueClockConfig
                  + ", sueFlightPlanType=" + sueFlightPlanType + "}";
+    }
+
+    public static SerialUdbExtraF14 deserialize(ByteBuffer input) {
+        long sueTrapSource = PayloadFieldDecoder.decodeUint32(input);
+        int sueRcon = PayloadFieldDecoder.decodeInt16(input);
+        int sueTrapFlags = PayloadFieldDecoder.decodeInt16(input);
+        int sueOscFailCount = PayloadFieldDecoder.decodeInt16(input);
+        int sueWindEstimation = PayloadFieldDecoder.decodeUint8(input);
+        int sueGpsType = PayloadFieldDecoder.decodeUint8(input);
+        int sueDr = PayloadFieldDecoder.decodeUint8(input);
+        int sueBoardType = PayloadFieldDecoder.decodeUint8(input);
+        int sueAirframe = PayloadFieldDecoder.decodeUint8(input);
+        int sueClockConfig = PayloadFieldDecoder.decodeUint8(input);
+        int sueFlightPlanType = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialUdbExtraF14(sueWindEstimation, sueGpsType, sueDr, sueBoardType, sueAirframe, sueRcon, sueTrapFlags, sueTrapSource, sueOscFailCount, sueClockConfig, sueFlightPlanType);
     }
 
     public static final class Builder {

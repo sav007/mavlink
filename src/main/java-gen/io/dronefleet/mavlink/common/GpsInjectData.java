@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -120,6 +122,14 @@ public final class GpsInjectData {
                  + ", targetComponent=" + targetComponent
                  + ", len=" + len
                  + ", data=" + data + "}";
+    }
+
+    public static GpsInjectData deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int len = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 110);
+        return new GpsInjectData(targetSystem, targetComponent, len, data);
     }
 
     public static final class Builder {

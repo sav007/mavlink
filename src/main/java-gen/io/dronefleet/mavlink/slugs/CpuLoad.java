@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class CpuLoad {
         return "CpuLoad{sensload=" + sensload
                  + ", ctrlload=" + ctrlload
                  + ", batvolt=" + batvolt + "}";
+    }
+
+    public static CpuLoad deserialize(ByteBuffer input) {
+        int batvolt = PayloadFieldDecoder.decodeUint16(input);
+        int sensload = PayloadFieldDecoder.decodeUint8(input);
+        int ctrlload = PayloadFieldDecoder.decodeUint8(input);
+        return new CpuLoad(sensload, ctrlload, batvolt);
     }
 
     public static final class Builder {

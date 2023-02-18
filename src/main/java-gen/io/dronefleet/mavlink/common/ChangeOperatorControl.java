@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -121,6 +123,14 @@ public final class ChangeOperatorControl {
                  + ", controlRequest=" + controlRequest
                  + ", version=" + version
                  + ", passkey=" + passkey + "}";
+    }
+
+    public static ChangeOperatorControl deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int controlRequest = PayloadFieldDecoder.decodeUint8(input);
+        int version = PayloadFieldDecoder.decodeUint8(input);
+        String passkey = PayloadFieldDecoder.decodeString(input, 25);
+        return new ChangeOperatorControl(targetSystem, controlRequest, version, passkey);
     }
 
     public static final class Builder {

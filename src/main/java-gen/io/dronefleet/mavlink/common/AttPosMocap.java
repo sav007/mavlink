@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -162,6 +164,16 @@ public final class AttPosMocap {
                  + ", y=" + y
                  + ", z=" + z
                  + ", covariance=" + covariance + "}";
+    }
+
+    public static AttPosMocap deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> covariance = PayloadFieldDecoder.decodeFloatArray(input, 84);
+        return new AttPosMocap(timeUsec, q, x, y, z, covariance);
     }
 
     public static final class Builder {

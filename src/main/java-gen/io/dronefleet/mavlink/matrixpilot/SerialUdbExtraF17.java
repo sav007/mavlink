@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class SerialUdbExtraF17 {
         return "SerialUdbExtraF17{sueFeedForward=" + sueFeedForward
                  + ", sueTurnRateNav=" + sueTurnRateNav
                  + ", sueTurnRateFbw=" + sueTurnRateFbw + "}";
+    }
+
+    public static SerialUdbExtraF17 deserialize(ByteBuffer input) {
+        float sueFeedForward = PayloadFieldDecoder.decodeFloat(input);
+        float sueTurnRateNav = PayloadFieldDecoder.decodeFloat(input);
+        float sueTurnRateFbw = PayloadFieldDecoder.decodeFloat(input);
+        return new SerialUdbExtraF17(sueFeedForward, sueTurnRateNav, sueTurnRateFbw);
     }
 
     public static final class Builder {

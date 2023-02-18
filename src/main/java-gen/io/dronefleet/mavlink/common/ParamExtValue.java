@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -145,6 +147,15 @@ public final class ParamExtValue {
                  + ", paramType=" + paramType
                  + ", paramCount=" + paramCount
                  + ", paramIndex=" + paramIndex + "}";
+    }
+
+    public static ParamExtValue deserialize(ByteBuffer input) {
+        int paramCount = PayloadFieldDecoder.decodeUint16(input);
+        int paramIndex = PayloadFieldDecoder.decodeUint16(input);
+        String paramId = PayloadFieldDecoder.decodeString(input, 16);
+        String paramValue = PayloadFieldDecoder.decodeString(input, 128);
+        EnumValue<MavParamExtType> paramType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavParamExtType.class, input, 1);
+        return new ParamExtValue(paramId, paramValue, paramType, paramCount, paramIndex);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -218,6 +220,19 @@ public final class UavcanNodeInfo {
                  + ", swVersionMajor=" + swVersionMajor
                  + ", swVersionMinor=" + swVersionMinor
                  + ", swVcsCommit=" + swVcsCommit + "}";
+    }
+
+    public static UavcanNodeInfo deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long uptimeSec = PayloadFieldDecoder.decodeUint32(input);
+        long swVcsCommit = PayloadFieldDecoder.decodeUint32(input);
+        String name = PayloadFieldDecoder.decodeString(input, 80);
+        int hwVersionMajor = PayloadFieldDecoder.decodeUint8(input);
+        int hwVersionMinor = PayloadFieldDecoder.decodeUint8(input);
+        byte[] hwUniqueId = PayloadFieldDecoder.decodeUint8Array(input, 16);
+        int swVersionMajor = PayloadFieldDecoder.decodeUint8(input);
+        int swVersionMinor = PayloadFieldDecoder.decodeUint8(input);
+        return new UavcanNodeInfo(timeUsec, uptimeSec, name, hwVersionMajor, hwVersionMinor, hwUniqueId, swVersionMajor, swVersionMinor, swVcsCommit);
     }
 
     public static final class Builder {

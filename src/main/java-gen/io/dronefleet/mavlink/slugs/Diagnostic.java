@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -156,6 +158,16 @@ public final class Diagnostic {
                  + ", diagsh1=" + diagsh1
                  + ", diagsh2=" + diagsh2
                  + ", diagsh3=" + diagsh3 + "}";
+    }
+
+    public static Diagnostic deserialize(ByteBuffer input) {
+        float diagfl1 = PayloadFieldDecoder.decodeFloat(input);
+        float diagfl2 = PayloadFieldDecoder.decodeFloat(input);
+        float diagfl3 = PayloadFieldDecoder.decodeFloat(input);
+        int diagsh1 = PayloadFieldDecoder.decodeInt16(input);
+        int diagsh2 = PayloadFieldDecoder.decodeInt16(input);
+        int diagsh3 = PayloadFieldDecoder.decodeInt16(input);
+        return new Diagnostic(diagfl1, diagfl2, diagfl3, diagsh1, diagsh2, diagsh3);
     }
 
     public static final class Builder {

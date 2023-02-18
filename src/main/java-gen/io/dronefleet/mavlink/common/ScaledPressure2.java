@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -138,6 +140,15 @@ public final class ScaledPressure2 {
                  + ", pressDiff=" + pressDiff
                  + ", temperature=" + temperature
                  + ", temperaturePressDiff=" + temperaturePressDiff + "}";
+    }
+
+    public static ScaledPressure2 deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float pressAbs = PayloadFieldDecoder.decodeFloat(input);
+        float pressDiff = PayloadFieldDecoder.decodeFloat(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        int temperaturePressDiff = PayloadFieldDecoder.decodeInt16(input);
+        return new ScaledPressure2(timeBootMs, pressAbs, pressDiff, temperature, temperaturePressDiff);
     }
 
     public static final class Builder {

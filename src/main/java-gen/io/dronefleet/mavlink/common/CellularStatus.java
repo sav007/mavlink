@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -178,6 +180,17 @@ public final class CellularStatus {
                  + ", mcc=" + mcc
                  + ", mnc=" + mnc
                  + ", lac=" + lac + "}";
+    }
+
+    public static CellularStatus deserialize(ByteBuffer input) {
+        int mcc = PayloadFieldDecoder.decodeUint16(input);
+        int mnc = PayloadFieldDecoder.decodeUint16(input);
+        int lac = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<CellularStatusFlag> status = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CellularStatusFlag.class, input, 1);
+        EnumValue<CellularNetworkFailedReason> failureReason = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CellularNetworkFailedReason.class, input, 1);
+        EnumValue<CellularNetworkRadioType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CellularNetworkRadioType.class, input, 1);
+        int quality = PayloadFieldDecoder.decodeUint8(input);
+        return new CellularStatus(status, failureReason, type, quality, mcc, mnc, lac);
     }
 
     public static final class Builder {

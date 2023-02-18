@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -245,6 +247,21 @@ public final class Simstate {
                  + ", zgyro=" + zgyro
                  + ", lat=" + lat
                  + ", lng=" + lng + "}";
+    }
+
+    public static Simstate deserialize(ByteBuffer input) {
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float xacc = PayloadFieldDecoder.decodeFloat(input);
+        float yacc = PayloadFieldDecoder.decodeFloat(input);
+        float zacc = PayloadFieldDecoder.decodeFloat(input);
+        float xgyro = PayloadFieldDecoder.decodeFloat(input);
+        float ygyro = PayloadFieldDecoder.decodeFloat(input);
+        float zgyro = PayloadFieldDecoder.decodeFloat(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lng = PayloadFieldDecoder.decodeInt32(input);
+        return new Simstate(roll, pitch, yaw, xacc, yacc, zacc, xgyro, ygyro, zgyro, lat, lng);
     }
 
     public static final class Builder {

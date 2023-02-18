@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -334,6 +336,25 @@ public final class MissionItemInt {
                  + ", y=" + y
                  + ", z=" + z
                  + ", missionType=" + missionType + "}";
+    }
+
+    public static MissionItemInt deserialize(ByteBuffer input) {
+        float param1 = PayloadFieldDecoder.decodeFloat(input);
+        float param2 = PayloadFieldDecoder.decodeFloat(input);
+        float param3 = PayloadFieldDecoder.decodeFloat(input);
+        float param4 = PayloadFieldDecoder.decodeFloat(input);
+        int x = PayloadFieldDecoder.decodeInt32(input);
+        int y = PayloadFieldDecoder.decodeInt32(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        int seq = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavCmd> command = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCmd.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavFrame> frame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        int current = PayloadFieldDecoder.decodeUint8(input);
+        int autocontinue = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavMissionType> missionType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavMissionType.class, input, 1);
+        return new MissionItemInt(targetSystem, targetComponent, seq, frame, command, current, autocontinue, param1, param2, param3, param4, x, y, z, missionType);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class HygrometerSensor {
         return "HygrometerSensor{id=" + id
                  + ", temperature=" + temperature
                  + ", humidity=" + humidity + "}";
+    }
+
+    public static HygrometerSensor deserialize(ByteBuffer input) {
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        int humidity = PayloadFieldDecoder.decodeUint16(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        return new HygrometerSensor(id, temperature, humidity);
     }
 
     public static final class Builder {

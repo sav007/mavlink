@@ -4,11 +4,13 @@ import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
 import io.dronefleet.mavlink.common.MagCalStatus;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -214,6 +216,19 @@ public final class MagCalProgress {
                  + ", directionX=" + directionX
                  + ", directionY=" + directionY
                  + ", directionZ=" + directionZ + "}";
+    }
+
+    public static MagCalProgress deserialize(ByteBuffer input) {
+        float directionX = PayloadFieldDecoder.decodeFloat(input);
+        float directionY = PayloadFieldDecoder.decodeFloat(input);
+        float directionZ = PayloadFieldDecoder.decodeFloat(input);
+        int compassId = PayloadFieldDecoder.decodeUint8(input);
+        int calMask = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MagCalStatus> calStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MagCalStatus.class, input, 1);
+        int attempt = PayloadFieldDecoder.decodeUint8(input);
+        int completionPct = PayloadFieldDecoder.decodeUint8(input);
+        byte[] completionMask = PayloadFieldDecoder.decodeUint8Array(input, 10);
+        return new MagCalProgress(compassId, calMask, calStatus, attempt, completionPct, completionMask, directionX, directionY, directionZ);
     }
 
     public static final class Builder {

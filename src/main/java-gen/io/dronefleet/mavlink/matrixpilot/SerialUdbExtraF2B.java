@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -1004,6 +1006,60 @@ public final class SerialUdbExtraF2B {
                  + ", sueBatAmpHours=" + sueBatAmpHours
                  + ", sueDesiredHeight=" + sueDesiredHeight
                  + ", sueMemoryStackFree=" + sueMemoryStackFree + "}";
+    }
+
+    public static SerialUdbExtraF2B deserialize(ByteBuffer input) {
+        long sueTime = PayloadFieldDecoder.decodeUint32(input);
+        long sueFlags = PayloadFieldDecoder.decodeUint32(input);
+        int sueBaromPress = PayloadFieldDecoder.decodeInt32(input);
+        int sueBaromAlt = PayloadFieldDecoder.decodeInt32(input);
+        int suePwmInput1 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput2 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput3 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput4 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput5 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput6 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput7 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput8 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput9 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput10 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput11 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmInput12 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput1 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput2 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput3 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput4 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput5 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput6 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput7 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput8 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput9 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput10 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput11 = PayloadFieldDecoder.decodeInt16(input);
+        int suePwmOutput12 = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuLocationX = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuLocationY = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuLocationZ = PayloadFieldDecoder.decodeInt16(input);
+        int sueLocationErrorEarthX = PayloadFieldDecoder.decodeInt16(input);
+        int sueLocationErrorEarthY = PayloadFieldDecoder.decodeInt16(input);
+        int sueLocationErrorEarthZ = PayloadFieldDecoder.decodeInt16(input);
+        int sueOscFails = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuVelocityX = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuVelocityY = PayloadFieldDecoder.decodeInt16(input);
+        int sueImuVelocityZ = PayloadFieldDecoder.decodeInt16(input);
+        int sueWaypointGoalX = PayloadFieldDecoder.decodeInt16(input);
+        int sueWaypointGoalY = PayloadFieldDecoder.decodeInt16(input);
+        int sueWaypointGoalZ = PayloadFieldDecoder.decodeInt16(input);
+        int sueAeroX = PayloadFieldDecoder.decodeInt16(input);
+        int sueAeroY = PayloadFieldDecoder.decodeInt16(input);
+        int sueAeroZ = PayloadFieldDecoder.decodeInt16(input);
+        int sueBaromTemp = PayloadFieldDecoder.decodeInt16(input);
+        int sueBatVolt = PayloadFieldDecoder.decodeInt16(input);
+        int sueBatAmp = PayloadFieldDecoder.decodeInt16(input);
+        int sueBatAmpHours = PayloadFieldDecoder.decodeInt16(input);
+        int sueDesiredHeight = PayloadFieldDecoder.decodeInt16(input);
+        int sueMemoryStackFree = PayloadFieldDecoder.decodeInt16(input);
+        return new SerialUdbExtraF2B(sueTime, suePwmInput1, suePwmInput2, suePwmInput3, suePwmInput4, suePwmInput5, suePwmInput6, suePwmInput7, suePwmInput8, suePwmInput9, suePwmInput10, suePwmInput11, suePwmInput12, suePwmOutput1, suePwmOutput2, suePwmOutput3, suePwmOutput4, suePwmOutput5, suePwmOutput6, suePwmOutput7, suePwmOutput8, suePwmOutput9, suePwmOutput10, suePwmOutput11, suePwmOutput12, sueImuLocationX, sueImuLocationY, sueImuLocationZ, sueLocationErrorEarthX, sueLocationErrorEarthY, sueLocationErrorEarthZ, sueFlags, sueOscFails, sueImuVelocityX, sueImuVelocityY, sueImuVelocityZ, sueWaypointGoalX, sueWaypointGoalY, sueWaypointGoalZ, sueAeroX, sueAeroY, sueAeroZ, sueBaromTemp, sueBaromPress, sueBaromAlt, sueBatVolt, sueBatAmp, sueBatAmpHours, sueDesiredHeight, sueMemoryStackFree);
     }
 
     public static final class Builder {

@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -338,6 +340,24 @@ public final class BatteryStatus {
                  + ", voltagesExt=" + voltagesExt
                  + ", mode=" + mode
                  + ", faultBitmask=" + faultBitmask + "}";
+    }
+
+    public static BatteryStatus deserialize(ByteBuffer input) {
+        int currentConsumed = PayloadFieldDecoder.decodeInt32(input);
+        int energyConsumed = PayloadFieldDecoder.decodeInt32(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        List<Integer> voltages = PayloadFieldDecoder.decodeUint16Array(input, 20);
+        int currentBattery = PayloadFieldDecoder.decodeInt16(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavBatteryFunction> batteryFunction = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavBatteryFunction.class, input, 1);
+        EnumValue<MavBatteryType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavBatteryType.class, input, 1);
+        int batteryRemaining = PayloadFieldDecoder.decodeInt8(input);
+        int timeRemaining = PayloadFieldDecoder.decodeInt32(input);
+        EnumValue<MavBatteryChargeState> chargeState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavBatteryChargeState.class, input, 1);
+        List<Integer> voltagesExt = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        EnumValue<MavBatteryMode> mode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavBatteryMode.class, input, 1);
+        EnumValue<MavBatteryFault> faultBitmask = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavBatteryFault.class, input, 4);
+        return new BatteryStatus(id, batteryFunction, type, temperature, voltages, currentBattery, currentConsumed, energyConsumed, batteryRemaining, timeRemaining, chargeState, voltagesExt, mode, faultBitmask);
     }
 
     public static final class Builder {

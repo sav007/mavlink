@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class Debug {
         return "Debug{timeBootMs=" + timeBootMs
                  + ", ind=" + ind
                  + ", value=" + value + "}";
+    }
+
+    public static Debug deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float value = PayloadFieldDecoder.decodeFloat(input);
+        int ind = PayloadFieldDecoder.decodeUint8(input);
+        return new Debug(timeBootMs, ind, value);
     }
 
     public static final class Builder {

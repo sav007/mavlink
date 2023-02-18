@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -342,6 +344,26 @@ public final class HilSensor {
                  + ", temperature=" + temperature
                  + ", fieldsUpdated=" + fieldsUpdated
                  + ", id=" + id + "}";
+    }
+
+    public static HilSensor deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float xacc = PayloadFieldDecoder.decodeFloat(input);
+        float yacc = PayloadFieldDecoder.decodeFloat(input);
+        float zacc = PayloadFieldDecoder.decodeFloat(input);
+        float xgyro = PayloadFieldDecoder.decodeFloat(input);
+        float ygyro = PayloadFieldDecoder.decodeFloat(input);
+        float zgyro = PayloadFieldDecoder.decodeFloat(input);
+        float xmag = PayloadFieldDecoder.decodeFloat(input);
+        float ymag = PayloadFieldDecoder.decodeFloat(input);
+        float zmag = PayloadFieldDecoder.decodeFloat(input);
+        float absPressure = PayloadFieldDecoder.decodeFloat(input);
+        float diffPressure = PayloadFieldDecoder.decodeFloat(input);
+        float pressureAlt = PayloadFieldDecoder.decodeFloat(input);
+        float temperature = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<HilSensorUpdatedFlags> fieldsUpdated = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.HilSensorUpdatedFlags.class, input, 4);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        return new HilSensor(timeUsec, xacc, yacc, zacc, xgyro, ygyro, zgyro, xmag, ymag, zmag, absPressure, diffPressure, pressureAlt, temperature, fieldsUpdated, id);
     }
 
     public static final class Builder {

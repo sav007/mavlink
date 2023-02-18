@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -163,6 +165,16 @@ public final class CanFilterModify {
                  + ", operation=" + operation
                  + ", numIds=" + numIds
                  + ", ids=" + ids + "}";
+    }
+
+    public static CanFilterModify deserialize(ByteBuffer input) {
+        List<Integer> ids = PayloadFieldDecoder.decodeUint16Array(input, 32);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int bus = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<CanFilterOp> operation = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CanFilterOp.class, input, 1);
+        int numIds = PayloadFieldDecoder.decodeUint8(input);
+        return new CanFilterModify(targetSystem, targetComponent, bus, operation, numIds, ids);
     }
 
     public static final class Builder {

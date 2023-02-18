@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -500,6 +502,35 @@ public final class FwSoaringData {
                  + ", debugvar2=" + debugvar2
                  + ", controlmode=" + controlmode
                  + ", valid=" + valid + "}";
+    }
+
+    public static FwSoaringData deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger timestampmodechanged = PayloadFieldDecoder.decodeUint64(input);
+        float xw = PayloadFieldDecoder.decodeFloat(input);
+        float xr = PayloadFieldDecoder.decodeFloat(input);
+        float xlat = PayloadFieldDecoder.decodeFloat(input);
+        float xlon = PayloadFieldDecoder.decodeFloat(input);
+        float varw = PayloadFieldDecoder.decodeFloat(input);
+        float varr = PayloadFieldDecoder.decodeFloat(input);
+        float varlat = PayloadFieldDecoder.decodeFloat(input);
+        float varlon = PayloadFieldDecoder.decodeFloat(input);
+        float loiterradius = PayloadFieldDecoder.decodeFloat(input);
+        float loiterdirection = PayloadFieldDecoder.decodeFloat(input);
+        float disttosoarpoint = PayloadFieldDecoder.decodeFloat(input);
+        float vsinkexp = PayloadFieldDecoder.decodeFloat(input);
+        float z1Localupdraftspeed = PayloadFieldDecoder.decodeFloat(input);
+        float z2Deltaroll = PayloadFieldDecoder.decodeFloat(input);
+        float z1Exp = PayloadFieldDecoder.decodeFloat(input);
+        float z2Exp = PayloadFieldDecoder.decodeFloat(input);
+        float thermalgsnorth = PayloadFieldDecoder.decodeFloat(input);
+        float thermalgseast = PayloadFieldDecoder.decodeFloat(input);
+        float tseDot = PayloadFieldDecoder.decodeFloat(input);
+        float debugvar1 = PayloadFieldDecoder.decodeFloat(input);
+        float debugvar2 = PayloadFieldDecoder.decodeFloat(input);
+        int controlmode = PayloadFieldDecoder.decodeUint8(input);
+        int valid = PayloadFieldDecoder.decodeUint8(input);
+        return new FwSoaringData(timestamp, timestampmodechanged, xw, xr, xlat, xlon, varw, varr, varlat, varlon, loiterradius, loiterdirection, disttosoarpoint, vsinkexp, z1Localupdraftspeed, z2Deltaroll, z1Exp, z2Exp, thermalgsnorth, thermalgseast, tseDot, debugvar1, debugvar2, controlmode, valid);
     }
 
     public static final class Builder {

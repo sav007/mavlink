@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -82,6 +84,12 @@ public final class SystemTime {
     public String toString() {
         return "SystemTime{timeUnixUsec=" + timeUnixUsec
                  + ", timeBootMs=" + timeBootMs + "}";
+    }
+
+    public static SystemTime deserialize(ByteBuffer input) {
+        BigInteger timeUnixUsec = PayloadFieldDecoder.decodeUint64(input);
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        return new SystemTime(timeUnixUsec, timeBootMs);
     }
 
     public static final class Builder {

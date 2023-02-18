@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class Data96 {
         return "Data96{type=" + type
                  + ", len=" + len
                  + ", data=" + data + "}";
+    }
+
+    public static Data96 deserialize(ByteBuffer input) {
+        int type = PayloadFieldDecoder.decodeUint8(input);
+        int len = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 96);
+        return new Data96(type, len, data);
     }
 
     public static final class Builder {

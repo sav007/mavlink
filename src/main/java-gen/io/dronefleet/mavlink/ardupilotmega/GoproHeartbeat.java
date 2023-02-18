@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -105,6 +107,13 @@ public final class GoproHeartbeat {
         return "GoproHeartbeat{status=" + status
                  + ", captureMode=" + captureMode
                  + ", flags=" + flags + "}";
+    }
+
+    public static GoproHeartbeat deserialize(ByteBuffer input) {
+        EnumValue<GoproHeartbeatStatus> status = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.GoproHeartbeatStatus.class, input, 1);
+        EnumValue<GoproCaptureMode> captureMode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.GoproCaptureMode.class, input, 1);
+        EnumValue<GoproHeartbeatFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.GoproHeartbeatFlags.class, input, 1);
+        return new GoproHeartbeat(status, captureMode, flags);
     }
 
     public static final class Builder {

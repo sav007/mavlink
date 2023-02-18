@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class Rangefinder {
     public String toString() {
         return "Rangefinder{distance=" + distance
                  + ", voltage=" + voltage + "}";
+    }
+
+    public static Rangefinder deserialize(ByteBuffer input) {
+        float distance = PayloadFieldDecoder.decodeFloat(input);
+        float voltage = PayloadFieldDecoder.decodeFloat(input);
+        return new Rangefinder(distance, voltage);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -135,6 +137,15 @@ public final class SerialUdbExtraF18 {
                  + ", elevatorTrimNormal=" + elevatorTrimNormal
                  + ", elevatorTrimInverted=" + elevatorTrimInverted
                  + ", referenceSpeed=" + referenceSpeed + "}";
+    }
+
+    public static SerialUdbExtraF18 deserialize(ByteBuffer input) {
+        float angleOfAttackNormal = PayloadFieldDecoder.decodeFloat(input);
+        float angleOfAttackInverted = PayloadFieldDecoder.decodeFloat(input);
+        float elevatorTrimNormal = PayloadFieldDecoder.decodeFloat(input);
+        float elevatorTrimInverted = PayloadFieldDecoder.decodeFloat(input);
+        float referenceSpeed = PayloadFieldDecoder.decodeFloat(input);
+        return new SerialUdbExtraF18(angleOfAttackNormal, angleOfAttackInverted, elevatorTrimNormal, elevatorTrimInverted, referenceSpeed);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -190,6 +192,18 @@ public final class SerialUdbExtraF19 {
                  + ", sueThrottleReversed=" + sueThrottleReversed
                  + ", sueRudderOutputChannel=" + sueRudderOutputChannel
                  + ", sueRudderReversed=" + sueRudderReversed + "}";
+    }
+
+    public static SerialUdbExtraF19 deserialize(ByteBuffer input) {
+        int sueAileronOutputChannel = PayloadFieldDecoder.decodeUint8(input);
+        int sueAileronReversed = PayloadFieldDecoder.decodeUint8(input);
+        int sueElevatorOutputChannel = PayloadFieldDecoder.decodeUint8(input);
+        int sueElevatorReversed = PayloadFieldDecoder.decodeUint8(input);
+        int sueThrottleOutputChannel = PayloadFieldDecoder.decodeUint8(input);
+        int sueThrottleReversed = PayloadFieldDecoder.decodeUint8(input);
+        int sueRudderOutputChannel = PayloadFieldDecoder.decodeUint8(input);
+        int sueRudderReversed = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialUdbExtraF19(sueAileronOutputChannel, sueAileronReversed, sueElevatorOutputChannel, sueElevatorReversed, sueThrottleOutputChannel, sueThrottleReversed, sueRudderOutputChannel, sueRudderReversed);
     }
 
     public static final class Builder {

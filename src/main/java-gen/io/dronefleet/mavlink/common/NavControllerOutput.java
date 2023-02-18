@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -191,6 +193,18 @@ public final class NavControllerOutput {
                  + ", altError=" + altError
                  + ", aspdError=" + aspdError
                  + ", xtrackError=" + xtrackError + "}";
+    }
+
+    public static NavControllerOutput deserialize(ByteBuffer input) {
+        float navRoll = PayloadFieldDecoder.decodeFloat(input);
+        float navPitch = PayloadFieldDecoder.decodeFloat(input);
+        float altError = PayloadFieldDecoder.decodeFloat(input);
+        float aspdError = PayloadFieldDecoder.decodeFloat(input);
+        float xtrackError = PayloadFieldDecoder.decodeFloat(input);
+        int navBearing = PayloadFieldDecoder.decodeInt16(input);
+        int targetBearing = PayloadFieldDecoder.decodeInt16(input);
+        int wpDist = PayloadFieldDecoder.decodeUint16(input);
+        return new NavControllerOutput(navRoll, navPitch, navBearing, targetBearing, wpDist, altError, aspdError, xtrackError);
     }
 
     public static final class Builder {

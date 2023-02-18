@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -136,6 +138,15 @@ public final class SensorAirflowAngles {
                  + ", angleofattackValid=" + angleofattackValid
                  + ", sideslip=" + sideslip
                  + ", sideslipValid=" + sideslipValid + "}";
+    }
+
+    public static SensorAirflowAngles deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float angleofattack = PayloadFieldDecoder.decodeFloat(input);
+        float sideslip = PayloadFieldDecoder.decodeFloat(input);
+        int angleofattackValid = PayloadFieldDecoder.decodeUint8(input);
+        int sideslipValid = PayloadFieldDecoder.decodeUint8(input);
+        return new SensorAirflowAngles(timestamp, angleofattack, angleofattackValid, sideslip, sideslipValid);
     }
 
     public static final class Builder {

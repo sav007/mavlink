@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -161,6 +163,16 @@ public final class OpenDroneIdMessagePack {
                  + ", singleMessageSize=" + singleMessageSize
                  + ", msgPackSize=" + msgPackSize
                  + ", messages=" + messages + "}";
+    }
+
+    public static OpenDroneIdMessagePack deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] idOrMac = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        int singleMessageSize = PayloadFieldDecoder.decodeUint8(input);
+        int msgPackSize = PayloadFieldDecoder.decodeUint8(input);
+        byte[] messages = PayloadFieldDecoder.decodeUint8Array(input, 225);
+        return new OpenDroneIdMessagePack(targetSystem, targetComponent, idOrMac, singleMessageSize, msgPackSize, messages);
     }
 
     public static final class Builder {

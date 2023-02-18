@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -307,6 +309,24 @@ public final class CameraFeedback {
                  + ", focLen=" + focLen
                  + ", flags=" + flags
                  + ", completedCaptures=" + completedCaptures + "}";
+    }
+
+    public static CameraFeedback deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lng = PayloadFieldDecoder.decodeInt32(input);
+        float altMsl = PayloadFieldDecoder.decodeFloat(input);
+        float altRel = PayloadFieldDecoder.decodeFloat(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float focLen = PayloadFieldDecoder.decodeFloat(input);
+        int imgIdx = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int camIdx = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<CameraFeedbackFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.CameraFeedbackFlags.class, input, 1);
+        int completedCaptures = PayloadFieldDecoder.decodeUint16(input);
+        return new CameraFeedback(timeUsec, targetSystem, camIdx, imgIdx, lat, lng, altMsl, altRel, roll, pitch, yaw, focLen, flags, completedCaptures);
     }
 
     public static final class Builder {

@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -306,6 +308,24 @@ public final class PositionTargetLocalNed {
                  + ", afz=" + afz
                  + ", yaw=" + yaw
                  + ", yawRate=" + yawRate + "}";
+    }
+
+    public static PositionTargetLocalNed deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        float vx = PayloadFieldDecoder.decodeFloat(input);
+        float vy = PayloadFieldDecoder.decodeFloat(input);
+        float vz = PayloadFieldDecoder.decodeFloat(input);
+        float afx = PayloadFieldDecoder.decodeFloat(input);
+        float afy = PayloadFieldDecoder.decodeFloat(input);
+        float afz = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float yawRate = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<PositionTargetTypemask> typeMask = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.PositionTargetTypemask.class, input, 2);
+        EnumValue<MavFrame> coordinateFrame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        return new PositionTargetLocalNed(timeBootMs, coordinateFrame, typeMask, x, y, z, vx, vy, vz, afx, afy, afz, yaw, yawRate);
     }
 
     public static final class Builder {

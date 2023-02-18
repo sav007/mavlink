@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Float;
 import java.lang.Integer;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -153,6 +155,15 @@ public final class EscStatus {
                  + ", rpm=" + rpm
                  + ", voltage=" + voltage
                  + ", current=" + current + "}";
+    }
+
+    public static EscStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Integer> rpm = PayloadFieldDecoder.decodeInt32Array(input, 16);
+        List<Float> voltage = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        List<Float> current = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        int index = PayloadFieldDecoder.decodeUint8(input);
+        return new EscStatus(index, timeUsec, rpm, voltage, current);
     }
 
     public static final class Builder {

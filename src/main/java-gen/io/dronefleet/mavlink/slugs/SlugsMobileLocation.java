@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class SlugsMobileLocation {
         return "SlugsMobileLocation{target=" + target
                  + ", latitude=" + latitude
                  + ", longitude=" + longitude + "}";
+    }
+
+    public static SlugsMobileLocation deserialize(ByteBuffer input) {
+        float latitude = PayloadFieldDecoder.decodeFloat(input);
+        float longitude = PayloadFieldDecoder.decodeFloat(input);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        return new SlugsMobileLocation(target, latitude, longitude);
     }
 
     public static final class Builder {

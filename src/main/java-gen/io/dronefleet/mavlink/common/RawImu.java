@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -279,6 +281,22 @@ public final class RawImu {
                  + ", zmag=" + zmag
                  + ", id=" + id
                  + ", temperature=" + temperature + "}";
+    }
+
+    public static RawImu deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int xacc = PayloadFieldDecoder.decodeInt16(input);
+        int yacc = PayloadFieldDecoder.decodeInt16(input);
+        int zacc = PayloadFieldDecoder.decodeInt16(input);
+        int xgyro = PayloadFieldDecoder.decodeInt16(input);
+        int ygyro = PayloadFieldDecoder.decodeInt16(input);
+        int zgyro = PayloadFieldDecoder.decodeInt16(input);
+        int xmag = PayloadFieldDecoder.decodeInt16(input);
+        int ymag = PayloadFieldDecoder.decodeInt16(input);
+        int zmag = PayloadFieldDecoder.decodeInt16(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        return new RawImu(timeUsec, xacc, yacc, zacc, xgyro, ygyro, zgyro, xmag, ymag, zmag, id, temperature);
     }
 
     public static final class Builder {

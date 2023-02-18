@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class AsluavDialect extends AbstractMavlinkDialect {
     /**
@@ -40,7 +43,27 @@ public final class AsluavDialect extends AbstractMavlinkDialect {
             .put(8016, SensorAirflowAngles.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(CommandIntStamped.class, CommandIntStamped::deserialize)
+            .put(CommandLongStamped.class, CommandLongStamped::deserialize)
+            .put(SensPower.class, SensPower::deserialize)
+            .put(SensMppt.class, SensMppt::deserialize)
+            .put(AslctrlData.class, AslctrlData::deserialize)
+            .put(AslctrlDebug.class, AslctrlDebug::deserialize)
+            .put(AsluavStatus.class, AsluavStatus::deserialize)
+            .put(EkfExt.class, EkfExt::deserialize)
+            .put(AslObctrl.class, AslObctrl::deserialize)
+            .put(SensAtmos.class, SensAtmos::deserialize)
+            .put(SensBatmon.class, SensBatmon::deserialize)
+            .put(FwSoaringData.class, FwSoaringData::deserialize)
+            .put(SensorpodStatus.class, SensorpodStatus::deserialize)
+            .put(SensPowerBoard.class, SensPowerBoard::deserialize)
+            .put(GsmLinkStatus.class, GsmLinkStatus::deserialize)
+            .put(SatcomLinkStatus.class, SatcomLinkStatus::deserialize)
+            .put(SensorAirflowAngles.class, SensorAirflowAngles::deserialize)
+            .build();
+
     public AsluavDialect() {
-        super("asluav", dependencies, messages);
+        super("asluav", dependencies, messages, deserializers);
     }
 }

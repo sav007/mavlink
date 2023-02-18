@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -173,6 +175,17 @@ public final class Vibration {
                  + ", clipping0=" + clipping0
                  + ", clipping1=" + clipping1
                  + ", clipping2=" + clipping2 + "}";
+    }
+
+    public static Vibration deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float vibrationX = PayloadFieldDecoder.decodeFloat(input);
+        float vibrationY = PayloadFieldDecoder.decodeFloat(input);
+        float vibrationZ = PayloadFieldDecoder.decodeFloat(input);
+        long clipping0 = PayloadFieldDecoder.decodeUint32(input);
+        long clipping1 = PayloadFieldDecoder.decodeUint32(input);
+        long clipping2 = PayloadFieldDecoder.decodeUint32(input);
+        return new Vibration(timeUsec, vibrationX, vibrationY, vibrationZ, clipping0, clipping1, clipping2);
     }
 
     public static final class Builder {

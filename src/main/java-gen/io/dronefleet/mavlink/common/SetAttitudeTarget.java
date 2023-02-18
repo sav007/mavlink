@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -236,6 +238,20 @@ public final class SetAttitudeTarget {
                  + ", bodyYawRate=" + bodyYawRate
                  + ", thrust=" + thrust
                  + ", thrustBody=" + thrustBody + "}";
+    }
+
+    public static SetAttitudeTarget deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float bodyRollRate = PayloadFieldDecoder.decodeFloat(input);
+        float bodyPitchRate = PayloadFieldDecoder.decodeFloat(input);
+        float bodyYawRate = PayloadFieldDecoder.decodeFloat(input);
+        float thrust = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<AttitudeTargetTypemask> typeMask = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.AttitudeTargetTypemask.class, input, 1);
+        List<Float> thrustBody = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        return new SetAttitudeTarget(timeBootMs, targetSystem, targetComponent, typeMask, q, bodyRollRate, bodyPitchRate, bodyYawRate, thrust, thrustBody);
     }
 
     public static final class Builder {

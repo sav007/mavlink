@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -88,6 +90,12 @@ public final class MessageInterval {
     public String toString() {
         return "MessageInterval{messageId=" + messageId
                  + ", intervalUs=" + intervalUs + "}";
+    }
+
+    public static MessageInterval deserialize(ByteBuffer input) {
+        int intervalUs = PayloadFieldDecoder.decodeInt32(input);
+        int messageId = PayloadFieldDecoder.decodeUint16(input);
+        return new MessageInterval(messageId, intervalUs);
     }
 
     public static final class Builder {

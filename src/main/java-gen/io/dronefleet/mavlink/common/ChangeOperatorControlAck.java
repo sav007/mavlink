@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class ChangeOperatorControlAck {
         return "ChangeOperatorControlAck{gcsSystemId=" + gcsSystemId
                  + ", controlRequest=" + controlRequest
                  + ", ack=" + ack + "}";
+    }
+
+    public static ChangeOperatorControlAck deserialize(ByteBuffer input) {
+        int gcsSystemId = PayloadFieldDecoder.decodeUint8(input);
+        int controlRequest = PayloadFieldDecoder.decodeUint8(input);
+        int ack = PayloadFieldDecoder.decodeUint8(input);
+        return new ChangeOperatorControlAck(gcsSystemId, controlRequest, ack);
     }
 
     public static final class Builder {

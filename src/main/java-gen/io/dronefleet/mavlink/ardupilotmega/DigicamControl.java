@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -228,6 +230,20 @@ public final class DigicamControl {
                  + ", commandId=" + commandId
                  + ", extraParam=" + extraParam
                  + ", extraValue=" + extraValue + "}";
+    }
+
+    public static DigicamControl deserialize(ByteBuffer input) {
+        float extraValue = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int session = PayloadFieldDecoder.decodeUint8(input);
+        int zoomPos = PayloadFieldDecoder.decodeUint8(input);
+        int zoomStep = PayloadFieldDecoder.decodeInt8(input);
+        int focusLock = PayloadFieldDecoder.decodeUint8(input);
+        int shot = PayloadFieldDecoder.decodeUint8(input);
+        int commandId = PayloadFieldDecoder.decodeUint8(input);
+        int extraParam = PayloadFieldDecoder.decodeUint8(input);
+        return new DigicamControl(targetSystem, targetComponent, session, zoomPos, zoomStep, focusLock, shot, commandId, extraParam, extraValue);
     }
 
     public static final class Builder {

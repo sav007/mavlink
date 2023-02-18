@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -162,6 +164,16 @@ public final class AttitudeQuaternionCov {
                  + ", pitchspeed=" + pitchspeed
                  + ", yawspeed=" + yawspeed
                  + ", covariance=" + covariance + "}";
+    }
+
+    public static AttitudeQuaternionCov deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float rollspeed = PayloadFieldDecoder.decodeFloat(input);
+        float pitchspeed = PayloadFieldDecoder.decodeFloat(input);
+        float yawspeed = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> covariance = PayloadFieldDecoder.decodeFloatArray(input, 36);
+        return new AttitudeQuaternionCov(timeUsec, q, rollspeed, pitchspeed, yawspeed, covariance);
     }
 
     public static final class Builder {

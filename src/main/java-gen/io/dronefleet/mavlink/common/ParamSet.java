@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -153,6 +155,15 @@ public final class ParamSet {
                  + ", paramId=" + paramId
                  + ", paramValue=" + paramValue
                  + ", paramType=" + paramType + "}";
+    }
+
+    public static ParamSet deserialize(ByteBuffer input) {
+        float paramValue = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        String paramId = PayloadFieldDecoder.decodeString(input, 16);
+        EnumValue<MavParamType> paramType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavParamType.class, input, 1);
+        return new ParamSet(targetSystem, targetComponent, paramId, paramValue, paramType);
     }
 
     public static final class Builder {

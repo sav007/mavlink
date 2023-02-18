@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class FlexifunctionSet {
     public String toString() {
         return "FlexifunctionSet{targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent + "}";
+    }
+
+    public static FlexifunctionSet deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new FlexifunctionSet(targetSystem, targetComponent);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -270,6 +272,22 @@ public final class HilOpticalFlow {
                  + ", quality=" + quality
                  + ", timeDeltaDistanceUs=" + timeDeltaDistanceUs
                  + ", distance=" + distance + "}";
+    }
+
+    public static HilOpticalFlow deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long integrationTimeUs = PayloadFieldDecoder.decodeUint32(input);
+        float integratedX = PayloadFieldDecoder.decodeFloat(input);
+        float integratedY = PayloadFieldDecoder.decodeFloat(input);
+        float integratedXgyro = PayloadFieldDecoder.decodeFloat(input);
+        float integratedYgyro = PayloadFieldDecoder.decodeFloat(input);
+        float integratedZgyro = PayloadFieldDecoder.decodeFloat(input);
+        long timeDeltaDistanceUs = PayloadFieldDecoder.decodeUint32(input);
+        float distance = PayloadFieldDecoder.decodeFloat(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        int sensorId = PayloadFieldDecoder.decodeUint8(input);
+        int quality = PayloadFieldDecoder.decodeUint8(input);
+        return new HilOpticalFlow(timeUsec, sensorId, integrationTimeUs, integratedX, integratedY, integratedXgyro, integratedYgyro, integratedZgyro, temperature, quality, timeDeltaDistanceUs, distance);
     }
 
     public static final class Builder {

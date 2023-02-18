@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
@@ -12,6 +13,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -232,6 +234,19 @@ public final class EscInfo {
                  + ", failureFlags=" + failureFlags
                  + ", errorCount=" + errorCount
                  + ", temperature=" + temperature + "}";
+    }
+
+    public static EscInfo deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Long> errorCount = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        int counter = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<EscFailureFlags> failureFlags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.EscFailureFlags.class, input, 8);
+        List<Integer> temperature = PayloadFieldDecoder.decodeInt16Array(input, 8);
+        int index = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<EscConnectionType> connectionType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.EscConnectionType.class, input, 1);
+        int info = PayloadFieldDecoder.decodeUint8(input);
+        return new EscInfo(index, timeUsec, counter, count, connectionType, info, failureFlags, errorCount, temperature);
     }
 
     public static final class Builder {

@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -84,6 +86,12 @@ public final class CtrlSrfcPt {
     public String toString() {
         return "CtrlSrfcPt{target=" + target
                  + ", bitfieldpt=" + bitfieldpt + "}";
+    }
+
+    public static CtrlSrfcPt deserialize(ByteBuffer input) {
+        EnumValue<ControlSurfaceFlag> bitfieldpt = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.slugs.ControlSurfaceFlag.class, input, 2);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        return new CtrlSrfcPt(target, bitfieldpt);
     }
 
     public static final class Builder {

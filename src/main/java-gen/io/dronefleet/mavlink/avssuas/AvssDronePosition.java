@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.avssuas;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -157,6 +159,16 @@ public final class AvssDronePosition {
                  + ", alt=" + alt
                  + ", groundAlt=" + groundAlt
                  + ", barometerAlt=" + barometerAlt + "}";
+    }
+
+    public static AvssDronePosition deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        float groundAlt = PayloadFieldDecoder.decodeFloat(input);
+        float barometerAlt = PayloadFieldDecoder.decodeFloat(input);
+        return new AvssDronePosition(timeBootMs, lat, lon, alt, groundAlt, barometerAlt);
     }
 
     public static final class Builder {

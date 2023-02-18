@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class UavionixDialect extends AbstractMavlinkDialect {
     /**
@@ -26,7 +29,13 @@ public final class UavionixDialect extends AbstractMavlinkDialect {
             .put(10003, UavionixAdsbTransceiverHealthReport.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(UavionixAdsbOutCfg.class, UavionixAdsbOutCfg::deserialize)
+            .put(UavionixAdsbOutDynamic.class, UavionixAdsbOutDynamic::deserialize)
+            .put(UavionixAdsbTransceiverHealthReport.class, UavionixAdsbTransceiverHealthReport::deserialize)
+            .build();
+
     public UavionixDialect() {
-        super("uavionix", dependencies, messages);
+        super("uavionix", dependencies, messages, deserializers);
     }
 }

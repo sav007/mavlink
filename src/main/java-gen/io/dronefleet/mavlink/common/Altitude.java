@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -186,6 +188,17 @@ public final class Altitude {
                  + ", altitudeRelative=" + altitudeRelative
                  + ", altitudeTerrain=" + altitudeTerrain
                  + ", bottomClearance=" + bottomClearance + "}";
+    }
+
+    public static Altitude deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float altitudeMonotonic = PayloadFieldDecoder.decodeFloat(input);
+        float altitudeAmsl = PayloadFieldDecoder.decodeFloat(input);
+        float altitudeLocal = PayloadFieldDecoder.decodeFloat(input);
+        float altitudeRelative = PayloadFieldDecoder.decodeFloat(input);
+        float altitudeTerrain = PayloadFieldDecoder.decodeFloat(input);
+        float bottomClearance = PayloadFieldDecoder.decodeFloat(input);
+        return new Altitude(timeUsec, altitudeMonotonic, altitudeAmsl, altitudeLocal, altitudeRelative, altitudeTerrain, bottomClearance);
     }
 
     public static final class Builder {

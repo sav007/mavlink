@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -171,6 +173,17 @@ public final class ManualSetpoint {
                  + ", thrust=" + thrust
                  + ", modeSwitch=" + modeSwitch
                  + ", manualOverrideSwitch=" + manualOverrideSwitch + "}";
+    }
+
+    public static ManualSetpoint deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float thrust = PayloadFieldDecoder.decodeFloat(input);
+        int modeSwitch = PayloadFieldDecoder.decodeUint8(input);
+        int manualOverrideSwitch = PayloadFieldDecoder.decodeUint8(input);
+        return new ManualSetpoint(timeBootMs, roll, pitch, yaw, thrust, modeSwitch, manualOverrideSwitch);
     }
 
     public static final class Builder {

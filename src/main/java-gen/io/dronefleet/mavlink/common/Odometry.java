@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -398,6 +400,28 @@ public final class Odometry {
                  + ", resetCounter=" + resetCounter
                  + ", estimatorType=" + estimatorType
                  + ", quality=" + quality + "}";
+    }
+
+    public static Odometry deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float vx = PayloadFieldDecoder.decodeFloat(input);
+        float vy = PayloadFieldDecoder.decodeFloat(input);
+        float vz = PayloadFieldDecoder.decodeFloat(input);
+        float rollspeed = PayloadFieldDecoder.decodeFloat(input);
+        float pitchspeed = PayloadFieldDecoder.decodeFloat(input);
+        float yawspeed = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> poseCovariance = PayloadFieldDecoder.decodeFloatArray(input, 84);
+        List<Float> velocityCovariance = PayloadFieldDecoder.decodeFloatArray(input, 84);
+        EnumValue<MavFrame> frameId = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        EnumValue<MavFrame> childFrameId = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        int resetCounter = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavEstimatorType> estimatorType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavEstimatorType.class, input, 1);
+        int quality = PayloadFieldDecoder.decodeInt8(input);
+        return new Odometry(timeUsec, frameId, childFrameId, x, y, z, q, vx, vy, vz, rollspeed, pitchspeed, yawspeed, poseCovariance, velocityCovariance, resetCounter, estimatorType, quality);
     }
 
     public static final class Builder {

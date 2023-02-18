@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class MatrixpilotDialect extends AbstractMavlinkDialect {
     /**
@@ -50,7 +53,37 @@ public final class MatrixpilotDialect extends AbstractMavlinkDialect {
             .put(188, SerialUdbExtraF22.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(FlexifunctionSet.class, FlexifunctionSet::deserialize)
+            .put(FlexifunctionReadReq.class, FlexifunctionReadReq::deserialize)
+            .put(FlexifunctionBufferFunction.class, FlexifunctionBufferFunction::deserialize)
+            .put(FlexifunctionBufferFunctionAck.class, FlexifunctionBufferFunctionAck::deserialize)
+            .put(FlexifunctionDirectory.class, FlexifunctionDirectory::deserialize)
+            .put(FlexifunctionDirectoryAck.class, FlexifunctionDirectoryAck::deserialize)
+            .put(FlexifunctionCommand.class, FlexifunctionCommand::deserialize)
+            .put(FlexifunctionCommandAck.class, FlexifunctionCommandAck::deserialize)
+            .put(SerialUdbExtraF2A.class, SerialUdbExtraF2A::deserialize)
+            .put(SerialUdbExtraF2B.class, SerialUdbExtraF2B::deserialize)
+            .put(SerialUdbExtraF4.class, SerialUdbExtraF4::deserialize)
+            .put(SerialUdbExtraF5.class, SerialUdbExtraF5::deserialize)
+            .put(SerialUdbExtraF6.class, SerialUdbExtraF6::deserialize)
+            .put(SerialUdbExtraF7.class, SerialUdbExtraF7::deserialize)
+            .put(SerialUdbExtraF8.class, SerialUdbExtraF8::deserialize)
+            .put(SerialUdbExtraF13.class, SerialUdbExtraF13::deserialize)
+            .put(SerialUdbExtraF14.class, SerialUdbExtraF14::deserialize)
+            .put(SerialUdbExtraF15.class, SerialUdbExtraF15::deserialize)
+            .put(SerialUdbExtraF16.class, SerialUdbExtraF16::deserialize)
+            .put(Altitudes.class, Altitudes::deserialize)
+            .put(Airspeeds.class, Airspeeds::deserialize)
+            .put(SerialUdbExtraF17.class, SerialUdbExtraF17::deserialize)
+            .put(SerialUdbExtraF18.class, SerialUdbExtraF18::deserialize)
+            .put(SerialUdbExtraF19.class, SerialUdbExtraF19::deserialize)
+            .put(SerialUdbExtraF20.class, SerialUdbExtraF20::deserialize)
+            .put(SerialUdbExtraF21.class, SerialUdbExtraF21::deserialize)
+            .put(SerialUdbExtraF22.class, SerialUdbExtraF22::deserialize)
+            .build();
+
     public MatrixpilotDialect() {
-        super("matrixpilot", dependencies, messages);
+        super("matrixpilot", dependencies, messages, deserializers);
     }
 }

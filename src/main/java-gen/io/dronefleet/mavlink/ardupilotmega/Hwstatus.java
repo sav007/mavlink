@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class Hwstatus {
     public String toString() {
         return "Hwstatus{vcc=" + vcc
                  + ", i2cerr=" + i2cerr + "}";
+    }
+
+    public static Hwstatus deserialize(ByteBuffer input) {
+        int vcc = PayloadFieldDecoder.decodeUint16(input);
+        int i2cerr = PayloadFieldDecoder.decodeUint8(input);
+        return new Hwstatus(vcc, i2cerr);
     }
 
     public static final class Builder {

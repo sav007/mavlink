@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ualberta;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -172,6 +174,17 @@ public final class NavFilterBias {
                  + ", gyro0=" + gyro0
                  + ", gyro1=" + gyro1
                  + ", gyro2=" + gyro2 + "}";
+    }
+
+    public static NavFilterBias deserialize(ByteBuffer input) {
+        BigInteger usec = PayloadFieldDecoder.decodeUint64(input);
+        float accel0 = PayloadFieldDecoder.decodeFloat(input);
+        float accel1 = PayloadFieldDecoder.decodeFloat(input);
+        float accel2 = PayloadFieldDecoder.decodeFloat(input);
+        float gyro0 = PayloadFieldDecoder.decodeFloat(input);
+        float gyro1 = PayloadFieldDecoder.decodeFloat(input);
+        float gyro2 = PayloadFieldDecoder.decodeFloat(input);
+        return new NavFilterBias(usec, accel0, accel1, accel2, gyro0, gyro1, gyro2);
     }
 
     public static final class Builder {

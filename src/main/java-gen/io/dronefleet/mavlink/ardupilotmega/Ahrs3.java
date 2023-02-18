@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -227,6 +229,20 @@ public final class Ahrs3 {
                  + ", v2=" + v2
                  + ", v3=" + v3
                  + ", v4=" + v4 + "}";
+    }
+
+    public static Ahrs3 deserialize(ByteBuffer input) {
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float altitude = PayloadFieldDecoder.decodeFloat(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lng = PayloadFieldDecoder.decodeInt32(input);
+        float v1 = PayloadFieldDecoder.decodeFloat(input);
+        float v2 = PayloadFieldDecoder.decodeFloat(input);
+        float v3 = PayloadFieldDecoder.decodeFloat(input);
+        float v4 = PayloadFieldDecoder.decodeFloat(input);
+        return new Ahrs3(roll, pitch, yaw, altitude, lat, lng, v1, v2, v3, v4);
     }
 
     public static final class Builder {

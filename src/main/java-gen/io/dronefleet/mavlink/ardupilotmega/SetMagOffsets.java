@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -141,6 +143,15 @@ public final class SetMagOffsets {
                  + ", magOfsX=" + magOfsX
                  + ", magOfsY=" + magOfsY
                  + ", magOfsZ=" + magOfsZ + "}";
+    }
+
+    public static SetMagOffsets deserialize(ByteBuffer input) {
+        int magOfsX = PayloadFieldDecoder.decodeInt16(input);
+        int magOfsY = PayloadFieldDecoder.decodeInt16(input);
+        int magOfsZ = PayloadFieldDecoder.decodeInt16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new SetMagOffsets(targetSystem, targetComponent, magOfsX, magOfsY, magOfsZ);
     }
 
     public static final class Builder {

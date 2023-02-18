@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -299,6 +301,22 @@ public final class SetHomePosition {
                  + ", approachY=" + approachY
                  + ", approachZ=" + approachZ
                  + ", timeUsec=" + timeUsec + "}";
+    }
+
+    public static SetHomePosition deserialize(ByteBuffer input) {
+        int latitude = PayloadFieldDecoder.decodeInt32(input);
+        int longitude = PayloadFieldDecoder.decodeInt32(input);
+        int altitude = PayloadFieldDecoder.decodeInt32(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float approachX = PayloadFieldDecoder.decodeFloat(input);
+        float approachY = PayloadFieldDecoder.decodeFloat(input);
+        float approachZ = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        return new SetHomePosition(targetSystem, latitude, longitude, altitude, x, y, z, q, approachX, approachY, approachZ, timeUsec);
     }
 
     public static final class Builder {

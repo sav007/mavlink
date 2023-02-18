@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -181,6 +183,17 @@ public final class TrajectoryRepresentationBezier {
                  + ", posZ=" + posZ
                  + ", delta=" + delta
                  + ", posYaw=" + posYaw + "}";
+    }
+
+    public static TrajectoryRepresentationBezier deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> posX = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posY = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posZ = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> delta = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posYaw = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        int validPoints = PayloadFieldDecoder.decodeUint8(input);
+        return new TrajectoryRepresentationBezier(timeUsec, validPoints, posX, posY, posZ, delta, posYaw);
     }
 
     public static final class Builder {

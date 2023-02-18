@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -118,6 +120,14 @@ public final class SensorDiag {
                  + ", float2=" + float2
                  + ", int1=" + int1
                  + ", char1=" + char1 + "}";
+    }
+
+    public static SensorDiag deserialize(ByteBuffer input) {
+        float float1 = PayloadFieldDecoder.decodeFloat(input);
+        float float2 = PayloadFieldDecoder.decodeFloat(input);
+        int int1 = PayloadFieldDecoder.decodeInt16(input);
+        int char1 = PayloadFieldDecoder.decodeInt8(input);
+        return new SensorDiag(float1, float2, int1, char1);
     }
 
     public static final class Builder {

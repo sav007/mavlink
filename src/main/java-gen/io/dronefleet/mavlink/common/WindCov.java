@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -211,6 +213,19 @@ public final class WindCov {
                  + ", windAlt=" + windAlt
                  + ", horizAccuracy=" + horizAccuracy
                  + ", vertAccuracy=" + vertAccuracy + "}";
+    }
+
+    public static WindCov deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float windX = PayloadFieldDecoder.decodeFloat(input);
+        float windY = PayloadFieldDecoder.decodeFloat(input);
+        float windZ = PayloadFieldDecoder.decodeFloat(input);
+        float varHoriz = PayloadFieldDecoder.decodeFloat(input);
+        float varVert = PayloadFieldDecoder.decodeFloat(input);
+        float windAlt = PayloadFieldDecoder.decodeFloat(input);
+        float horizAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        float vertAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        return new WindCov(timeUsec, windX, windY, windZ, varHoriz, varVert, windAlt, horizAccuracy, vertAccuracy);
     }
 
     public static final class Builder {

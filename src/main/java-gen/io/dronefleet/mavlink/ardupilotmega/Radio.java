@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -171,6 +173,17 @@ public final class Radio {
                  + ", remnoise=" + remnoise
                  + ", rxerrors=" + rxerrors
                  + ", fixed=" + fixed + "}";
+    }
+
+    public static Radio deserialize(ByteBuffer input) {
+        int rxerrors = PayloadFieldDecoder.decodeUint16(input);
+        int fixed = PayloadFieldDecoder.decodeUint16(input);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        int remrssi = PayloadFieldDecoder.decodeUint8(input);
+        int txbuf = PayloadFieldDecoder.decodeUint8(input);
+        int noise = PayloadFieldDecoder.decodeUint8(input);
+        int remnoise = PayloadFieldDecoder.decodeUint8(input);
+        return new Radio(rssi, remrssi, txbuf, noise, remnoise, rxerrors, fixed);
     }
 
     public static final class Builder {

@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -217,6 +219,19 @@ public final class GlobalVisionPositionEstimate {
                  + ", yaw=" + yaw
                  + ", covariance=" + covariance
                  + ", resetCounter=" + resetCounter + "}";
+    }
+
+    public static GlobalVisionPositionEstimate deserialize(ByteBuffer input) {
+        BigInteger usec = PayloadFieldDecoder.decodeUint64(input);
+        float x = PayloadFieldDecoder.decodeFloat(input);
+        float y = PayloadFieldDecoder.decodeFloat(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> covariance = PayloadFieldDecoder.decodeFloatArray(input, 84);
+        int resetCounter = PayloadFieldDecoder.decodeUint8(input);
+        return new GlobalVisionPositionEstimate(usec, x, y, z, roll, pitch, yaw, covariance, resetCounter);
     }
 
     public static final class Builder {

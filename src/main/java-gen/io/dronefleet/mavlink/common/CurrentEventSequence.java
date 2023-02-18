@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -92,6 +94,12 @@ public final class CurrentEventSequence {
     public String toString() {
         return "CurrentEventSequence{sequence=" + sequence
                  + ", flags=" + flags + "}";
+    }
+
+    public static CurrentEventSequence deserialize(ByteBuffer input) {
+        int sequence = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavEventCurrentSequenceFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavEventCurrentSequenceFlags.class, input, 1);
+        return new CurrentEventSequence(sequence, flags);
     }
 
     public static final class Builder {

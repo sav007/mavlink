@@ -236,11 +236,13 @@ public class MavlinkConnection {
         try {
             MavlinkPacket packet;
             while ((packet = reader.next()) != null) {
-                Class<?> messageType = getMessageType(packet, Arrays.asList(
-                        systemDialects.getOrDefault(packet.getSystemId(), defaultDialect),
-                        COMMON_DIALECT));
+                List<MavlinkDialect> supportedDialects = Arrays.asList(
+                    systemDialects.getOrDefault(packet.getSystemId(), defaultDialect),
+                    COMMON_DIALECT
+                );
+                Class<?> messageType = getMessageType(packet, supportedDialects);
                 if (messageType != null) {
-                    Object payload = deserializer.deserialize(packet.getPayload(), messageType);
+                    Object payload = deserializePayload(messageType, packet.getPayload(), supportedDialects);
                     if (payload instanceof Heartbeat) {
                         Heartbeat heartbeat = (Heartbeat) payload;
                         if (dialects.containsKey(heartbeat.autopilot().entry())) {
@@ -407,5 +409,18 @@ public class MavlinkConnection {
             }
         }
         return null;
+    }
+
+    private Object deserializePayload(Class<?> messageType, byte[] packetPayload, List<MavlinkDialect> dialects) {
+        for (MavlinkDialect dialect : dialects) {
+            if (dialect.canDeserializeMessage(messageType)) {
+                try {
+                    return dialect.deserializeMessage(messageType, packetPayload);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return deserializer.deserialize(packetPayload, messageType);
     }
 }

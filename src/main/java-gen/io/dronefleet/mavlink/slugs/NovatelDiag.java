@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -171,6 +173,17 @@ public final class NovatelDiag {
                  + ", veltype=" + veltype
                  + ", possolage=" + possolage
                  + ", csfails=" + csfails + "}";
+    }
+
+    public static NovatelDiag deserialize(ByteBuffer input) {
+        long receiverstatus = PayloadFieldDecoder.decodeUint32(input);
+        float possolage = PayloadFieldDecoder.decodeFloat(input);
+        int csfails = PayloadFieldDecoder.decodeUint16(input);
+        int timestatus = PayloadFieldDecoder.decodeUint8(input);
+        int solstatus = PayloadFieldDecoder.decodeUint8(input);
+        int postype = PayloadFieldDecoder.decodeUint8(input);
+        int veltype = PayloadFieldDecoder.decodeUint8(input);
+        return new NovatelDiag(timestatus, receiverstatus, solstatus, postype, veltype, possolage, csfails);
     }
 
     public static final class Builder {

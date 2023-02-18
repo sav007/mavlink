@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Double;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -104,6 +106,13 @@ public final class WheelDistance {
         return "WheelDistance{timeUsec=" + timeUsec
                  + ", count=" + count
                  + ", distance=" + distance + "}";
+    }
+
+    public static WheelDistance deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Double> distance = PayloadFieldDecoder.decodeDoubleArray(input, 128);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        return new WheelDistance(timeUsec, count, distance);
     }
 
     public static final class Builder {

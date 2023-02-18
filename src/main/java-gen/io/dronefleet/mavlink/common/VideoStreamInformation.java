@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -271,6 +273,22 @@ public final class VideoStreamInformation {
                  + ", hfov=" + hfov
                  + ", name=" + name
                  + ", uri=" + uri + "}";
+    }
+
+    public static VideoStreamInformation deserialize(ByteBuffer input) {
+        float framerate = PayloadFieldDecoder.decodeFloat(input);
+        long bitrate = PayloadFieldDecoder.decodeUint32(input);
+        EnumValue<VideoStreamStatusFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.VideoStreamStatusFlags.class, input, 2);
+        int resolutionH = PayloadFieldDecoder.decodeUint16(input);
+        int resolutionV = PayloadFieldDecoder.decodeUint16(input);
+        int rotation = PayloadFieldDecoder.decodeUint16(input);
+        int hfov = PayloadFieldDecoder.decodeUint16(input);
+        int streamId = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<VideoStreamType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.VideoStreamType.class, input, 1);
+        String name = PayloadFieldDecoder.decodeString(input, 32);
+        String uri = PayloadFieldDecoder.decodeString(input, 160);
+        return new VideoStreamInformation(streamId, count, type, flags, framerate, resolutionH, resolutionV, bitrate, rotation, hfov, name, uri);
     }
 
     public static final class Builder {

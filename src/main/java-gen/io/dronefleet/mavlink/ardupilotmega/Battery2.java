@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -84,6 +86,12 @@ public final class Battery2 {
     public String toString() {
         return "Battery2{voltage=" + voltage
                  + ", currentBattery=" + currentBattery + "}";
+    }
+
+    public static Battery2 deserialize(ByteBuffer input) {
+        int voltage = PayloadFieldDecoder.decodeUint16(input);
+        int currentBattery = PayloadFieldDecoder.decodeInt16(input);
+        return new Battery2(voltage, currentBattery);
     }
 
     public static final class Builder {

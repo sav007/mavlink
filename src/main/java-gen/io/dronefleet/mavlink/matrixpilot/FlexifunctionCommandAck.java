@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class FlexifunctionCommandAck {
     public String toString() {
         return "FlexifunctionCommandAck{commandType=" + commandType
                  + ", result=" + result + "}";
+    }
+
+    public static FlexifunctionCommandAck deserialize(ByteBuffer input) {
+        int commandType = PayloadFieldDecoder.decodeUint16(input);
+        int result = PayloadFieldDecoder.decodeUint16(input);
+        return new FlexifunctionCommandAck(commandType, result);
     }
 
     public static final class Builder {

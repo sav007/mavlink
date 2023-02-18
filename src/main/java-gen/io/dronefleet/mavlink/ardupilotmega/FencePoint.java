@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -153,6 +155,16 @@ public final class FencePoint {
                  + ", count=" + count
                  + ", lat=" + lat
                  + ", lng=" + lng + "}";
+    }
+
+    public static FencePoint deserialize(ByteBuffer input) {
+        float lat = PayloadFieldDecoder.decodeFloat(input);
+        float lng = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int idx = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        return new FencePoint(targetSystem, targetComponent, idx, count, lat, lng);
     }
 
     public static final class Builder {

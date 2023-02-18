@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -185,6 +187,17 @@ public final class Event {
                  + ", sequence=" + sequence
                  + ", logLevels=" + logLevels
                  + ", arguments=" + arguments + "}";
+    }
+
+    public static Event deserialize(ByteBuffer input) {
+        long id = PayloadFieldDecoder.decodeUint32(input);
+        long eventTimeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int sequence = PayloadFieldDecoder.decodeUint16(input);
+        int destinationComponent = PayloadFieldDecoder.decodeUint8(input);
+        int destinationSystem = PayloadFieldDecoder.decodeUint8(input);
+        int logLevels = PayloadFieldDecoder.decodeUint8(input);
+        byte[] arguments = PayloadFieldDecoder.decodeUint8Array(input, 40);
+        return new Event(destinationComponent, destinationSystem, id, eventTimeBootMs, sequence, logLevels, arguments);
     }
 
     public static final class Builder {

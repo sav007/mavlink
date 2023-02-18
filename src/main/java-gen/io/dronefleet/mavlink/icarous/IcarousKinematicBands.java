@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.icarous;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -345,6 +347,26 @@ public final class IcarousKinematicBands {
                  + ", type5=" + type5
                  + ", min5=" + min5
                  + ", max5=" + max5 + "}";
+    }
+
+    public static IcarousKinematicBands deserialize(ByteBuffer input) {
+        float min1 = PayloadFieldDecoder.decodeFloat(input);
+        float max1 = PayloadFieldDecoder.decodeFloat(input);
+        float min2 = PayloadFieldDecoder.decodeFloat(input);
+        float max2 = PayloadFieldDecoder.decodeFloat(input);
+        float min3 = PayloadFieldDecoder.decodeFloat(input);
+        float max3 = PayloadFieldDecoder.decodeFloat(input);
+        float min4 = PayloadFieldDecoder.decodeFloat(input);
+        float max4 = PayloadFieldDecoder.decodeFloat(input);
+        float min5 = PayloadFieldDecoder.decodeFloat(input);
+        float max5 = PayloadFieldDecoder.decodeFloat(input);
+        int numbands = PayloadFieldDecoder.decodeInt8(input);
+        EnumValue<IcarousTrackBandTypes> type1 = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.icarous.IcarousTrackBandTypes.class, input, 1);
+        EnumValue<IcarousTrackBandTypes> type2 = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.icarous.IcarousTrackBandTypes.class, input, 1);
+        EnumValue<IcarousTrackBandTypes> type3 = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.icarous.IcarousTrackBandTypes.class, input, 1);
+        EnumValue<IcarousTrackBandTypes> type4 = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.icarous.IcarousTrackBandTypes.class, input, 1);
+        EnumValue<IcarousTrackBandTypes> type5 = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.icarous.IcarousTrackBandTypes.class, input, 1);
+        return new IcarousKinematicBands(numbands, type1, min1, max1, type2, min2, max2, type3, min3, max3, type4, min4, max4, type5, min5, max5);
     }
 
     public static final class Builder {

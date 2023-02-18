@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -161,6 +163,16 @@ public final class EscTelemetry9To12 {
                  + ", totalcurrent=" + totalcurrent
                  + ", rpm=" + rpm
                  + ", count=" + count + "}";
+    }
+
+    public static EscTelemetry9To12 deserialize(ByteBuffer input) {
+        List<Integer> voltage = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        List<Integer> current = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        List<Integer> totalcurrent = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        List<Integer> rpm = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        List<Integer> count = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        byte[] temperature = PayloadFieldDecoder.decodeUint8Array(input, 4);
+        return new EscTelemetry9To12(temperature, voltage, current, totalcurrent, rpm, count);
     }
 
     public static final class Builder {

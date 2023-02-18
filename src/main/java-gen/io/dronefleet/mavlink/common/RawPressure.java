@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -142,6 +144,15 @@ public final class RawPressure {
                  + ", pressDiff1=" + pressDiff1
                  + ", pressDiff2=" + pressDiff2
                  + ", temperature=" + temperature + "}";
+    }
+
+    public static RawPressure deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int pressAbs = PayloadFieldDecoder.decodeInt16(input);
+        int pressDiff1 = PayloadFieldDecoder.decodeInt16(input);
+        int pressDiff2 = PayloadFieldDecoder.decodeInt16(input);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        return new RawPressure(timeUsec, pressAbs, pressDiff1, pressDiff2, temperature);
     }
 
     public static final class Builder {

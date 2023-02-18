@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -177,6 +179,17 @@ public final class EkfStatusReport {
                  + ", compassVariance=" + compassVariance
                  + ", terrainAltVariance=" + terrainAltVariance
                  + ", airspeedVariance=" + airspeedVariance + "}";
+    }
+
+    public static EkfStatusReport deserialize(ByteBuffer input) {
+        float velocityVariance = PayloadFieldDecoder.decodeFloat(input);
+        float posHorizVariance = PayloadFieldDecoder.decodeFloat(input);
+        float posVertVariance = PayloadFieldDecoder.decodeFloat(input);
+        float compassVariance = PayloadFieldDecoder.decodeFloat(input);
+        float terrainAltVariance = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<EkfStatusFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.EkfStatusFlags.class, input, 2);
+        float airspeedVariance = PayloadFieldDecoder.decodeFloat(input);
+        return new EkfStatusReport(flags, velocityVariance, posHorizVariance, posVertVariance, compassVariance, terrainAltVariance, airspeedVariance);
     }
 
     public static final class Builder {

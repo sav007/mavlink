@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -227,6 +229,20 @@ public final class SerialUdbExtraF4 {
                  + ", sueAltitudeholdStabilized=" + sueAltitudeholdStabilized
                  + ", sueAltitudeholdWaypoint=" + sueAltitudeholdWaypoint
                  + ", sueRacingMode=" + sueRacingMode + "}";
+    }
+
+    public static SerialUdbExtraF4 deserialize(ByteBuffer input) {
+        int sueRollStabilizationAilerons = PayloadFieldDecoder.decodeUint8(input);
+        int sueRollStabilizationRudder = PayloadFieldDecoder.decodeUint8(input);
+        int suePitchStabilization = PayloadFieldDecoder.decodeUint8(input);
+        int sueYawStabilizationRudder = PayloadFieldDecoder.decodeUint8(input);
+        int sueYawStabilizationAileron = PayloadFieldDecoder.decodeUint8(input);
+        int sueAileronNavigation = PayloadFieldDecoder.decodeUint8(input);
+        int sueRudderNavigation = PayloadFieldDecoder.decodeUint8(input);
+        int sueAltitudeholdStabilized = PayloadFieldDecoder.decodeUint8(input);
+        int sueAltitudeholdWaypoint = PayloadFieldDecoder.decodeUint8(input);
+        int sueRacingMode = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialUdbExtraF4(sueRollStabilizationAilerons, sueRollStabilizationRudder, suePitchStabilization, sueYawStabilizationRudder, sueYawStabilizationAileron, sueAileronNavigation, sueRudderNavigation, sueAltitudeholdStabilized, sueAltitudeholdWaypoint, sueRacingMode);
     }
 
     public static final class Builder {

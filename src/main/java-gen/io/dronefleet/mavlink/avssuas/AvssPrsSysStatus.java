@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.avssuas;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -135,6 +137,15 @@ public final class AvssPrsSysStatus {
                  + ", batteryStatus=" + batteryStatus
                  + ", armStatus=" + armStatus
                  + ", chargeStatus=" + chargeStatus + "}";
+    }
+
+    public static AvssPrsSysStatus deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        long errorStatus = PayloadFieldDecoder.decodeUint32(input);
+        long batteryStatus = PayloadFieldDecoder.decodeUint32(input);
+        int armStatus = PayloadFieldDecoder.decodeUint8(input);
+        int chargeStatus = PayloadFieldDecoder.decodeUint8(input);
+        return new AvssPrsSysStatus(timeBootMs, errorStatus, batteryStatus, armStatus, chargeStatus);
     }
 
     public static final class Builder {

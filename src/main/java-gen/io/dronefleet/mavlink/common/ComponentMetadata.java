@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Deprecated;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -126,6 +128,13 @@ public final class ComponentMetadata {
         return "ComponentMetadata{timeBootMs=" + timeBootMs
                  + ", fileCrc=" + fileCrc
                  + ", uri=" + uri + "}";
+    }
+
+    public static ComponentMetadata deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        long fileCrc = PayloadFieldDecoder.decodeUint32(input);
+        String uri = PayloadFieldDecoder.decodeString(input, 100);
+        return new ComponentMetadata(timeBootMs, fileCrc, uri);
     }
 
     public static final class Builder {

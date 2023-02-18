@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
@@ -10,6 +11,7 @@ import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -299,6 +301,21 @@ public final class GimbalDeviceAttitudeStatus {
                  + ", failureFlags=" + failureFlags
                  + ", deltaYaw=" + deltaYaw
                  + ", deltaYawVelocity=" + deltaYawVelocity + "}";
+    }
+
+    public static GimbalDeviceAttitudeStatus deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float angularVelocityX = PayloadFieldDecoder.decodeFloat(input);
+        float angularVelocityY = PayloadFieldDecoder.decodeFloat(input);
+        float angularVelocityZ = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<GimbalDeviceErrorFlags> failureFlags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GimbalDeviceErrorFlags.class, input, 4);
+        EnumValue<GimbalDeviceFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GimbalDeviceFlags.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        float deltaYaw = PayloadFieldDecoder.decodeFloat(input);
+        float deltaYawVelocity = PayloadFieldDecoder.decodeFloat(input);
+        return new GimbalDeviceAttitudeStatus(targetSystem, targetComponent, timeBootMs, flags, q, angularVelocityX, angularVelocityY, angularVelocityZ, failureFlags, deltaYaw, deltaYawVelocity);
     }
 
     public static final class Builder {

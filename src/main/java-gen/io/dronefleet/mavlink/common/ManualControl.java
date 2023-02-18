@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -253,6 +255,20 @@ public final class ManualControl {
                  + ", enabledExtensions=" + enabledExtensions
                  + ", s=" + s
                  + ", t=" + t + "}";
+    }
+
+    public static ManualControl deserialize(ByteBuffer input) {
+        int x = PayloadFieldDecoder.decodeInt16(input);
+        int y = PayloadFieldDecoder.decodeInt16(input);
+        int z = PayloadFieldDecoder.decodeInt16(input);
+        int r = PayloadFieldDecoder.decodeInt16(input);
+        int buttons = PayloadFieldDecoder.decodeUint16(input);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        int buttons2 = PayloadFieldDecoder.decodeUint16(input);
+        int enabledExtensions = PayloadFieldDecoder.decodeUint8(input);
+        int s = PayloadFieldDecoder.decodeInt16(input);
+        int t = PayloadFieldDecoder.decodeInt16(input);
+        return new ManualControl(target, x, y, z, r, buttons, buttons2, enabledExtensions, s, t);
     }
 
     public static final class Builder {

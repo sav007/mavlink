@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -122,6 +124,14 @@ public final class RemoteLogDataBlock {
                  + ", targetComponent=" + targetComponent
                  + ", seqno=" + seqno
                  + ", data=" + data + "}";
+    }
+
+    public static RemoteLogDataBlock deserialize(ByteBuffer input) {
+        EnumValue<MavRemoteLogDataBlockCommands> seqno = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.MavRemoteLogDataBlockCommands.class, input, 4);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 200);
+        return new RemoteLogDataBlock(targetSystem, targetComponent, seqno, data);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -137,6 +139,15 @@ public final class McuStatus {
                  + ", mcuVoltage=" + mcuVoltage
                  + ", mcuVoltageMin=" + mcuVoltageMin
                  + ", mcuVoltageMax=" + mcuVoltageMax + "}";
+    }
+
+    public static McuStatus deserialize(ByteBuffer input) {
+        int mcuTemperature = PayloadFieldDecoder.decodeInt16(input);
+        int mcuVoltage = PayloadFieldDecoder.decodeUint16(input);
+        int mcuVoltageMin = PayloadFieldDecoder.decodeUint16(input);
+        int mcuVoltageMax = PayloadFieldDecoder.decodeUint16(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        return new McuStatus(id, mcuTemperature, mcuVoltage, mcuVoltageMin, mcuVoltageMax);
     }
 
     public static final class Builder {

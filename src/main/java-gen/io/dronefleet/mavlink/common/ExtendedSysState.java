@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -87,6 +89,12 @@ public final class ExtendedSysState {
     public String toString() {
         return "ExtendedSysState{vtolState=" + vtolState
                  + ", landedState=" + landedState + "}";
+    }
+
+    public static ExtendedSysState deserialize(ByteBuffer input) {
+        EnumValue<MavVtolState> vtolState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavVtolState.class, input, 1);
+        EnumValue<MavLandedState> landedState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavLandedState.class, input, 1);
+        return new ExtendedSysState(vtolState, landedState);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -154,6 +156,16 @@ public final class LedControl {
                  + ", pattern=" + pattern
                  + ", customLen=" + customLen
                  + ", customBytes=" + customBytes + "}";
+    }
+
+    public static LedControl deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int instance = PayloadFieldDecoder.decodeUint8(input);
+        int pattern = PayloadFieldDecoder.decodeUint8(input);
+        int customLen = PayloadFieldDecoder.decodeUint8(input);
+        byte[] customBytes = PayloadFieldDecoder.decodeUint8Array(input, 24);
+        return new LedControl(targetSystem, targetComponent, instance, pattern, customLen, customBytes);
     }
 
     public static final class Builder {

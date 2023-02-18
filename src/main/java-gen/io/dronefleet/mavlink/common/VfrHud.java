@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -156,6 +158,16 @@ public final class VfrHud {
                  + ", throttle=" + throttle
                  + ", alt=" + alt
                  + ", climb=" + climb + "}";
+    }
+
+    public static VfrHud deserialize(ByteBuffer input) {
+        float airspeed = PayloadFieldDecoder.decodeFloat(input);
+        float groundspeed = PayloadFieldDecoder.decodeFloat(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        float climb = PayloadFieldDecoder.decodeFloat(input);
+        int heading = PayloadFieldDecoder.decodeInt16(input);
+        int throttle = PayloadFieldDecoder.decodeUint16(input);
+        return new VfrHud(airspeed, groundspeed, heading, throttle, alt, climb);
     }
 
     public static final class Builder {

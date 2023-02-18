@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -284,6 +286,23 @@ public final class AdapTuning {
                  + ", f=" + f
                  + ", fDot=" + fDot
                  + ", u=" + u + "}";
+    }
+
+    public static AdapTuning deserialize(ByteBuffer input) {
+        float desired = PayloadFieldDecoder.decodeFloat(input);
+        float achieved = PayloadFieldDecoder.decodeFloat(input);
+        float error = PayloadFieldDecoder.decodeFloat(input);
+        float theta = PayloadFieldDecoder.decodeFloat(input);
+        float omega = PayloadFieldDecoder.decodeFloat(input);
+        float sigma = PayloadFieldDecoder.decodeFloat(input);
+        float thetaDot = PayloadFieldDecoder.decodeFloat(input);
+        float omegaDot = PayloadFieldDecoder.decodeFloat(input);
+        float sigmaDot = PayloadFieldDecoder.decodeFloat(input);
+        float f = PayloadFieldDecoder.decodeFloat(input);
+        float fDot = PayloadFieldDecoder.decodeFloat(input);
+        float u = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<PidTuningAxis> axis = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.PidTuningAxis.class, input, 1);
+        return new AdapTuning(axis, desired, achieved, error, theta, omega, sigma, thetaDot, omegaDot, sigmaDot, f, fDot, u);
     }
 
     public static final class Builder {

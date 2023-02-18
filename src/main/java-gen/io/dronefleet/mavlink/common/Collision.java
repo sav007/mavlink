@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -178,6 +180,17 @@ public final class Collision {
                  + ", timeToMinimumDelta=" + timeToMinimumDelta
                  + ", altitudeMinimumDelta=" + altitudeMinimumDelta
                  + ", horizontalMinimumDelta=" + horizontalMinimumDelta + "}";
+    }
+
+    public static Collision deserialize(ByteBuffer input) {
+        long id = PayloadFieldDecoder.decodeUint32(input);
+        float timeToMinimumDelta = PayloadFieldDecoder.decodeFloat(input);
+        float altitudeMinimumDelta = PayloadFieldDecoder.decodeFloat(input);
+        float horizontalMinimumDelta = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavCollisionSrc> src = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCollisionSrc.class, input, 1);
+        EnumValue<MavCollisionAction> action = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCollisionAction.class, input, 1);
+        EnumValue<MavCollisionThreatLevel> threatLevel = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCollisionThreatLevel.class, input, 1);
+        return new Collision(src, id, action, threatLevel, timeToMinimumDelta, altitudeMinimumDelta, horizontalMinimumDelta);
     }
 
     public static final class Builder {

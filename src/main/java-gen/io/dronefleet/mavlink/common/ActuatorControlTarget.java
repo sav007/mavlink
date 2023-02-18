@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,6 +109,13 @@ public final class ActuatorControlTarget {
         return "ActuatorControlTarget{timeUsec=" + timeUsec
                  + ", groupMlx=" + groupMlx
                  + ", controls=" + controls + "}";
+    }
+
+    public static ActuatorControlTarget deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> controls = PayloadFieldDecoder.decodeFloatArray(input, 32);
+        int groupMlx = PayloadFieldDecoder.decodeUint8(input);
+        return new ActuatorControlTarget(timeUsec, groupMlx, controls);
     }
 
     public static final class Builder {

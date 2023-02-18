@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -160,6 +162,16 @@ public final class SerialUdbExtraF22 {
                  + ", sueGyroXAtCalibration=" + sueGyroXAtCalibration
                  + ", sueGyroYAtCalibration=" + sueGyroYAtCalibration
                  + ", sueGyroZAtCalibration=" + sueGyroZAtCalibration + "}";
+    }
+
+    public static SerialUdbExtraF22 deserialize(ByteBuffer input) {
+        int sueAccelXAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        int sueAccelYAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        int sueAccelZAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        int sueGyroXAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        int sueGyroYAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        int sueGyroZAtCalibration = PayloadFieldDecoder.decodeInt16(input);
+        return new SerialUdbExtraF22(sueAccelXAtCalibration, sueAccelYAtCalibration, sueAccelZAtCalibration, sueGyroXAtCalibration, sueGyroYAtCalibration, sueGyroZAtCalibration);
     }
 
     public static final class Builder {

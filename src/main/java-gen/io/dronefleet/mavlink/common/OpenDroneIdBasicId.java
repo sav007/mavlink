@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -167,6 +169,16 @@ public final class OpenDroneIdBasicId {
                  + ", idType=" + idType
                  + ", uaType=" + uaType
                  + ", uasId=" + uasId + "}";
+    }
+
+    public static OpenDroneIdBasicId deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] idOrMac = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        EnumValue<MavOdidIdType> idType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidIdType.class, input, 1);
+        EnumValue<MavOdidUaType> uaType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidUaType.class, input, 1);
+        byte[] uasId = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        return new OpenDroneIdBasicId(targetSystem, targetComponent, idOrMac, idType, uaType, uasId);
     }
 
     public static final class Builder {

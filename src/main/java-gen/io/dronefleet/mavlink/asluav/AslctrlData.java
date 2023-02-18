@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -484,6 +486,35 @@ public final class AslctrlData {
                  + ", rref=" + rref
                  + ", uail=" + uail
                  + ", urud=" + urud + "}";
+    }
+
+    public static AslctrlData deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float h = PayloadFieldDecoder.decodeFloat(input);
+        float href = PayloadFieldDecoder.decodeFloat(input);
+        float hrefT = PayloadFieldDecoder.decodeFloat(input);
+        float pitchangle = PayloadFieldDecoder.decodeFloat(input);
+        float pitchangleref = PayloadFieldDecoder.decodeFloat(input);
+        float q = PayloadFieldDecoder.decodeFloat(input);
+        float qref = PayloadFieldDecoder.decodeFloat(input);
+        float uelev = PayloadFieldDecoder.decodeFloat(input);
+        float uthrot = PayloadFieldDecoder.decodeFloat(input);
+        float uthrot2 = PayloadFieldDecoder.decodeFloat(input);
+        float nz = PayloadFieldDecoder.decodeFloat(input);
+        float airspeedref = PayloadFieldDecoder.decodeFloat(input);
+        float yawangle = PayloadFieldDecoder.decodeFloat(input);
+        float yawangleref = PayloadFieldDecoder.decodeFloat(input);
+        float rollangle = PayloadFieldDecoder.decodeFloat(input);
+        float rollangleref = PayloadFieldDecoder.decodeFloat(input);
+        float p = PayloadFieldDecoder.decodeFloat(input);
+        float pref = PayloadFieldDecoder.decodeFloat(input);
+        float r = PayloadFieldDecoder.decodeFloat(input);
+        float rref = PayloadFieldDecoder.decodeFloat(input);
+        float uail = PayloadFieldDecoder.decodeFloat(input);
+        float urud = PayloadFieldDecoder.decodeFloat(input);
+        int aslctrlMode = PayloadFieldDecoder.decodeUint8(input);
+        int spoilersengaged = PayloadFieldDecoder.decodeUint8(input);
+        return new AslctrlData(timestamp, aslctrlMode, h, href, hrefT, pitchangle, pitchangleref, q, qref, uelev, uthrot, uthrot2, nz, airspeedref, spoilersengaged, yawangle, yawangleref, rollangle, rollangleref, p, pref, r, rref, uail, urud);
     }
 
     public static final class Builder {

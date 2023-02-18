@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -153,6 +155,16 @@ public final class SensorBias {
                  + ", gxbias=" + gxbias
                  + ", gybias=" + gybias
                  + ", gzbias=" + gzbias + "}";
+    }
+
+    public static SensorBias deserialize(ByteBuffer input) {
+        float axbias = PayloadFieldDecoder.decodeFloat(input);
+        float aybias = PayloadFieldDecoder.decodeFloat(input);
+        float azbias = PayloadFieldDecoder.decodeFloat(input);
+        float gxbias = PayloadFieldDecoder.decodeFloat(input);
+        float gybias = PayloadFieldDecoder.decodeFloat(input);
+        float gzbias = PayloadFieldDecoder.decodeFloat(input);
+        return new SensorBias(axbias, aybias, azbias, gxbias, gybias, gzbias);
     }
 
     public static final class Builder {

@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -371,6 +373,26 @@ public final class SysStatus {
                  + ", onboardControlSensorsPresentExtended=" + onboardControlSensorsPresentExtended
                  + ", onboardControlSensorsEnabledExtended=" + onboardControlSensorsEnabledExtended
                  + ", onboardControlSensorsHealthExtended=" + onboardControlSensorsHealthExtended + "}";
+    }
+
+    public static SysStatus deserialize(ByteBuffer input) {
+        EnumValue<MavSysStatusSensor> onboardControlSensorsPresent = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensor.class, input, 4);
+        EnumValue<MavSysStatusSensor> onboardControlSensorsEnabled = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensor.class, input, 4);
+        EnumValue<MavSysStatusSensor> onboardControlSensorsHealth = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensor.class, input, 4);
+        int load = PayloadFieldDecoder.decodeUint16(input);
+        int voltageBattery = PayloadFieldDecoder.decodeUint16(input);
+        int currentBattery = PayloadFieldDecoder.decodeInt16(input);
+        int dropRateComm = PayloadFieldDecoder.decodeUint16(input);
+        int errorsComm = PayloadFieldDecoder.decodeUint16(input);
+        int errorsCount1 = PayloadFieldDecoder.decodeUint16(input);
+        int errorsCount2 = PayloadFieldDecoder.decodeUint16(input);
+        int errorsCount3 = PayloadFieldDecoder.decodeUint16(input);
+        int errorsCount4 = PayloadFieldDecoder.decodeUint16(input);
+        int batteryRemaining = PayloadFieldDecoder.decodeInt8(input);
+        EnumValue<MavSysStatusSensorExtended> onboardControlSensorsPresentExtended = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensorExtended.class, input, 4);
+        EnumValue<MavSysStatusSensorExtended> onboardControlSensorsEnabledExtended = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensorExtended.class, input, 4);
+        EnumValue<MavSysStatusSensorExtended> onboardControlSensorsHealthExtended = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSysStatusSensorExtended.class, input, 4);
+        return new SysStatus(onboardControlSensorsPresent, onboardControlSensorsEnabled, onboardControlSensorsHealth, load, voltageBattery, currentBattery, batteryRemaining, dropRateComm, errorsComm, errorsCount1, errorsCount2, errorsCount3, errorsCount4, onboardControlSensorsPresentExtended, onboardControlSensorsEnabledExtended, onboardControlSensorsHealthExtended);
     }
 
     public static final class Builder {

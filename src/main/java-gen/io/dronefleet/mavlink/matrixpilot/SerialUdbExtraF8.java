@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -172,6 +174,17 @@ public final class SerialUdbExtraF8 {
                  + ", sueAltHoldPitchMin=" + sueAltHoldPitchMin
                  + ", sueAltHoldPitchMax=" + sueAltHoldPitchMax
                  + ", sueAltHoldPitchHigh=" + sueAltHoldPitchHigh + "}";
+    }
+
+    public static SerialUdbExtraF8 deserialize(ByteBuffer input) {
+        float sueHeightTargetMax = PayloadFieldDecoder.decodeFloat(input);
+        float sueHeightTargetMin = PayloadFieldDecoder.decodeFloat(input);
+        float sueAltHoldThrottleMin = PayloadFieldDecoder.decodeFloat(input);
+        float sueAltHoldThrottleMax = PayloadFieldDecoder.decodeFloat(input);
+        float sueAltHoldPitchMin = PayloadFieldDecoder.decodeFloat(input);
+        float sueAltHoldPitchMax = PayloadFieldDecoder.decodeFloat(input);
+        float sueAltHoldPitchHigh = PayloadFieldDecoder.decodeFloat(input);
+        return new SerialUdbExtraF8(sueHeightTargetMax, sueHeightTargetMin, sueAltHoldThrottleMin, sueAltHoldThrottleMax, sueAltHoldPitchMin, sueAltHoldPitchMax, sueAltHoldPitchHigh);
     }
 
     public static final class Builder {

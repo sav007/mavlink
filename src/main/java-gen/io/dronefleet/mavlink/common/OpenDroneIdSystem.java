@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -338,6 +340,25 @@ public final class OpenDroneIdSystem {
                  + ", classEu=" + classEu
                  + ", operatorAltitudeGeo=" + operatorAltitudeGeo
                  + ", timestamp=" + timestamp + "}";
+    }
+
+    public static OpenDroneIdSystem deserialize(ByteBuffer input) {
+        int operatorLatitude = PayloadFieldDecoder.decodeInt32(input);
+        int operatorLongitude = PayloadFieldDecoder.decodeInt32(input);
+        float areaCeiling = PayloadFieldDecoder.decodeFloat(input);
+        float areaFloor = PayloadFieldDecoder.decodeFloat(input);
+        float operatorAltitudeGeo = PayloadFieldDecoder.decodeFloat(input);
+        long timestamp = PayloadFieldDecoder.decodeUint32(input);
+        int areaCount = PayloadFieldDecoder.decodeUint16(input);
+        int areaRadius = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] idOrMac = PayloadFieldDecoder.decodeUint8Array(input, 20);
+        EnumValue<MavOdidOperatorLocationType> operatorLocationType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidOperatorLocationType.class, input, 1);
+        EnumValue<MavOdidClassificationType> classificationType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidClassificationType.class, input, 1);
+        EnumValue<MavOdidCategoryEu> categoryEu = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidCategoryEu.class, input, 1);
+        EnumValue<MavOdidClassEu> classEu = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavOdidClassEu.class, input, 1);
+        return new OpenDroneIdSystem(targetSystem, targetComponent, idOrMac, operatorLocationType, classificationType, operatorLatitude, operatorLongitude, areaCount, areaRadius, areaCeiling, areaFloor, categoryEu, classEu, operatorAltitudeGeo, timestamp);
     }
 
     public static final class Builder {

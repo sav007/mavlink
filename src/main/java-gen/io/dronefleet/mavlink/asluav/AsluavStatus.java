@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -117,6 +119,14 @@ public final class AsluavStatus {
                  + ", satcomStatus=" + satcomStatus
                  + ", servoStatus=" + servoStatus
                  + ", motorRpm=" + motorRpm + "}";
+    }
+
+    public static AsluavStatus deserialize(ByteBuffer input) {
+        float motorRpm = PayloadFieldDecoder.decodeFloat(input);
+        int ledStatus = PayloadFieldDecoder.decodeUint8(input);
+        int satcomStatus = PayloadFieldDecoder.decodeUint8(input);
+        byte[] servoStatus = PayloadFieldDecoder.decodeUint8Array(input, 8);
+        return new AsluavStatus(ledStatus, satcomStatus, servoStatus, motorRpm);
     }
 
     public static final class Builder {

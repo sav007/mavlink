@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -339,6 +341,25 @@ public final class GimbalDeviceInformation {
                  + ", pitchMax=" + pitchMax
                  + ", yawMin=" + yawMin
                  + ", yawMax=" + yawMax + "}";
+    }
+
+    public static GimbalDeviceInformation deserialize(ByteBuffer input) {
+        BigInteger uid = PayloadFieldDecoder.decodeUint64(input);
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        long firmwareVersion = PayloadFieldDecoder.decodeUint32(input);
+        long hardwareVersion = PayloadFieldDecoder.decodeUint32(input);
+        float rollMin = PayloadFieldDecoder.decodeFloat(input);
+        float rollMax = PayloadFieldDecoder.decodeFloat(input);
+        float pitchMin = PayloadFieldDecoder.decodeFloat(input);
+        float pitchMax = PayloadFieldDecoder.decodeFloat(input);
+        float yawMin = PayloadFieldDecoder.decodeFloat(input);
+        float yawMax = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<GimbalDeviceCapFlags> capFlags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GimbalDeviceCapFlags.class, input, 2);
+        int customCapFlags = PayloadFieldDecoder.decodeUint16(input);
+        String vendorName = PayloadFieldDecoder.decodeString(input, 32);
+        String modelName = PayloadFieldDecoder.decodeString(input, 32);
+        String customName = PayloadFieldDecoder.decodeString(input, 32);
+        return new GimbalDeviceInformation(timeBootMs, vendorName, modelName, customName, firmwareVersion, hardwareVersion, uid, capFlags, customCapFlags, rollMin, rollMax, pitchMin, pitchMax, yawMin, yawMax);
     }
 
     public static final class Builder {

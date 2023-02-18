@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -399,6 +401,29 @@ public final class GpsInput {
                  + ", vertAccuracy=" + vertAccuracy
                  + ", satellitesVisible=" + satellitesVisible
                  + ", yaw=" + yaw + "}";
+    }
+
+    public static GpsInput deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        long timeWeekMs = PayloadFieldDecoder.decodeUint32(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        float alt = PayloadFieldDecoder.decodeFloat(input);
+        float hdop = PayloadFieldDecoder.decodeFloat(input);
+        float vdop = PayloadFieldDecoder.decodeFloat(input);
+        float vn = PayloadFieldDecoder.decodeFloat(input);
+        float ve = PayloadFieldDecoder.decodeFloat(input);
+        float vd = PayloadFieldDecoder.decodeFloat(input);
+        float speedAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        float horizAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        float vertAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<GpsInputIgnoreFlags> ignoreFlags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.GpsInputIgnoreFlags.class, input, 2);
+        int timeWeek = PayloadFieldDecoder.decodeUint16(input);
+        int gpsId = PayloadFieldDecoder.decodeUint8(input);
+        int fixType = PayloadFieldDecoder.decodeUint8(input);
+        int satellitesVisible = PayloadFieldDecoder.decodeUint8(input);
+        int yaw = PayloadFieldDecoder.decodeUint16(input);
+        return new GpsInput(timeUsec, gpsId, ignoreFlags, timeWeekMs, timeWeek, fixType, lat, lon, alt, hdop, vdop, vn, ve, vd, speedAccuracy, horizAccuracy, vertAccuracy, satellitesVisible, yaw);
     }
 
     public static final class Builder {

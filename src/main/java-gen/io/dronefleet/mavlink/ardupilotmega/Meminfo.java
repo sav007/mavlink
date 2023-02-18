@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class Meminfo {
         return "Meminfo{brkval=" + brkval
                  + ", freemem=" + freemem
                  + ", freemem32=" + freemem32 + "}";
+    }
+
+    public static Meminfo deserialize(ByteBuffer input) {
+        int brkval = PayloadFieldDecoder.decodeUint16(input);
+        int freemem = PayloadFieldDecoder.decodeUint16(input);
+        long freemem32 = PayloadFieldDecoder.decodeUint32(input);
+        return new Meminfo(brkval, freemem, freemem32);
     }
 
     public static final class Builder {

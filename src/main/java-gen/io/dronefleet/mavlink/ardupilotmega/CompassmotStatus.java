@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -153,6 +155,16 @@ public final class CompassmotStatus {
                  + ", compensationx=" + compensationx
                  + ", compensationy=" + compensationy
                  + ", compensationz=" + compensationz + "}";
+    }
+
+    public static CompassmotStatus deserialize(ByteBuffer input) {
+        float current = PayloadFieldDecoder.decodeFloat(input);
+        float compensationx = PayloadFieldDecoder.decodeFloat(input);
+        float compensationy = PayloadFieldDecoder.decodeFloat(input);
+        float compensationz = PayloadFieldDecoder.decodeFloat(input);
+        int throttle = PayloadFieldDecoder.decodeUint16(input);
+        int interference = PayloadFieldDecoder.decodeUint16(input);
+        return new CompassmotStatus(throttle, current, interference, compensationx, compensationy, compensationz);
     }
 
     public static final class Builder {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.ualberta;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -161,6 +163,16 @@ public final class RadioCalibration {
                  + ", gyro=" + gyro
                  + ", pitch=" + pitch
                  + ", throttle=" + throttle + "}";
+    }
+
+    public static RadioCalibration deserialize(ByteBuffer input) {
+        List<Integer> aileron = PayloadFieldDecoder.decodeUint16Array(input, 6);
+        List<Integer> elevator = PayloadFieldDecoder.decodeUint16Array(input, 6);
+        List<Integer> rudder = PayloadFieldDecoder.decodeUint16Array(input, 6);
+        List<Integer> gyro = PayloadFieldDecoder.decodeUint16Array(input, 4);
+        List<Integer> pitch = PayloadFieldDecoder.decodeUint16Array(input, 10);
+        List<Integer> throttle = PayloadFieldDecoder.decodeUint16Array(input, 10);
+        return new RadioCalibration(aileron, elevator, rudder, gyro, pitch, throttle);
     }
 
     public static final class Builder {

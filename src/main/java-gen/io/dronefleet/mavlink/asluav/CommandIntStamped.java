@@ -5,12 +5,14 @@ import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
 import io.dronefleet.mavlink.common.MavCmd;
 import io.dronefleet.mavlink.common.MavFrame;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -329,6 +331,25 @@ public final class CommandIntStamped {
                  + ", x=" + x
                  + ", y=" + y
                  + ", z=" + z + "}";
+    }
+
+    public static CommandIntStamped deserialize(ByteBuffer input) {
+        BigInteger vehicleTimestamp = PayloadFieldDecoder.decodeUint64(input);
+        long utcTime = PayloadFieldDecoder.decodeUint32(input);
+        float param1 = PayloadFieldDecoder.decodeFloat(input);
+        float param2 = PayloadFieldDecoder.decodeFloat(input);
+        float param3 = PayloadFieldDecoder.decodeFloat(input);
+        float param4 = PayloadFieldDecoder.decodeFloat(input);
+        int x = PayloadFieldDecoder.decodeInt32(input);
+        int y = PayloadFieldDecoder.decodeInt32(input);
+        float z = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavCmd> command = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCmd.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavFrame> frame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        int current = PayloadFieldDecoder.decodeUint8(input);
+        int autocontinue = PayloadFieldDecoder.decodeUint8(input);
+        return new CommandIntStamped(utcTime, vehicleTimestamp, targetSystem, targetComponent, frame, command, current, autocontinue, param1, param2, param3, param4, x, y, z);
     }
 
     public static final class Builder {

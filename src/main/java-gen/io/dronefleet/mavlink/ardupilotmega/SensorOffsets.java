@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -268,6 +270,22 @@ public final class SensorOffsets {
                  + ", accelCalX=" + accelCalX
                  + ", accelCalY=" + accelCalY
                  + ", accelCalZ=" + accelCalZ + "}";
+    }
+
+    public static SensorOffsets deserialize(ByteBuffer input) {
+        float magDeclination = PayloadFieldDecoder.decodeFloat(input);
+        int rawPress = PayloadFieldDecoder.decodeInt32(input);
+        int rawTemp = PayloadFieldDecoder.decodeInt32(input);
+        float gyroCalX = PayloadFieldDecoder.decodeFloat(input);
+        float gyroCalY = PayloadFieldDecoder.decodeFloat(input);
+        float gyroCalZ = PayloadFieldDecoder.decodeFloat(input);
+        float accelCalX = PayloadFieldDecoder.decodeFloat(input);
+        float accelCalY = PayloadFieldDecoder.decodeFloat(input);
+        float accelCalZ = PayloadFieldDecoder.decodeFloat(input);
+        int magOfsX = PayloadFieldDecoder.decodeInt16(input);
+        int magOfsY = PayloadFieldDecoder.decodeInt16(input);
+        int magOfsZ = PayloadFieldDecoder.decodeInt16(input);
+        return new SensorOffsets(magOfsX, magOfsY, magOfsZ, magDeclination, rawPress, rawTemp, gyroCalX, gyroCalY, gyroCalZ, accelCalX, accelCalY, accelCalZ);
     }
 
     public static final class Builder {

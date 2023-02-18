@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.uavionix;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -66,6 +68,11 @@ public final class UavionixAdsbTransceiverHealthReport {
     @Override
     public String toString() {
         return "UavionixAdsbTransceiverHealthReport{rfhealth=" + rfhealth + "}";
+    }
+
+    public static UavionixAdsbTransceiverHealthReport deserialize(ByteBuffer input) {
+        EnumValue<UavionixAdsbRfHealth> rfhealth = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.uavionix.UavionixAdsbRfHealth.class, input, 1);
+        return new UavionixAdsbTransceiverHealthReport(rfhealth);
     }
 
     public static final class Builder {

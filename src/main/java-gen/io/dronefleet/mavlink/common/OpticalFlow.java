@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -231,6 +233,20 @@ public final class OpticalFlow {
                  + ", groundDistance=" + groundDistance
                  + ", flowRateX=" + flowRateX
                  + ", flowRateY=" + flowRateY + "}";
+    }
+
+    public static OpticalFlow deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float flowCompMX = PayloadFieldDecoder.decodeFloat(input);
+        float flowCompMY = PayloadFieldDecoder.decodeFloat(input);
+        float groundDistance = PayloadFieldDecoder.decodeFloat(input);
+        int flowX = PayloadFieldDecoder.decodeInt16(input);
+        int flowY = PayloadFieldDecoder.decodeInt16(input);
+        int sensorId = PayloadFieldDecoder.decodeUint8(input);
+        int quality = PayloadFieldDecoder.decodeUint8(input);
+        float flowRateX = PayloadFieldDecoder.decodeFloat(input);
+        float flowRateY = PayloadFieldDecoder.decodeFloat(input);
+        return new OpticalFlow(timeUsec, sensorId, flowX, flowY, flowCompMX, flowCompMY, quality, groundDistance, flowRateX, flowRateY);
     }
 
     public static final class Builder {

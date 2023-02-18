@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -240,6 +242,20 @@ public final class EstimatorStatus {
                  + ", tasRatio=" + tasRatio
                  + ", posHorizAccuracy=" + posHorizAccuracy
                  + ", posVertAccuracy=" + posVertAccuracy + "}";
+    }
+
+    public static EstimatorStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float velRatio = PayloadFieldDecoder.decodeFloat(input);
+        float posHorizRatio = PayloadFieldDecoder.decodeFloat(input);
+        float posVertRatio = PayloadFieldDecoder.decodeFloat(input);
+        float magRatio = PayloadFieldDecoder.decodeFloat(input);
+        float haglRatio = PayloadFieldDecoder.decodeFloat(input);
+        float tasRatio = PayloadFieldDecoder.decodeFloat(input);
+        float posHorizAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        float posVertAccuracy = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<EstimatorStatusFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.EstimatorStatusFlags.class, input, 2);
+        return new EstimatorStatus(timeUsec, flags, velRatio, posHorizRatio, posVertRatio, magRatio, haglRatio, tasRatio, posHorizAccuracy, posVertAccuracy);
     }
 
     public static final class Builder {

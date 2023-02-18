@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -217,6 +219,19 @@ public final class AttitudeQuaternion {
                  + ", pitchspeed=" + pitchspeed
                  + ", yawspeed=" + yawspeed
                  + ", reprOffsetQ=" + reprOffsetQ + "}";
+    }
+
+    public static AttitudeQuaternion deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float q1 = PayloadFieldDecoder.decodeFloat(input);
+        float q2 = PayloadFieldDecoder.decodeFloat(input);
+        float q3 = PayloadFieldDecoder.decodeFloat(input);
+        float q4 = PayloadFieldDecoder.decodeFloat(input);
+        float rollspeed = PayloadFieldDecoder.decodeFloat(input);
+        float pitchspeed = PayloadFieldDecoder.decodeFloat(input);
+        float yawspeed = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> reprOffsetQ = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        return new AttitudeQuaternion(timeBootMs, q1, q2, q3, q4, rollspeed, pitchspeed, yawspeed, reprOffsetQ);
     }
 
     public static final class Builder {

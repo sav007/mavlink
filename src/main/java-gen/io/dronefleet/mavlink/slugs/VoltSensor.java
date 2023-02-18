@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class VoltSensor {
         return "VoltSensor{r2type=" + r2type
                  + ", voltage=" + voltage
                  + ", reading2=" + reading2 + "}";
+    }
+
+    public static VoltSensor deserialize(ByteBuffer input) {
+        int voltage = PayloadFieldDecoder.decodeUint16(input);
+        int reading2 = PayloadFieldDecoder.decodeUint16(input);
+        int r2type = PayloadFieldDecoder.decodeUint8(input);
+        return new VoltSensor(r2type, voltage, reading2);
     }
 
     public static final class Builder {

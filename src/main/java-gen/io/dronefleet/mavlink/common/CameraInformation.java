@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -293,6 +295,23 @@ public final class CameraInformation {
                  + ", flags=" + flags
                  + ", camDefinitionVersion=" + camDefinitionVersion
                  + ", camDefinitionUri=" + camDefinitionUri + "}";
+    }
+
+    public static CameraInformation deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        long firmwareVersion = PayloadFieldDecoder.decodeUint32(input);
+        float focalLength = PayloadFieldDecoder.decodeFloat(input);
+        float sensorSizeH = PayloadFieldDecoder.decodeFloat(input);
+        float sensorSizeV = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<CameraCapFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraCapFlags.class, input, 4);
+        int resolutionH = PayloadFieldDecoder.decodeUint16(input);
+        int resolutionV = PayloadFieldDecoder.decodeUint16(input);
+        int camDefinitionVersion = PayloadFieldDecoder.decodeUint16(input);
+        byte[] vendorName = PayloadFieldDecoder.decodeUint8Array(input, 32);
+        byte[] modelName = PayloadFieldDecoder.decodeUint8Array(input, 32);
+        int lensId = PayloadFieldDecoder.decodeUint8(input);
+        String camDefinitionUri = PayloadFieldDecoder.decodeString(input, 140);
+        return new CameraInformation(timeBootMs, vendorName, modelName, firmwareVersion, focalLength, sensorSizeH, sensorSizeV, resolutionH, resolutionV, lensId, flags, camDefinitionVersion, camDefinitionUri);
     }
 
     public static final class Builder {

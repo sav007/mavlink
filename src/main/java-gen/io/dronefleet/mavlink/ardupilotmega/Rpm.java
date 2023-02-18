@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class Rpm {
     public String toString() {
         return "Rpm{rpm1=" + rpm1
                  + ", rpm2=" + rpm2 + "}";
+    }
+
+    public static Rpm deserialize(ByteBuffer input) {
+        float rpm1 = PayloadFieldDecoder.decodeFloat(input);
+        float rpm2 = PayloadFieldDecoder.decodeFloat(input);
+        return new Rpm(rpm1, rpm2);
     }
 
     public static final class Builder {

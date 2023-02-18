@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -177,6 +179,17 @@ public final class Altitudes {
                  + ", altOpticalFlow=" + altOpticalFlow
                  + ", altRangeFinder=" + altRangeFinder
                  + ", altExtra=" + altExtra + "}";
+    }
+
+    public static Altitudes deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int altGps = PayloadFieldDecoder.decodeInt32(input);
+        int altImu = PayloadFieldDecoder.decodeInt32(input);
+        int altBarometric = PayloadFieldDecoder.decodeInt32(input);
+        int altOpticalFlow = PayloadFieldDecoder.decodeInt32(input);
+        int altRangeFinder = PayloadFieldDecoder.decodeInt32(input);
+        int altExtra = PayloadFieldDecoder.decodeInt32(input);
+        return new Altitudes(timeBootMs, altGps, altImu, altBarometric, altOpticalFlow, altRangeFinder, altExtra);
     }
 
     public static final class Builder {

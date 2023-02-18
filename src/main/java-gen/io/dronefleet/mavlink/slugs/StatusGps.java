@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -175,6 +177,17 @@ public final class StatusGps {
                  + ", magvar=" + magvar
                  + ", magdir=" + magdir
                  + ", modeind=" + modeind + "}";
+    }
+
+    public static StatusGps deserialize(ByteBuffer input) {
+        float magvar = PayloadFieldDecoder.decodeFloat(input);
+        int csfails = PayloadFieldDecoder.decodeUint16(input);
+        int gpsquality = PayloadFieldDecoder.decodeUint8(input);
+        int msgstype = PayloadFieldDecoder.decodeUint8(input);
+        int posstatus = PayloadFieldDecoder.decodeUint8(input);
+        int magdir = PayloadFieldDecoder.decodeInt8(input);
+        int modeind = PayloadFieldDecoder.decodeUint8(input);
+        return new StatusGps(csfails, gpsquality, msgstype, posstatus, magvar, magdir, modeind);
     }
 
     public static final class Builder {

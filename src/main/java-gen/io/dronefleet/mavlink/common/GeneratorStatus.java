@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -256,6 +258,21 @@ public final class GeneratorStatus {
                  + ", generatorTemperature=" + generatorTemperature
                  + ", runtime=" + runtime
                  + ", timeUntilMaintenance=" + timeUntilMaintenance + "}";
+    }
+
+    public static GeneratorStatus deserialize(ByteBuffer input) {
+        EnumValue<MavGeneratorStatusFlag> status = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavGeneratorStatusFlag.class, input, 8);
+        float batteryCurrent = PayloadFieldDecoder.decodeFloat(input);
+        float loadCurrent = PayloadFieldDecoder.decodeFloat(input);
+        float powerGenerated = PayloadFieldDecoder.decodeFloat(input);
+        float busVoltage = PayloadFieldDecoder.decodeFloat(input);
+        float batCurrentSetpoint = PayloadFieldDecoder.decodeFloat(input);
+        long runtime = PayloadFieldDecoder.decodeUint32(input);
+        int timeUntilMaintenance = PayloadFieldDecoder.decodeInt32(input);
+        int generatorSpeed = PayloadFieldDecoder.decodeUint16(input);
+        int rectifierTemperature = PayloadFieldDecoder.decodeInt16(input);
+        int generatorTemperature = PayloadFieldDecoder.decodeInt16(input);
+        return new GeneratorStatus(status, generatorSpeed, batteryCurrent, loadCurrent, powerGenerated, busVoltage, rectifierTemperature, batCurrentSetpoint, generatorTemperature, runtime, timeUntilMaintenance);
     }
 
     public static final class Builder {

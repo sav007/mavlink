@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -233,6 +235,20 @@ public final class RallyPoint {
                  + ", breakAlt=" + breakAlt
                  + ", landDir=" + landDir
                  + ", flags=" + flags + "}";
+    }
+
+    public static RallyPoint deserialize(ByteBuffer input) {
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lng = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt16(input);
+        int breakAlt = PayloadFieldDecoder.decodeInt16(input);
+        int landDir = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int idx = PayloadFieldDecoder.decodeUint8(input);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<RallyFlags> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.RallyFlags.class, input, 1);
+        return new RallyPoint(targetSystem, targetComponent, idx, count, lat, lng, alt, breakAlt, landDir, flags);
     }
 
     public static final class Builder {

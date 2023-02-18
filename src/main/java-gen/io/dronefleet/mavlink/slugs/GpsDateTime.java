@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -261,6 +263,22 @@ public final class GpsDateTime {
                  + ", gppgl=" + gppgl
                  + ", sigusedmask=" + sigusedmask
                  + ", percentused=" + percentused + "}";
+    }
+
+    public static GpsDateTime deserialize(ByteBuffer input) {
+        int year = PayloadFieldDecoder.decodeUint8(input);
+        int month = PayloadFieldDecoder.decodeUint8(input);
+        int day = PayloadFieldDecoder.decodeUint8(input);
+        int hour = PayloadFieldDecoder.decodeUint8(input);
+        int min = PayloadFieldDecoder.decodeUint8(input);
+        int sec = PayloadFieldDecoder.decodeUint8(input);
+        int clockstat = PayloadFieldDecoder.decodeUint8(input);
+        int vissat = PayloadFieldDecoder.decodeUint8(input);
+        int usesat = PayloadFieldDecoder.decodeUint8(input);
+        int gppgl = PayloadFieldDecoder.decodeUint8(input);
+        int sigusedmask = PayloadFieldDecoder.decodeUint8(input);
+        int percentused = PayloadFieldDecoder.decodeUint8(input);
+        return new GpsDateTime(year, month, day, hour, min, sec, clockstat, vissat, usesat, gppgl, sigusedmask, percentused);
     }
 
     public static final class Builder {

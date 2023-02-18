@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -153,6 +155,16 @@ public final class UavStatus {
                  + ", altitude=" + altitude
                  + ", speed=" + speed
                  + ", course=" + course + "}";
+    }
+
+    public static UavStatus deserialize(ByteBuffer input) {
+        float latitude = PayloadFieldDecoder.decodeFloat(input);
+        float longitude = PayloadFieldDecoder.decodeFloat(input);
+        float altitude = PayloadFieldDecoder.decodeFloat(input);
+        float speed = PayloadFieldDecoder.decodeFloat(input);
+        float course = PayloadFieldDecoder.decodeFloat(input);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        return new UavStatus(target, latitude, longitude, altitude, speed, course);
     }
 
     public static final class Builder {

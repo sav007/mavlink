@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -120,6 +122,14 @@ public final class SetupSigning {
                  + ", targetComponent=" + targetComponent
                  + ", secretKey=" + secretKey
                  + ", initialTimestamp=" + initialTimestamp + "}";
+    }
+
+    public static SetupSigning deserialize(ByteBuffer input) {
+        BigInteger initialTimestamp = PayloadFieldDecoder.decodeUint64(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        byte[] secretKey = PayloadFieldDecoder.decodeUint8Array(input, 32);
+        return new SetupSigning(targetSystem, targetComponent, secretKey, initialTimestamp);
     }
 
     public static final class Builder {

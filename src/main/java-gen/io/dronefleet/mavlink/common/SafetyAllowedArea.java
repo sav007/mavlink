@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -176,6 +178,17 @@ public final class SafetyAllowedArea {
                  + ", p2x=" + p2x
                  + ", p2y=" + p2y
                  + ", p2z=" + p2z + "}";
+    }
+
+    public static SafetyAllowedArea deserialize(ByteBuffer input) {
+        float p1x = PayloadFieldDecoder.decodeFloat(input);
+        float p1y = PayloadFieldDecoder.decodeFloat(input);
+        float p1z = PayloadFieldDecoder.decodeFloat(input);
+        float p2x = PayloadFieldDecoder.decodeFloat(input);
+        float p2y = PayloadFieldDecoder.decodeFloat(input);
+        float p2z = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavFrame> frame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        return new SafetyAllowedArea(frame, p1x, p1y, p1z, p2x, p2y, p2z);
     }
 
     public static final class Builder {

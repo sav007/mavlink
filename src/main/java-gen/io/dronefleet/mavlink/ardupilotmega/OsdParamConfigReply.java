@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -84,6 +86,12 @@ public final class OsdParamConfigReply {
     public String toString() {
         return "OsdParamConfigReply{requestId=" + requestId
                  + ", result=" + result + "}";
+    }
+
+    public static OsdParamConfigReply deserialize(ByteBuffer input) {
+        long requestId = PayloadFieldDecoder.decodeUint32(input);
+        EnumValue<OsdParamConfigError> result = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.OsdParamConfigError.class, input, 1);
+        return new OsdParamConfigReply(requestId, result);
     }
 
     public static final class Builder {

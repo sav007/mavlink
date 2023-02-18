@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class Wind {
         return "Wind{direction=" + direction
                  + ", speed=" + speed
                  + ", speedZ=" + speedZ + "}";
+    }
+
+    public static Wind deserialize(ByteBuffer input) {
+        float direction = PayloadFieldDecoder.decodeFloat(input);
+        float speed = PayloadFieldDecoder.decodeFloat(input);
+        float speedZ = PayloadFieldDecoder.decodeFloat(input);
+        return new Wind(direction, speed, speedZ);
     }
 
     public static final class Builder {

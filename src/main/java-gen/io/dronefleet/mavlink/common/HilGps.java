@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -330,6 +332,25 @@ public final class HilGps {
                  + ", satellitesVisible=" + satellitesVisible
                  + ", id=" + id
                  + ", yaw=" + yaw + "}";
+    }
+
+    public static HilGps deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int lat = PayloadFieldDecoder.decodeInt32(input);
+        int lon = PayloadFieldDecoder.decodeInt32(input);
+        int alt = PayloadFieldDecoder.decodeInt32(input);
+        int eph = PayloadFieldDecoder.decodeUint16(input);
+        int epv = PayloadFieldDecoder.decodeUint16(input);
+        int vel = PayloadFieldDecoder.decodeUint16(input);
+        int vn = PayloadFieldDecoder.decodeInt16(input);
+        int ve = PayloadFieldDecoder.decodeInt16(input);
+        int vd = PayloadFieldDecoder.decodeInt16(input);
+        int cog = PayloadFieldDecoder.decodeUint16(input);
+        int fixType = PayloadFieldDecoder.decodeUint8(input);
+        int satellitesVisible = PayloadFieldDecoder.decodeUint8(input);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        int yaw = PayloadFieldDecoder.decodeUint16(input);
+        return new HilGps(timeUsec, fixType, lat, lon, alt, eph, epv, vel, vn, ve, vd, cog, satellitesVisible, id, yaw);
     }
 
     public static final class Builder {

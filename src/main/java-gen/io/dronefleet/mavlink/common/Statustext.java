@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -129,6 +131,14 @@ public final class Statustext {
                  + ", text=" + text
                  + ", id=" + id
                  + ", chunkSeq=" + chunkSeq + "}";
+    }
+
+    public static Statustext deserialize(ByteBuffer input) {
+        EnumValue<MavSeverity> severity = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSeverity.class, input, 1);
+        String text = PayloadFieldDecoder.decodeString(input, 50);
+        int id = PayloadFieldDecoder.decodeUint16(input);
+        int chunkSeq = PayloadFieldDecoder.decodeUint8(input);
+        return new Statustext(severity, text, id, chunkSeq);
     }
 
     public static final class Builder {

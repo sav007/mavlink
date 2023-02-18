@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -135,6 +137,15 @@ public final class GimbalControl {
                  + ", demandedRateX=" + demandedRateX
                  + ", demandedRateY=" + demandedRateY
                  + ", demandedRateZ=" + demandedRateZ + "}";
+    }
+
+    public static GimbalControl deserialize(ByteBuffer input) {
+        float demandedRateX = PayloadFieldDecoder.decodeFloat(input);
+        float demandedRateY = PayloadFieldDecoder.decodeFloat(input);
+        float demandedRateZ = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new GimbalControl(targetSystem, targetComponent, demandedRateX, demandedRateY, demandedRateZ);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.matrixpilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -177,6 +179,17 @@ public final class Airspeeds {
                  + ", airspeedUltrasonic=" + airspeedUltrasonic
                  + ", aoa=" + aoa
                  + ", aoy=" + aoy + "}";
+    }
+
+    public static Airspeeds deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int airspeedImu = PayloadFieldDecoder.decodeInt16(input);
+        int airspeedPitot = PayloadFieldDecoder.decodeInt16(input);
+        int airspeedHotWire = PayloadFieldDecoder.decodeInt16(input);
+        int airspeedUltrasonic = PayloadFieldDecoder.decodeInt16(input);
+        int aoa = PayloadFieldDecoder.decodeInt16(input);
+        int aoy = PayloadFieldDecoder.decodeInt16(input);
+        return new Airspeeds(timeBootMs, airspeedImu, airspeedPitot, airspeedHotWire, airspeedUltrasonic, aoa, aoy);
     }
 
     public static final class Builder {

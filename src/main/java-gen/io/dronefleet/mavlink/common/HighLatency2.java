@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -552,6 +554,37 @@ public final class HighLatency2 {
                  + ", custom0=" + custom0
                  + ", custom1=" + custom1
                  + ", custom2=" + custom2 + "}";
+    }
+
+    public static HighLatency2 deserialize(ByteBuffer input) {
+        long timestamp = PayloadFieldDecoder.decodeUint32(input);
+        int latitude = PayloadFieldDecoder.decodeInt32(input);
+        int longitude = PayloadFieldDecoder.decodeInt32(input);
+        int customMode = PayloadFieldDecoder.decodeUint16(input);
+        int altitude = PayloadFieldDecoder.decodeInt16(input);
+        int targetAltitude = PayloadFieldDecoder.decodeInt16(input);
+        int targetDistance = PayloadFieldDecoder.decodeUint16(input);
+        int wpNum = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<HlFailureFlag> failureFlags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.HlFailureFlag.class, input, 2);
+        EnumValue<MavType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavType.class, input, 1);
+        EnumValue<MavAutopilot> autopilot = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavAutopilot.class, input, 1);
+        int heading = PayloadFieldDecoder.decodeUint8(input);
+        int targetHeading = PayloadFieldDecoder.decodeUint8(input);
+        int throttle = PayloadFieldDecoder.decodeUint8(input);
+        int airspeed = PayloadFieldDecoder.decodeUint8(input);
+        int airspeedSp = PayloadFieldDecoder.decodeUint8(input);
+        int groundspeed = PayloadFieldDecoder.decodeUint8(input);
+        int windspeed = PayloadFieldDecoder.decodeUint8(input);
+        int windHeading = PayloadFieldDecoder.decodeUint8(input);
+        int eph = PayloadFieldDecoder.decodeUint8(input);
+        int epv = PayloadFieldDecoder.decodeUint8(input);
+        int temperatureAir = PayloadFieldDecoder.decodeInt8(input);
+        int climbRate = PayloadFieldDecoder.decodeInt8(input);
+        int battery = PayloadFieldDecoder.decodeInt8(input);
+        int custom0 = PayloadFieldDecoder.decodeInt8(input);
+        int custom1 = PayloadFieldDecoder.decodeInt8(input);
+        int custom2 = PayloadFieldDecoder.decodeInt8(input);
+        return new HighLatency2(timestamp, type, autopilot, customMode, latitude, longitude, altitude, targetAltitude, heading, targetHeading, targetDistance, throttle, airspeed, airspeedSp, groundspeed, windspeed, windHeading, eph, epv, temperatureAir, climbRate, battery, wpNum, failureFlags, custom0, custom1, custom2);
     }
 
     public static final class Builder {

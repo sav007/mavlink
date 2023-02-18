@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -64,6 +66,11 @@ public final class AuthKey {
     @Override
     public String toString() {
         return "AuthKey{key=" + key + "}";
+    }
+
+    public static AuthKey deserialize(ByteBuffer input) {
+        String key = PayloadFieldDecoder.decodeString(input, 32);
+        return new AuthKey(key);
     }
 
     public static final class Builder {

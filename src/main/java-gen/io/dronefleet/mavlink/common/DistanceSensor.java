@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -283,6 +285,22 @@ public final class DistanceSensor {
                  + ", verticalFov=" + verticalFov
                  + ", quaternion=" + quaternion
                  + ", signalQuality=" + signalQuality + "}";
+    }
+
+    public static DistanceSensor deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int minDistance = PayloadFieldDecoder.decodeUint16(input);
+        int maxDistance = PayloadFieldDecoder.decodeUint16(input);
+        int currentDistance = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavDistanceSensor> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavDistanceSensor.class, input, 1);
+        int id = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavSensorOrientation> orientation = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSensorOrientation.class, input, 1);
+        int covariance = PayloadFieldDecoder.decodeUint8(input);
+        float horizontalFov = PayloadFieldDecoder.decodeFloat(input);
+        float verticalFov = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> quaternion = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        int signalQuality = PayloadFieldDecoder.decodeUint8(input);
+        return new DistanceSensor(timeBootMs, minDistance, maxDistance, currentDistance, type, id, orientation, covariance, horizontalFov, verticalFov, quaternion, signalQuality);
     }
 
     public static final class Builder {

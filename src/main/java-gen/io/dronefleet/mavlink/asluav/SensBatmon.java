@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -319,6 +321,25 @@ public final class SensBatmon {
                  + ", cellvoltage4=" + cellvoltage4
                  + ", cellvoltage5=" + cellvoltage5
                  + ", cellvoltage6=" + cellvoltage6 + "}";
+    }
+
+    public static SensBatmon deserialize(ByteBuffer input) {
+        BigInteger batmonTimestamp = PayloadFieldDecoder.decodeUint64(input);
+        float temperature = PayloadFieldDecoder.decodeFloat(input);
+        long safetystatus = PayloadFieldDecoder.decodeUint32(input);
+        long operationstatus = PayloadFieldDecoder.decodeUint32(input);
+        int voltage = PayloadFieldDecoder.decodeUint16(input);
+        int current = PayloadFieldDecoder.decodeInt16(input);
+        int batterystatus = PayloadFieldDecoder.decodeUint16(input);
+        int serialnumber = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage1 = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage2 = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage3 = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage4 = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage5 = PayloadFieldDecoder.decodeUint16(input);
+        int cellvoltage6 = PayloadFieldDecoder.decodeUint16(input);
+        int soc = PayloadFieldDecoder.decodeUint8(input);
+        return new SensBatmon(batmonTimestamp, temperature, voltage, current, soc, batterystatus, serialnumber, safetystatus, operationstatus, cellvoltage1, cellvoltage2, cellvoltage3, cellvoltage4, cellvoltage5, cellvoltage6);
     }
 
     public static final class Builder {

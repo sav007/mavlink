@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -196,6 +198,18 @@ public final class WinchStatus {
                  + ", current=" + current
                  + ", temperature=" + temperature
                  + ", status=" + status + "}";
+    }
+
+    public static WinchStatus deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float lineLength = PayloadFieldDecoder.decodeFloat(input);
+        float speed = PayloadFieldDecoder.decodeFloat(input);
+        float tension = PayloadFieldDecoder.decodeFloat(input);
+        float voltage = PayloadFieldDecoder.decodeFloat(input);
+        float current = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavWinchStatusFlag> status = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavWinchStatusFlag.class, input, 4);
+        int temperature = PayloadFieldDecoder.decodeInt16(input);
+        return new WinchStatus(timeUsec, lineLength, speed, tension, voltage, current, temperature, status);
     }
 
     public static final class Builder {

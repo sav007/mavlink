@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -172,6 +174,17 @@ public final class EkfExt {
                  + ", airspeed=" + airspeed
                  + ", beta=" + beta
                  + ", alpha=" + alpha + "}";
+    }
+
+    public static EkfExt deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float windspeed = PayloadFieldDecoder.decodeFloat(input);
+        float winddir = PayloadFieldDecoder.decodeFloat(input);
+        float windz = PayloadFieldDecoder.decodeFloat(input);
+        float airspeed = PayloadFieldDecoder.decodeFloat(input);
+        float beta = PayloadFieldDecoder.decodeFloat(input);
+        float alpha = PayloadFieldDecoder.decodeFloat(input);
+        return new EkfExt(timestamp, windspeed, winddir, windz, airspeed, beta, alpha);
     }
 
     public static final class Builder {

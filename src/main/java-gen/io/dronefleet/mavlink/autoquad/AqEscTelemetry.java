@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.autoquad;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Integer;
 import java.lang.Long;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -231,6 +233,19 @@ public final class AqEscTelemetry {
                  + ", dataVersion=" + dataVersion
                  + ", data0=" + data0
                  + ", data1=" + data1 + "}";
+    }
+
+    public static AqEscTelemetry deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        List<Long> data0 = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        List<Long> data1 = PayloadFieldDecoder.decodeUint32Array(input, 16);
+        List<Integer> statusAge = PayloadFieldDecoder.decodeUint16Array(input, 8);
+        int seq = PayloadFieldDecoder.decodeUint8(input);
+        int numMotors = PayloadFieldDecoder.decodeUint8(input);
+        int numInSeq = PayloadFieldDecoder.decodeUint8(input);
+        byte[] escid = PayloadFieldDecoder.decodeUint8Array(input, 4);
+        byte[] dataVersion = PayloadFieldDecoder.decodeUint8Array(input, 4);
+        return new AqEscTelemetry(timeBootMs, seq, numMotors, numInSeq, escid, statusAge, dataVersion, data0, data1);
     }
 
     public static final class Builder {

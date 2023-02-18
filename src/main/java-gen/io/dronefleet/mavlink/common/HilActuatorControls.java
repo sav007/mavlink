@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -127,6 +129,14 @@ public final class HilActuatorControls {
                  + ", controls=" + controls
                  + ", mode=" + mode
                  + ", flags=" + flags + "}";
+    }
+
+    public static HilActuatorControls deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger flags = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> controls = PayloadFieldDecoder.decodeFloatArray(input, 64);
+        EnumValue<MavModeFlag> mode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavModeFlag.class, input, 1);
+        return new HilActuatorControls(timeUsec, controls, mode, flags);
     }
 
     public static final class Builder {

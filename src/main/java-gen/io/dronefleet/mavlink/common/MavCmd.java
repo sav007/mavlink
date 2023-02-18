@@ -4452,231 +4452,6 @@ public enum MavCmd {
     MAV_CMD_PRS_SHUTDOWN,
 
     /**
-     * Orbit a waypoint. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Orbit radius in meters</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>Loiter time in decimal seconds</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Maximum horizontal speed in m/s</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Desired yaw angle at waypoint</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Latitude</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Longitude</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Altitude</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(1)
-    MAV_CMD_AQ_NAV_LEG_ORBIT,
-
-    /**
-     * Start/stop AutoQuad telemetry values stream. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Start or stop (1 or 0)</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>Stream frequency in us</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Dataset ID (refer to aq_mavlink.h::mavlinkCustomDataSets enum in AQ flight controller 
-     * code)</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Empty</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(2)
-    MAV_CMD_AQ_TELEMETRY,
-
-    /**
-     * Request AutoQuad firmware version number. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Empty</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(4)
-    MAV_CMD_AQ_REQUEST_VERSION,
-
-    /**
-     * Request storage of different parameter values and logs. This command will be only accepted if 
-     * in pre-flight mode. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Storage action: Action defined by MAV_PREFLIGHT_STORAGE_ACTION_ADVANCED</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>Storage area as defined by parameter database</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Storage flags as defined by parameter database</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Empty</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(0)
-    MAV_CMD_PREFLIGHT_STORAGE_ADVANCED,
-
-    /**
-     * Mission command to reset Maximum Power Point Tracker (MPPT) 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>MPPT number</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Empty</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(40001)
-    MAV_CMD_RESET_MPPT,
-
-    /**
-     * Mission command to perform a power cycle on payload 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Complete power cycle</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>VISensor power cycle</dd>
-     *
-     *   <dt>param3</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param4</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param5</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param6</dt>
-     *   <dd>Empty</dd>
-     *
-     *   <dt>param7</dt>
-     *   <dd>Empty</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(40002)
-    MAV_CMD_PAYLOAD_CONTROL,
-
-    /**
-     * Does nothing. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>1 to arm, 0 to disarm</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(10001)
-    MAV_CMD_DO_NOTHING,
-
-    /**
-     * Return vehicle to base. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>0: return to base, 1: track mobile base</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(10011)
-    MAV_CMD_RETURN_TO_BASE,
-
-    /**
-     * Stops the vehicle from returning to base and resumes flight. 
-     */
-    @MavlinkEntryInfo(10012)
-    MAV_CMD_STOP_RETURN_TO_BASE,
-
-    /**
-     * Turns the vehicle's visible or infrared lights on or off. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>0: visible lights, 1: infrared lights</dd>
-     *
-     *   <dt>param2</dt>
-     *   <dd>0: turn on, 1: turn off</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(10013)
-    MAV_CMD_TURN_LIGHT,
-
-    /**
-     * Requests vehicle to send current mid-level commands to ground station. 
-     */
-    @MavlinkEntryInfo(10014)
-    MAV_CMD_GET_MID_LEVEL_COMMANDS,
-
-    /**
-     * Requests storage of mid-level commands. 
-     * <dl>
-     *   <dt>param1</dt>
-     *   <dd>Mid-level command storage: 0: read from flash/EEPROM, 1: write to flash/EEPROM</dd>
-     * </dl>
-     */
-    @MavlinkEntryInfo(10015)
-    MAV_CMD_MIDLEVEL_STORAGE,
-
-    /**
      * Set the distance to be repeated on mission resume 
      * <dl>
      *   <dt>param1</dt>
@@ -5526,5 +5301,230 @@ public enum MavCmd {
      * </dl>
      */
     @MavlinkEntryInfo(43002)
-    MAV_CMD_GUIDED_CHANGE_HEADING
+    MAV_CMD_GUIDED_CHANGE_HEADING,
+
+    /**
+     * Does nothing. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>1 to arm, 0 to disarm</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(10001)
+    MAV_CMD_DO_NOTHING,
+
+    /**
+     * Return vehicle to base. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>0: return to base, 1: track mobile base</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(10011)
+    MAV_CMD_RETURN_TO_BASE,
+
+    /**
+     * Stops the vehicle from returning to base and resumes flight. 
+     */
+    @MavlinkEntryInfo(10012)
+    MAV_CMD_STOP_RETURN_TO_BASE,
+
+    /**
+     * Turns the vehicle's visible or infrared lights on or off. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>0: visible lights, 1: infrared lights</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>0: turn on, 1: turn off</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(10013)
+    MAV_CMD_TURN_LIGHT,
+
+    /**
+     * Requests vehicle to send current mid-level commands to ground station. 
+     */
+    @MavlinkEntryInfo(10014)
+    MAV_CMD_GET_MID_LEVEL_COMMANDS,
+
+    /**
+     * Requests storage of mid-level commands. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Mid-level command storage: 0: read from flash/EEPROM, 1: write to flash/EEPROM</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(10015)
+    MAV_CMD_MIDLEVEL_STORAGE,
+
+    /**
+     * Mission command to reset Maximum Power Point Tracker (MPPT) 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>MPPT number</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Empty</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(40001)
+    MAV_CMD_RESET_MPPT,
+
+    /**
+     * Mission command to perform a power cycle on payload 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Complete power cycle</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>VISensor power cycle</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Empty</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(40002)
+    MAV_CMD_PAYLOAD_CONTROL,
+
+    /**
+     * Orbit a waypoint. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Orbit radius in meters</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>Loiter time in decimal seconds</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Maximum horizontal speed in m/s</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Desired yaw angle at waypoint</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Latitude</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Longitude</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Altitude</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(1)
+    MAV_CMD_AQ_NAV_LEG_ORBIT,
+
+    /**
+     * Start/stop AutoQuad telemetry values stream. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Start or stop (1 or 0)</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>Stream frequency in us</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Dataset ID (refer to aq_mavlink.h::mavlinkCustomDataSets enum in AQ flight controller 
+     * code)</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Empty</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(2)
+    MAV_CMD_AQ_TELEMETRY,
+
+    /**
+     * Request AutoQuad firmware version number. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Empty</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(4)
+    MAV_CMD_AQ_REQUEST_VERSION,
+
+    /**
+     * Request storage of different parameter values and logs. This command will be only accepted if 
+     * in pre-flight mode. 
+     * <dl>
+     *   <dt>param1</dt>
+     *   <dd>Storage action: Action defined by MAV_PREFLIGHT_STORAGE_ACTION_ADVANCED</dd>
+     *
+     *   <dt>param2</dt>
+     *   <dd>Storage area as defined by parameter database</dd>
+     *
+     *   <dt>param3</dt>
+     *   <dd>Storage flags as defined by parameter database</dd>
+     *
+     *   <dt>param4</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param5</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param6</dt>
+     *   <dd>Empty</dd>
+     *
+     *   <dt>param7</dt>
+     *   <dd>Empty</dd>
+     * </dl>
+     */
+    @MavlinkEntryInfo(0)
+    MAV_CMD_PREFLIGHT_STORAGE_ADVANCED
 }

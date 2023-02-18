@@ -1,0 +1,24 @@
+apply plugin: 'maven-publish'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def GitHubUserName = properties.getProperty('github_packages.user')
+def GitHubKey = properties.getProperty('github_packages.key')
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/sav007/mavlink")
+            credentials {
+                username = GitHubUserName ?: System.getenv("USERNAME")
+                password = GitHubKey ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}

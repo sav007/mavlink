@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class SlugsConfigurationCamera {
         return "SlugsConfigurationCamera{target=" + target
                  + ", idorder=" + idorder
                  + ", order=" + order + "}";
+    }
+
+    public static SlugsConfigurationCamera deserialize(ByteBuffer input) {
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        int idorder = PayloadFieldDecoder.decodeUint8(input);
+        int order = PayloadFieldDecoder.decodeUint8(input);
+        return new SlugsConfigurationCamera(target, idorder, order);
     }
 
     public static final class Builder {

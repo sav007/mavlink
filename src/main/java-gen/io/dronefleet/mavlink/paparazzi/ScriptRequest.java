@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.paparazzi;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,13 @@ public final class ScriptRequest {
         return "ScriptRequest{targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent
                  + ", seq=" + seq + "}";
+    }
+
+    public static ScriptRequest deserialize(ByteBuffer input) {
+        int seq = PayloadFieldDecoder.decodeUint16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new ScriptRequest(targetSystem, targetComponent, seq);
     }
 
     public static final class Builder {

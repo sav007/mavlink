@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -255,6 +257,21 @@ public final class RcChannelsScaled {
                  + ", chan7Scaled=" + chan7Scaled
                  + ", chan8Scaled=" + chan8Scaled
                  + ", rssi=" + rssi + "}";
+    }
+
+    public static RcChannelsScaled deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        int chan1Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan2Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan3Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan4Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan5Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan6Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan7Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int chan8Scaled = PayloadFieldDecoder.decodeInt16(input);
+        int port = PayloadFieldDecoder.decodeUint8(input);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        return new RcChannelsScaled(timeBootMs, port, chan1Scaled, chan2Scaled, chan3Scaled, chan4Scaled, chan5Scaled, chan6Scaled, chan7Scaled, chan8Scaled, rssi);
     }
 
     public static final class Builder {

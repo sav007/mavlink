@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ualberta;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,13 @@ public final class UalbertaSysStatus {
         return "UalbertaSysStatus{mode=" + mode
                  + ", navMode=" + navMode
                  + ", pilot=" + pilot + "}";
+    }
+
+    public static UalbertaSysStatus deserialize(ByteBuffer input) {
+        int mode = PayloadFieldDecoder.decodeUint8(input);
+        int navMode = PayloadFieldDecoder.decodeUint8(input);
+        int pilot = PayloadFieldDecoder.decodeUint8(input);
+        return new UalbertaSysStatus(mode, navMode, pilot);
     }
 
     public static final class Builder {

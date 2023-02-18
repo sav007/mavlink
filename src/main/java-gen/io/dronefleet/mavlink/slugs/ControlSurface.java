@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -116,6 +118,14 @@ public final class ControlSurface {
                  + ", idsurface=" + idsurface
                  + ", mcontrol=" + mcontrol
                  + ", bcontrol=" + bcontrol + "}";
+    }
+
+    public static ControlSurface deserialize(ByteBuffer input) {
+        float mcontrol = PayloadFieldDecoder.decodeFloat(input);
+        float bcontrol = PayloadFieldDecoder.decodeFloat(input);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        int idsurface = PayloadFieldDecoder.decodeUint8(input);
+        return new ControlSurface(target, idsurface, mcontrol, bcontrol);
     }
 
     public static final class Builder {

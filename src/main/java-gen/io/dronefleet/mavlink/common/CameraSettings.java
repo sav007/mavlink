@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -123,6 +125,14 @@ public final class CameraSettings {
                  + ", modeId=" + modeId
                  + ", zoomlevel=" + zoomlevel
                  + ", focuslevel=" + focuslevel + "}";
+    }
+
+    public static CameraSettings deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        EnumValue<CameraMode> modeId = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.CameraMode.class, input, 1);
+        float zoomlevel = PayloadFieldDecoder.decodeFloat(input);
+        float focuslevel = PayloadFieldDecoder.decodeFloat(input);
+        return new CameraSettings(timeBootMs, modeId, zoomlevel, focuslevel);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -172,6 +174,17 @@ public final class Attitude {
                  + ", rollspeed=" + rollspeed
                  + ", pitchspeed=" + pitchspeed
                  + ", yawspeed=" + yawspeed + "}";
+    }
+
+    public static Attitude deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float roll = PayloadFieldDecoder.decodeFloat(input);
+        float pitch = PayloadFieldDecoder.decodeFloat(input);
+        float yaw = PayloadFieldDecoder.decodeFloat(input);
+        float rollspeed = PayloadFieldDecoder.decodeFloat(input);
+        float pitchspeed = PayloadFieldDecoder.decodeFloat(input);
+        float yawspeed = PayloadFieldDecoder.decodeFloat(input);
+        return new Attitude(timeBootMs, roll, pitch, yaw, rollspeed, pitchspeed, yawspeed);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -117,6 +119,14 @@ public final class MidLvlCmds {
                  + ", hcommand=" + hcommand
                  + ", ucommand=" + ucommand
                  + ", rcommand=" + rcommand + "}";
+    }
+
+    public static MidLvlCmds deserialize(ByteBuffer input) {
+        float hcommand = PayloadFieldDecoder.decodeFloat(input);
+        float ucommand = PayloadFieldDecoder.decodeFloat(input);
+        float rcommand = PayloadFieldDecoder.decodeFloat(input);
+        int target = PayloadFieldDecoder.decodeUint8(input);
+        return new MidLvlCmds(target, hcommand, ucommand, rcommand);
     }
 
     public static final class Builder {

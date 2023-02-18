@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -303,6 +305,24 @@ public final class HilRcInputsRaw {
                  + ", chan11Raw=" + chan11Raw
                  + ", chan12Raw=" + chan12Raw
                  + ", rssi=" + rssi + "}";
+    }
+
+    public static HilRcInputsRaw deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int chan1Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan2Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan3Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan4Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan5Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan6Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan7Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan8Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan9Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan10Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan11Raw = PayloadFieldDecoder.decodeUint16(input);
+        int chan12Raw = PayloadFieldDecoder.decodeUint16(input);
+        int rssi = PayloadFieldDecoder.decodeUint8(input);
+        return new HilRcInputsRaw(timeUsec, chan1Raw, chan2Raw, chan3Raw, chan4Raw, chan5Raw, chan6Raw, chan7Raw, chan8Raw, chan9Raw, chan10Raw, chan11Raw, chan12Raw, rssi);
     }
 
     public static final class Builder {

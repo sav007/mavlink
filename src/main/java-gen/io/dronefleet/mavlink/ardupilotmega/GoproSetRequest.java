@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -122,6 +124,14 @@ public final class GoproSetRequest {
                  + ", targetComponent=" + targetComponent
                  + ", cmdId=" + cmdId
                  + ", value=" + value + "}";
+    }
+
+    public static GoproSetRequest deserialize(ByteBuffer input) {
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<GoproCommand> cmdId = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.GoproCommand.class, input, 1);
+        byte[] value = PayloadFieldDecoder.decodeUint8Array(input, 4);
+        return new GoproSetRequest(targetSystem, targetComponent, cmdId, value);
     }
 
     public static final class Builder {

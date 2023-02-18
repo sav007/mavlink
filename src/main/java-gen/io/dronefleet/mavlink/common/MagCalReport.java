@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -382,6 +384,28 @@ public final class MagCalReport {
                  + ", oldOrientation=" + oldOrientation
                  + ", newOrientation=" + newOrientation
                  + ", scaleFactor=" + scaleFactor + "}";
+    }
+
+    public static MagCalReport deserialize(ByteBuffer input) {
+        float fitness = PayloadFieldDecoder.decodeFloat(input);
+        float ofsX = PayloadFieldDecoder.decodeFloat(input);
+        float ofsY = PayloadFieldDecoder.decodeFloat(input);
+        float ofsZ = PayloadFieldDecoder.decodeFloat(input);
+        float diagX = PayloadFieldDecoder.decodeFloat(input);
+        float diagY = PayloadFieldDecoder.decodeFloat(input);
+        float diagZ = PayloadFieldDecoder.decodeFloat(input);
+        float offdiagX = PayloadFieldDecoder.decodeFloat(input);
+        float offdiagY = PayloadFieldDecoder.decodeFloat(input);
+        float offdiagZ = PayloadFieldDecoder.decodeFloat(input);
+        int compassId = PayloadFieldDecoder.decodeUint8(input);
+        int calMask = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MagCalStatus> calStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MagCalStatus.class, input, 1);
+        int autosaved = PayloadFieldDecoder.decodeUint8(input);
+        float orientationConfidence = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavSensorOrientation> oldOrientation = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSensorOrientation.class, input, 1);
+        EnumValue<MavSensorOrientation> newOrientation = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavSensorOrientation.class, input, 1);
+        float scaleFactor = PayloadFieldDecoder.decodeFloat(input);
+        return new MagCalReport(compassId, calMask, calStatus, autosaved, fitness, ofsX, ofsY, ofsZ, diagX, diagY, diagZ, offdiagX, offdiagY, offdiagZ, orientationConfidence, oldOrientation, newOrientation, scaleFactor);
     }
 
     public static final class Builder {

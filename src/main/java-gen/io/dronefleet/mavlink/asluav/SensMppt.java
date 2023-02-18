@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -281,6 +283,23 @@ public final class SensMppt {
                  + ", mppt3Amp=" + mppt3Amp
                  + ", mppt3Pwm=" + mppt3Pwm
                  + ", mppt3Status=" + mppt3Status + "}";
+    }
+
+    public static SensMppt deserialize(ByteBuffer input) {
+        BigInteger mpptTimestamp = PayloadFieldDecoder.decodeUint64(input);
+        float mppt1Volt = PayloadFieldDecoder.decodeFloat(input);
+        float mppt1Amp = PayloadFieldDecoder.decodeFloat(input);
+        float mppt2Volt = PayloadFieldDecoder.decodeFloat(input);
+        float mppt2Amp = PayloadFieldDecoder.decodeFloat(input);
+        float mppt3Volt = PayloadFieldDecoder.decodeFloat(input);
+        float mppt3Amp = PayloadFieldDecoder.decodeFloat(input);
+        int mppt1Pwm = PayloadFieldDecoder.decodeUint16(input);
+        int mppt2Pwm = PayloadFieldDecoder.decodeUint16(input);
+        int mppt3Pwm = PayloadFieldDecoder.decodeUint16(input);
+        int mppt1Status = PayloadFieldDecoder.decodeUint8(input);
+        int mppt2Status = PayloadFieldDecoder.decodeUint8(input);
+        int mppt3Status = PayloadFieldDecoder.decodeUint8(input);
+        return new SensMppt(mpptTimestamp, mppt1Volt, mppt1Amp, mppt1Pwm, mppt1Status, mppt2Volt, mppt2Amp, mppt2Pwm, mppt2Status, mppt3Volt, mppt3Amp, mppt3Pwm, mppt3Status);
     }
 
     public static final class Builder {

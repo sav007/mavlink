@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -82,6 +84,12 @@ public final class EncapsulatedData {
     public String toString() {
         return "EncapsulatedData{seqnr=" + seqnr
                  + ", data=" + data + "}";
+    }
+
+    public static EncapsulatedData deserialize(ByteBuffer input) {
+        int seqnr = PayloadFieldDecoder.decodeUint16(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 253);
+        return new EncapsulatedData(seqnr, data);
     }
 
     public static final class Builder {

@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -141,6 +143,15 @@ public final class FenceStatus {
                  + ", breachType=" + breachType
                  + ", breachTime=" + breachTime
                  + ", breachMitigation=" + breachMitigation + "}";
+    }
+
+    public static FenceStatus deserialize(ByteBuffer input) {
+        long breachTime = PayloadFieldDecoder.decodeUint32(input);
+        int breachCount = PayloadFieldDecoder.decodeUint16(input);
+        int breachStatus = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<FenceBreach> breachType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.FenceBreach.class, input, 1);
+        EnumValue<FenceMitigate> breachMitigation = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.FenceMitigate.class, input, 1);
+        return new FenceStatus(breachStatus, breachCount, breachType, breachTime, breachMitigation);
     }
 
     public static final class Builder {

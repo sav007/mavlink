@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Float;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -320,6 +322,24 @@ public final class TrajectoryRepresentationWaypoints {
                  + ", posYaw=" + posYaw
                  + ", velYaw=" + velYaw
                  + ", command=" + command + "}";
+    }
+
+    public static TrajectoryRepresentationWaypoints deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> posX = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posY = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posZ = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> velX = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> velY = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> velZ = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> accX = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> accY = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> accZ = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> posYaw = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        List<Float> velYaw = PayloadFieldDecoder.decodeFloatArray(input, 20);
+        EnumValue<MavCmd> command = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCmd.class, input, 10);
+        int validPoints = PayloadFieldDecoder.decodeUint8(input);
+        return new TrajectoryRepresentationWaypoints(timeUsec, validPoints, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ, posYaw, velYaw, command);
     }
 
     public static final class Builder {

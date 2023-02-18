@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -201,6 +203,18 @@ public final class SerialControl {
                  + ", data=" + data
                  + ", targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent + "}";
+    }
+
+    public static SerialControl deserialize(ByteBuffer input) {
+        long baudrate = PayloadFieldDecoder.decodeUint32(input);
+        int timeout = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<SerialControlDev> device = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.SerialControlDev.class, input, 1);
+        EnumValue<SerialControlFlag> flags = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.SerialControlFlag.class, input, 1);
+        int count = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 70);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new SerialControl(device, flags, timeout, baudrate, count, data, targetSystem, targetComponent);
     }
 
     public static final class Builder {

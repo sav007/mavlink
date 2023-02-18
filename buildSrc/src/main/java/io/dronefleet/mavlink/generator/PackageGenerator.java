@@ -3,8 +3,10 @@ package io.dronefleet.mavlink.generator;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,6 +25,24 @@ public class PackageGenerator {
     private static final ClassName UNMODIFIABLE_MAP_BUILDER = ClassName.get(
             "io.dronefleet.mavlink.util",
             "UnmodifiableMapBuilder");
+
+    private static final ParameterizedTypeName DESERIALIZER_FUNCTION = ParameterizedTypeName.get(
+        Function.class,
+        ByteBuffer.class,
+        Object.class
+    );
+
+    private static final ParameterizedTypeName DESERIALIZERS_MAP = ParameterizedTypeName.get(
+        ClassName.get(Map.class),
+        TypeName.get(Class.class),
+        DESERIALIZER_FUNCTION
+    );
+
+    private static final ParameterizedTypeName DESERIALIZERS_UNMODIFIABLE_MAP_BUILDER = ParameterizedTypeName.get(
+        UNMODIFIABLE_MAP_BUILDER,
+        TypeName.get(Class.class),
+        DESERIALIZER_FUNCTION
+    );
 
     private final String xmlName;
     private final String packageName;
@@ -167,31 +187,68 @@ public class PackageGenerator {
             messageTypesInitializer.add("$<$<");
         }
 
+        CodeBlock.Builder deserializersTypesInitializer = CodeBlock.builder();
+        if (messages.size() == 0) {
+            deserializersTypesInitializer.add("$T.emptyMap()", Collections.class);
+        } else {
+            deserializersTypesInitializer
+                .add("new $T()\n$>$>", DESERIALIZERS_UNMODIFIABLE_MAP_BUILDER)
+                .add(
+                    messages.stream().map(m -> CodeBlock.builder()
+                        .add(".put($T.class, $T::deserialize)", m.getClassName(), m.getClassName())
+                        .build()
+                    ).collect(
+                        CodeBlock.joining("\n", "", "\n.build()")
+                    )
+                )
+                .add("$<$<");
+        }
+
         return TypeSpec.classBuilder(dialectClassName())
-                .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
-                .superclass(ABSTRACT_MAVLINK_DIALECT)
-                .addField(FieldSpec.builder(
+            .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
+            .superclass(ABSTRACT_MAVLINK_DIALECT)
+            .addField(
+                FieldSpec.builder(
                         ParameterizedTypeName.get(ClassName.get(List.class), MAVLINK_DIALECT),
                         "dependencies",
-                        Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                        .addJavadoc("A list of all of the dependencies of this dialect.\n")
-                        .initializer(dependenciesInitializer.build())
-                        .build())
-                .addField(FieldSpec.builder(
+                        Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+                    )
+                    .addJavadoc("A list of all of the dependencies of this dialect.\n")
+                    .initializer(dependenciesInitializer.build())
+                    .build()
+            )
+            .addField(
+                FieldSpec.builder(
                         ParameterizedTypeName.get(Map.class, Integer.class, Class.class),
                         "messages",
-                        Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                        .addJavadoc("A list of all message types supported by this dialect.\n")
-                        .initializer(messageTypesInitializer.build())
-                        .build())
-                .addMethod(MethodSpec.constructorBuilder()
-                        .addModifiers(Modifier.PUBLIC)
-                        .addStatement("super($S, $N, $N)",
-                                dialectName(),
-                                "dependencies",
-                                "messages")
-                        .build())
-                .build();
+                        Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+                    )
+                    .addJavadoc("A list of all message types supported by this dialect.\n")
+                    .initializer(messageTypesInitializer.build())
+                    .build()
+            )
+            .addField(
+                FieldSpec.builder(
+                        DESERIALIZERS_MAP,
+                        "deserializers",
+                        Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+                    )
+                    .initializer(deserializersTypesInitializer.build())
+                    .build()
+            )
+            .addMethod(
+                MethodSpec.constructorBuilder()
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement(
+                        "super($S, $N, $N, $N)",
+                        dialectName(),
+                        "dependencies",
+                        "messages",
+                        "deserializers"
+                    )
+                    .build()
+            )
+            .build();
     }
 
     public List<JavaFile> generate() {

@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -120,6 +122,14 @@ public final class FlightInformation {
                  + ", armingTimeUtc=" + armingTimeUtc
                  + ", takeoffTimeUtc=" + takeoffTimeUtc
                  + ", flightUuid=" + flightUuid + "}";
+    }
+
+    public static FlightInformation deserialize(ByteBuffer input) {
+        BigInteger armingTimeUtc = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger takeoffTimeUtc = PayloadFieldDecoder.decodeUint64(input);
+        BigInteger flightUuid = PayloadFieldDecoder.decodeUint64(input);
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        return new FlightInformation(timeBootMs, armingTimeUtc, takeoffTimeUtc, flightUuid);
     }
 
     public static final class Builder {

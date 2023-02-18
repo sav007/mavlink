@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -215,6 +217,19 @@ public final class LimitsStatus {
                  + ", modsEnabled=" + modsEnabled
                  + ", modsRequired=" + modsRequired
                  + ", modsTriggered=" + modsTriggered + "}";
+    }
+
+    public static LimitsStatus deserialize(ByteBuffer input) {
+        long lastTrigger = PayloadFieldDecoder.decodeUint32(input);
+        long lastAction = PayloadFieldDecoder.decodeUint32(input);
+        long lastRecovery = PayloadFieldDecoder.decodeUint32(input);
+        long lastClear = PayloadFieldDecoder.decodeUint32(input);
+        int breachCount = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<LimitsState> limitsState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.LimitsState.class, input, 1);
+        EnumValue<LimitModule> modsEnabled = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.LimitModule.class, input, 1);
+        EnumValue<LimitModule> modsRequired = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.LimitModule.class, input, 1);
+        EnumValue<LimitModule> modsTriggered = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.ardupilotmega.LimitModule.class, input, 1);
+        return new LimitsStatus(limitsState, lastTrigger, lastAction, lastRecovery, lastClear, breachCount, modsEnabled, modsRequired, modsTriggered);
     }
 
     public static final class Builder {

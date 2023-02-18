@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
@@ -11,6 +12,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -304,6 +306,23 @@ public final class AutopilotStateForGimbalDevice {
                  + ", estimatorStatus=" + estimatorStatus
                  + ", landedState=" + landedState
                  + ", angularVelocityZ=" + angularVelocityZ + "}";
+    }
+
+    public static AutopilotStateForGimbalDevice deserialize(ByteBuffer input) {
+        BigInteger timeBootUs = PayloadFieldDecoder.decodeUint64(input);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        long qEstimatedDelayUs = PayloadFieldDecoder.decodeUint32(input);
+        float vx = PayloadFieldDecoder.decodeFloat(input);
+        float vy = PayloadFieldDecoder.decodeFloat(input);
+        float vz = PayloadFieldDecoder.decodeFloat(input);
+        long vEstimatedDelayUs = PayloadFieldDecoder.decodeUint32(input);
+        float feedForwardAngularVelocityZ = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<EstimatorStatusFlags> estimatorStatus = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.EstimatorStatusFlags.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavLandedState> landedState = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavLandedState.class, input, 1);
+        float angularVelocityZ = PayloadFieldDecoder.decodeFloat(input);
+        return new AutopilotStateForGimbalDevice(targetSystem, targetComponent, timeBootUs, q, qEstimatedDelayUs, vx, vy, vz, vEstimatedDelayUs, feedForwardAngularVelocityZ, estimatorStatus, landedState, angularVelocityZ);
     }
 
     public static final class Builder {

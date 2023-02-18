@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -80,6 +82,12 @@ public final class RawRpm {
     public String toString() {
         return "RawRpm{index=" + index
                  + ", frequency=" + frequency + "}";
+    }
+
+    public static RawRpm deserialize(ByteBuffer input) {
+        float frequency = PayloadFieldDecoder.decodeFloat(input);
+        int index = PayloadFieldDecoder.decodeUint8(input);
+        return new RawRpm(index, frequency);
     }
 
     public static final class Builder {

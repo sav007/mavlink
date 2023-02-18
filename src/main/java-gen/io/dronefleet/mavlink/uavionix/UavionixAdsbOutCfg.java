@@ -4,11 +4,13 @@ import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
 import io.dronefleet.mavlink.common.AdsbEmitterType;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -204,6 +206,18 @@ public final class UavionixAdsbOutCfg {
                  + ", gpsoffsetlon=" + gpsoffsetlon
                  + ", stallspeed=" + stallspeed
                  + ", rfselect=" + rfselect + "}";
+    }
+
+    public static UavionixAdsbOutCfg deserialize(ByteBuffer input) {
+        long icao = PayloadFieldDecoder.decodeUint32(input);
+        int stallspeed = PayloadFieldDecoder.decodeUint16(input);
+        String callsign = PayloadFieldDecoder.decodeString(input, 9);
+        EnumValue<AdsbEmitterType> emittertype = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.AdsbEmitterType.class, input, 1);
+        EnumValue<UavionixAdsbOutCfgAircraftSize> aircraftsize = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.uavionix.UavionixAdsbOutCfgAircraftSize.class, input, 1);
+        EnumValue<UavionixAdsbOutCfgGpsOffsetLat> gpsoffsetlat = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.uavionix.UavionixAdsbOutCfgGpsOffsetLat.class, input, 1);
+        EnumValue<UavionixAdsbOutCfgGpsOffsetLon> gpsoffsetlon = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.uavionix.UavionixAdsbOutCfgGpsOffsetLon.class, input, 1);
+        EnumValue<UavionixAdsbOutRfSelect> rfselect = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.uavionix.UavionixAdsbOutRfSelect.class, input, 1);
+        return new UavionixAdsbOutCfg(icao, callsign, emittertype, aircraftsize, gpsoffsetlat, gpsoffsetlon, stallspeed, rfselect);
     }
 
     public static final class Builder {

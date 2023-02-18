@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -262,6 +264,22 @@ public final class GimbalReport {
                  + ", jointRoll=" + jointRoll
                  + ", jointEl=" + jointEl
                  + ", jointAz=" + jointAz + "}";
+    }
+
+    public static GimbalReport deserialize(ByteBuffer input) {
+        float deltaTime = PayloadFieldDecoder.decodeFloat(input);
+        float deltaAngleX = PayloadFieldDecoder.decodeFloat(input);
+        float deltaAngleY = PayloadFieldDecoder.decodeFloat(input);
+        float deltaAngleZ = PayloadFieldDecoder.decodeFloat(input);
+        float deltaVelocityX = PayloadFieldDecoder.decodeFloat(input);
+        float deltaVelocityY = PayloadFieldDecoder.decodeFloat(input);
+        float deltaVelocityZ = PayloadFieldDecoder.decodeFloat(input);
+        float jointRoll = PayloadFieldDecoder.decodeFloat(input);
+        float jointEl = PayloadFieldDecoder.decodeFloat(input);
+        float jointAz = PayloadFieldDecoder.decodeFloat(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new GimbalReport(targetSystem, targetComponent, deltaTime, deltaAngleX, deltaAngleY, deltaAngleZ, deltaVelocityX, deltaVelocityY, deltaVelocityZ, jointRoll, jointEl, jointAz);
     }
 
     public static final class Builder {

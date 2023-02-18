@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -152,6 +154,16 @@ public final class DataLog {
                  + ", fl4=" + fl4
                  + ", fl5=" + fl5
                  + ", fl6=" + fl6 + "}";
+    }
+
+    public static DataLog deserialize(ByteBuffer input) {
+        float fl1 = PayloadFieldDecoder.decodeFloat(input);
+        float fl2 = PayloadFieldDecoder.decodeFloat(input);
+        float fl3 = PayloadFieldDecoder.decodeFloat(input);
+        float fl4 = PayloadFieldDecoder.decodeFloat(input);
+        float fl5 = PayloadFieldDecoder.decodeFloat(input);
+        float fl6 = PayloadFieldDecoder.decodeFloat(input);
+        return new DataLog(fl1, fl2, fl3, fl4, fl5, fl6);
     }
 
     public static final class Builder {

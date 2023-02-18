@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Serves as an index of a Mavlink dialect.
  */
+@SuppressWarnings("rawtypes")
 public interface MavlinkDialect {
 
     /**
@@ -34,4 +35,8 @@ public interface MavlinkDialect {
      * Returns a list of all of the message types supported by this dialect.
      */
     List<Class> messageTypes();
+
+    <T> T deserializeMessage(Class messageType, byte[] data);
+
+    boolean canDeserializeMessage(Class messageType);
 }

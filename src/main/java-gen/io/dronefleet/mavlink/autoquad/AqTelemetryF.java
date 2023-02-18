@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.autoquad;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -425,6 +427,31 @@ public final class AqTelemetryF {
                  + ", value18=" + value18
                  + ", value19=" + value19
                  + ", value20=" + value20 + "}";
+    }
+
+    public static AqTelemetryF deserialize(ByteBuffer input) {
+        float value1 = PayloadFieldDecoder.decodeFloat(input);
+        float value2 = PayloadFieldDecoder.decodeFloat(input);
+        float value3 = PayloadFieldDecoder.decodeFloat(input);
+        float value4 = PayloadFieldDecoder.decodeFloat(input);
+        float value5 = PayloadFieldDecoder.decodeFloat(input);
+        float value6 = PayloadFieldDecoder.decodeFloat(input);
+        float value7 = PayloadFieldDecoder.decodeFloat(input);
+        float value8 = PayloadFieldDecoder.decodeFloat(input);
+        float value9 = PayloadFieldDecoder.decodeFloat(input);
+        float value10 = PayloadFieldDecoder.decodeFloat(input);
+        float value11 = PayloadFieldDecoder.decodeFloat(input);
+        float value12 = PayloadFieldDecoder.decodeFloat(input);
+        float value13 = PayloadFieldDecoder.decodeFloat(input);
+        float value14 = PayloadFieldDecoder.decodeFloat(input);
+        float value15 = PayloadFieldDecoder.decodeFloat(input);
+        float value16 = PayloadFieldDecoder.decodeFloat(input);
+        float value17 = PayloadFieldDecoder.decodeFloat(input);
+        float value18 = PayloadFieldDecoder.decodeFloat(input);
+        float value19 = PayloadFieldDecoder.decodeFloat(input);
+        float value20 = PayloadFieldDecoder.decodeFloat(input);
+        int index = PayloadFieldDecoder.decodeUint16(input);
+        return new AqTelemetryF(index, value1, value2, value3, value4, value5, value6, value7, value8, value9, value10, value11, value12, value13, value14, value15, value16, value17, value18, value19, value20);
     }
 
     public static final class Builder {

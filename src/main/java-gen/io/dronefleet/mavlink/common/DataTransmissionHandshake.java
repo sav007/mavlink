@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -177,6 +179,17 @@ public final class DataTransmissionHandshake {
                  + ", packets=" + packets
                  + ", payload=" + payload
                  + ", jpgQuality=" + jpgQuality + "}";
+    }
+
+    public static DataTransmissionHandshake deserialize(ByteBuffer input) {
+        long size = PayloadFieldDecoder.decodeUint32(input);
+        int width = PayloadFieldDecoder.decodeUint16(input);
+        int height = PayloadFieldDecoder.decodeUint16(input);
+        int packets = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavlinkDataStreamType> type = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavlinkDataStreamType.class, input, 1);
+        int payload = PayloadFieldDecoder.decodeUint8(input);
+        int jpgQuality = PayloadFieldDecoder.decodeUint8(input);
+        return new DataTransmissionHandshake(type, size, width, height, packets, payload, jpgQuality);
     }
 
     public static final class Builder {

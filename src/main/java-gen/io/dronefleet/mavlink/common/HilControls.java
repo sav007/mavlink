@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -250,6 +252,21 @@ public final class HilControls {
                  + ", aux4=" + aux4
                  + ", mode=" + mode
                  + ", navMode=" + navMode + "}";
+    }
+
+    public static HilControls deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float rollAilerons = PayloadFieldDecoder.decodeFloat(input);
+        float pitchElevator = PayloadFieldDecoder.decodeFloat(input);
+        float yawRudder = PayloadFieldDecoder.decodeFloat(input);
+        float throttle = PayloadFieldDecoder.decodeFloat(input);
+        float aux1 = PayloadFieldDecoder.decodeFloat(input);
+        float aux2 = PayloadFieldDecoder.decodeFloat(input);
+        float aux3 = PayloadFieldDecoder.decodeFloat(input);
+        float aux4 = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavMode> mode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavMode.class, input, 1);
+        int navMode = PayloadFieldDecoder.decodeUint8(input);
+        return new HilControls(timeUsec, rollAilerons, pitchElevator, yawRudder, throttle, aux1, aux2, aux3, aux4, mode, navMode);
     }
 
     public static final class Builder {

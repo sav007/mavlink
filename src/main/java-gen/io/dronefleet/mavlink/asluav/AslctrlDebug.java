@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -243,6 +245,21 @@ public final class AslctrlDebug {
                  + ", f6=" + f6
                  + ", f7=" + f7
                  + ", f8=" + f8 + "}";
+    }
+
+    public static AslctrlDebug deserialize(ByteBuffer input) {
+        long i321 = PayloadFieldDecoder.decodeUint32(input);
+        float f1 = PayloadFieldDecoder.decodeFloat(input);
+        float f2 = PayloadFieldDecoder.decodeFloat(input);
+        float f3 = PayloadFieldDecoder.decodeFloat(input);
+        float f4 = PayloadFieldDecoder.decodeFloat(input);
+        float f5 = PayloadFieldDecoder.decodeFloat(input);
+        float f6 = PayloadFieldDecoder.decodeFloat(input);
+        float f7 = PayloadFieldDecoder.decodeFloat(input);
+        float f8 = PayloadFieldDecoder.decodeFloat(input);
+        int i81 = PayloadFieldDecoder.decodeUint8(input);
+        int i82 = PayloadFieldDecoder.decodeUint8(input);
+        return new AslctrlDebug(i321, i81, i82, f1, f2, f3, f4, f5, f6, f7, f8);
     }
 
     public static final class Builder {

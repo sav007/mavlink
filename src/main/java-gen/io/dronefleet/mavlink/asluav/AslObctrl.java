@@ -3,10 +3,12 @@ package io.dronefleet.mavlink.asluav;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -190,6 +192,18 @@ public final class AslObctrl {
                  + ", uailr=" + uailr
                  + ", urud=" + urud
                  + ", obctrlStatus=" + obctrlStatus + "}";
+    }
+
+    public static AslObctrl deserialize(ByteBuffer input) {
+        BigInteger timestamp = PayloadFieldDecoder.decodeUint64(input);
+        float uelev = PayloadFieldDecoder.decodeFloat(input);
+        float uthrot = PayloadFieldDecoder.decodeFloat(input);
+        float uthrot2 = PayloadFieldDecoder.decodeFloat(input);
+        float uaill = PayloadFieldDecoder.decodeFloat(input);
+        float uailr = PayloadFieldDecoder.decodeFloat(input);
+        float urud = PayloadFieldDecoder.decodeFloat(input);
+        int obctrlStatus = PayloadFieldDecoder.decodeUint8(input);
+        return new AslObctrl(timestamp, uelev, uthrot, uthrot2, uaill, uailr, urud, obctrlStatus);
     }
 
     public static final class Builder {

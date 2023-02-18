@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -140,6 +142,14 @@ public final class Timesync {
                  + ", ts1=" + ts1
                  + ", targetSystem=" + targetSystem
                  + ", targetComponent=" + targetComponent + "}";
+    }
+
+    public static Timesync deserialize(ByteBuffer input) {
+        long tc1 = PayloadFieldDecoder.decodeInt64(input);
+        long ts1 = PayloadFieldDecoder.decodeInt64(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        return new Timesync(tc1, ts1, targetSystem, targetComponent);
     }
 
     public static final class Builder {

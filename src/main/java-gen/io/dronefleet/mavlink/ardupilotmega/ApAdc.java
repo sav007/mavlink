@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.ardupilotmega;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -152,6 +154,16 @@ public final class ApAdc {
                  + ", adc4=" + adc4
                  + ", adc5=" + adc5
                  + ", adc6=" + adc6 + "}";
+    }
+
+    public static ApAdc deserialize(ByteBuffer input) {
+        int adc1 = PayloadFieldDecoder.decodeUint16(input);
+        int adc2 = PayloadFieldDecoder.decodeUint16(input);
+        int adc3 = PayloadFieldDecoder.decodeUint16(input);
+        int adc4 = PayloadFieldDecoder.decodeUint16(input);
+        int adc5 = PayloadFieldDecoder.decodeUint16(input);
+        int adc6 = PayloadFieldDecoder.decodeUint16(input);
+        return new ApAdc(adc1, adc2, adc3, adc4, adc5, adc6);
     }
 
     public static final class Builder {

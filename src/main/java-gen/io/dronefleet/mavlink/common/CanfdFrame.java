@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -155,6 +157,16 @@ public final class CanfdFrame {
                  + ", len=" + len
                  + ", id=" + id
                  + ", data=" + data + "}";
+    }
+
+    public static CanfdFrame deserialize(ByteBuffer input) {
+        long id = PayloadFieldDecoder.decodeUint32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int bus = PayloadFieldDecoder.decodeUint8(input);
+        int len = PayloadFieldDecoder.decodeUint8(input);
+        byte[] data = PayloadFieldDecoder.decodeUint8Array(input, 64);
+        return new CanfdFrame(targetSystem, targetComponent, bus, len, id, data);
     }
 
     public static final class Builder {

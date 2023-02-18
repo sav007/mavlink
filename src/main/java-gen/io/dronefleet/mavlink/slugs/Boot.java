@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.slugs;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -64,6 +66,11 @@ public final class Boot {
     @Override
     public String toString() {
         return "Boot{version=" + version + "}";
+    }
+
+    public static Boot deserialize(ByteBuffer input) {
+        long version = PayloadFieldDecoder.decodeUint32(input);
+        return new Boot(version);
     }
 
     public static final class Builder {

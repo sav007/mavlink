@@ -3,6 +3,7 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Integer;
@@ -10,6 +11,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -231,6 +233,19 @@ public final class ObstacleDistance {
                  + ", incrementF=" + incrementF
                  + ", angleOffset=" + angleOffset
                  + ", frame=" + frame + "}";
+    }
+
+    public static ObstacleDistance deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        List<Integer> distances = PayloadFieldDecoder.decodeUint16Array(input, 144);
+        int minDistance = PayloadFieldDecoder.decodeUint16(input);
+        int maxDistance = PayloadFieldDecoder.decodeUint16(input);
+        EnumValue<MavDistanceSensor> sensorType = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavDistanceSensor.class, input, 1);
+        int increment = PayloadFieldDecoder.decodeUint8(input);
+        float incrementF = PayloadFieldDecoder.decodeFloat(input);
+        float angleOffset = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavFrame> frame = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavFrame.class, input, 1);
+        return new ObstacleDistance(timeUsec, sensorType, distances, increment, minDistance, maxDistance, incrementF, angleOffset, frame);
     }
 
     public static final class Builder {

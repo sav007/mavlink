@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,6 +127,14 @@ public final class DebugFloatArray {
                  + ", name=" + name
                  + ", arrayId=" + arrayId
                  + ", data=" + data + "}";
+    }
+
+    public static DebugFloatArray deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        int arrayId = PayloadFieldDecoder.decodeUint16(input);
+        String name = PayloadFieldDecoder.decodeString(input, 10);
+        List<Float> data = PayloadFieldDecoder.decodeFloatArray(input, 232);
+        return new DebugFloatArray(timeUsec, name, arrayId, data);
     }
 
     public static final class Builder {

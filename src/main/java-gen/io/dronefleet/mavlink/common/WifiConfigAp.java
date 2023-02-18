@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -130,6 +132,14 @@ public final class WifiConfigAp {
                  + ", password=" + password
                  + ", mode=" + mode
                  + ", response=" + response + "}";
+    }
+
+    public static WifiConfigAp deserialize(ByteBuffer input) {
+        String ssid = PayloadFieldDecoder.decodeString(input, 32);
+        String password = PayloadFieldDecoder.decodeString(input, 64);
+        EnumValue<WifiConfigApMode> mode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.WifiConfigApMode.class, input, 1);
+        EnumValue<WifiConfigApResponse> response = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.WifiConfigApResponse.class, input, 1);
+        return new WifiConfigAp(ssid, password, mode, response);
     }
 
     public static final class Builder {

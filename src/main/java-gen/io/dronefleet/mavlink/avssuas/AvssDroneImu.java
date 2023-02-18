@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.avssuas;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -243,6 +245,21 @@ public final class AvssDroneImu {
                  + ", xgyro=" + xgyro
                  + ", ygyro=" + ygyro
                  + ", zgyro=" + zgyro + "}";
+    }
+
+    public static AvssDroneImu deserialize(ByteBuffer input) {
+        long timeBootMs = PayloadFieldDecoder.decodeUint32(input);
+        float q1 = PayloadFieldDecoder.decodeFloat(input);
+        float q2 = PayloadFieldDecoder.decodeFloat(input);
+        float q3 = PayloadFieldDecoder.decodeFloat(input);
+        float q4 = PayloadFieldDecoder.decodeFloat(input);
+        float xacc = PayloadFieldDecoder.decodeFloat(input);
+        float yacc = PayloadFieldDecoder.decodeFloat(input);
+        float zacc = PayloadFieldDecoder.decodeFloat(input);
+        float xgyro = PayloadFieldDecoder.decodeFloat(input);
+        float ygyro = PayloadFieldDecoder.decodeFloat(input);
+        float zgyro = PayloadFieldDecoder.decodeFloat(input);
+        return new AvssDroneImu(timeBootMs, q1, q2, q3, q4, xacc, yacc, zacc, xgyro, ygyro, zgyro);
     }
 
     public static final class Builder {

@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -216,6 +218,19 @@ public final class ParamMapRc {
                  + ", scale=" + scale
                  + ", paramValueMin=" + paramValueMin
                  + ", paramValueMax=" + paramValueMax + "}";
+    }
+
+    public static ParamMapRc deserialize(ByteBuffer input) {
+        float paramValue0 = PayloadFieldDecoder.decodeFloat(input);
+        float scale = PayloadFieldDecoder.decodeFloat(input);
+        float paramValueMin = PayloadFieldDecoder.decodeFloat(input);
+        float paramValueMax = PayloadFieldDecoder.decodeFloat(input);
+        int paramIndex = PayloadFieldDecoder.decodeInt16(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        String paramId = PayloadFieldDecoder.decodeString(input, 16);
+        int parameterRcChannelIndex = PayloadFieldDecoder.decodeUint8(input);
+        return new ParamMapRc(targetSystem, targetComponent, paramId, paramIndex, parameterRcChannelIndex, paramValue0, scale, paramValueMin, paramValueMax);
     }
 
     public static final class Builder {

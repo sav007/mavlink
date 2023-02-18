@@ -4,12 +4,14 @@ import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
 import io.dronefleet.mavlink.common.MavCmd;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -287,6 +289,23 @@ public final class CommandLongStamped {
                  + ", param5=" + param5
                  + ", param6=" + param6
                  + ", param7=" + param7 + "}";
+    }
+
+    public static CommandLongStamped deserialize(ByteBuffer input) {
+        BigInteger vehicleTimestamp = PayloadFieldDecoder.decodeUint64(input);
+        long utcTime = PayloadFieldDecoder.decodeUint32(input);
+        float param1 = PayloadFieldDecoder.decodeFloat(input);
+        float param2 = PayloadFieldDecoder.decodeFloat(input);
+        float param3 = PayloadFieldDecoder.decodeFloat(input);
+        float param4 = PayloadFieldDecoder.decodeFloat(input);
+        float param5 = PayloadFieldDecoder.decodeFloat(input);
+        float param6 = PayloadFieldDecoder.decodeFloat(input);
+        float param7 = PayloadFieldDecoder.decodeFloat(input);
+        EnumValue<MavCmd> command = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavCmd.class, input, 2);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        int targetComponent = PayloadFieldDecoder.decodeUint8(input);
+        int confirmation = PayloadFieldDecoder.decodeUint8(input);
+        return new CommandLongStamped(utcTime, vehicleTimestamp, targetSystem, targetComponent, command, confirmation, param1, param2, param3, param4, param5, param6, param7);
     }
 
     public static final class Builder {

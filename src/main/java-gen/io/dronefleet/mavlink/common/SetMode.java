@@ -3,12 +3,14 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import io.dronefleet.mavlink.util.EnumValue;
 import java.lang.Deprecated;
 import java.lang.Enum;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -107,6 +109,13 @@ public final class SetMode {
         return "SetMode{targetSystem=" + targetSystem
                  + ", baseMode=" + baseMode
                  + ", customMode=" + customMode + "}";
+    }
+
+    public static SetMode deserialize(ByteBuffer input) {
+        long customMode = PayloadFieldDecoder.decodeUint32(input);
+        int targetSystem = PayloadFieldDecoder.decodeUint8(input);
+        EnumValue<MavMode> baseMode = PayloadFieldDecoder.decodeEnum(io.dronefleet.mavlink.common.MavMode.class, input, 1);
+        return new SetMode(targetSystem, baseMode, customMode);
     }
 
     public static final class Builder {

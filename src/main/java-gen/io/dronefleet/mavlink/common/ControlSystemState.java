@@ -3,11 +3,13 @@ package io.dronefleet.mavlink.common;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Float;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
@@ -360,6 +362,27 @@ public final class ControlSystemState {
                  + ", rollRate=" + rollRate
                  + ", pitchRate=" + pitchRate
                  + ", yawRate=" + yawRate + "}";
+    }
+
+    public static ControlSystemState deserialize(ByteBuffer input) {
+        BigInteger timeUsec = PayloadFieldDecoder.decodeUint64(input);
+        float xAcc = PayloadFieldDecoder.decodeFloat(input);
+        float yAcc = PayloadFieldDecoder.decodeFloat(input);
+        float zAcc = PayloadFieldDecoder.decodeFloat(input);
+        float xVel = PayloadFieldDecoder.decodeFloat(input);
+        float yVel = PayloadFieldDecoder.decodeFloat(input);
+        float zVel = PayloadFieldDecoder.decodeFloat(input);
+        float xPos = PayloadFieldDecoder.decodeFloat(input);
+        float yPos = PayloadFieldDecoder.decodeFloat(input);
+        float zPos = PayloadFieldDecoder.decodeFloat(input);
+        float airspeed = PayloadFieldDecoder.decodeFloat(input);
+        List<Float> velVariance = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> posVariance = PayloadFieldDecoder.decodeFloatArray(input, 12);
+        List<Float> q = PayloadFieldDecoder.decodeFloatArray(input, 16);
+        float rollRate = PayloadFieldDecoder.decodeFloat(input);
+        float pitchRate = PayloadFieldDecoder.decodeFloat(input);
+        float yawRate = PayloadFieldDecoder.decodeFloat(input);
+        return new ControlSystemState(timeUsec, xAcc, yAcc, zAcc, xVel, yVel, zVel, xPos, yPos, zPos, airspeed, velVariance, posVariance, q, rollRate, pitchRate, yawRate);
     }
 
     public static final class Builder {

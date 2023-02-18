@@ -6,9 +6,12 @@ import io.dronefleet.mavlink.common.CommonDialect;
 import io.dronefleet.mavlink.util.UnmodifiableMapBuilder;
 import java.lang.Class;
 import java.lang.Integer;
+import java.lang.Object;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class CubepilotDialect extends AbstractMavlinkDialect {
     /**
@@ -28,7 +31,15 @@ public final class CubepilotDialect extends AbstractMavlinkDialect {
             .put(50005, CubepilotFirmwareUpdateResp.class)
             .build();
 
+    private static final Map<Class, Function<ByteBuffer, Object>> deserializers = new UnmodifiableMapBuilder<Class, Function<ByteBuffer, Object>>()
+            .put(CubepilotRawRc.class, CubepilotRawRc::deserialize)
+            .put(HerelinkVideoStreamInformation.class, HerelinkVideoStreamInformation::deserialize)
+            .put(HerelinkTelem.class, HerelinkTelem::deserialize)
+            .put(CubepilotFirmwareUpdateStart.class, CubepilotFirmwareUpdateStart::deserialize)
+            .put(CubepilotFirmwareUpdateResp.class, CubepilotFirmwareUpdateResp::deserialize)
+            .build();
+
     public CubepilotDialect() {
-        super("cubepilot", dependencies, messages);
+        super("cubepilot", dependencies, messages, deserializers);
     }
 }

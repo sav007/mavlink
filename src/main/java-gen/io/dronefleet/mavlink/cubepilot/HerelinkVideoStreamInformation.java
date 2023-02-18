@@ -3,9 +3,11 @@ package io.dronefleet.mavlink.cubepilot;
 import io.dronefleet.mavlink.annotations.MavlinkFieldInfo;
 import io.dronefleet.mavlink.annotations.MavlinkMessageBuilder;
 import io.dronefleet.mavlink.annotations.MavlinkMessageInfo;
+import io.dronefleet.mavlink.serialization.payload.PayloadFieldDecoder;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -191,6 +193,18 @@ public final class HerelinkVideoStreamInformation {
                  + ", bitrate=" + bitrate
                  + ", rotation=" + rotation
                  + ", uri=" + uri + "}";
+    }
+
+    public static HerelinkVideoStreamInformation deserialize(ByteBuffer input) {
+        float framerate = PayloadFieldDecoder.decodeFloat(input);
+        long bitrate = PayloadFieldDecoder.decodeUint32(input);
+        int resolutionH = PayloadFieldDecoder.decodeUint16(input);
+        int resolutionV = PayloadFieldDecoder.decodeUint16(input);
+        int rotation = PayloadFieldDecoder.decodeUint16(input);
+        int cameraId = PayloadFieldDecoder.decodeUint8(input);
+        int status = PayloadFieldDecoder.decodeUint8(input);
+        String uri = PayloadFieldDecoder.decodeString(input, 230);
+        return new HerelinkVideoStreamInformation(cameraId, status, framerate, resolutionH, resolutionV, bitrate, rotation, uri);
     }
 
     public static final class Builder {
