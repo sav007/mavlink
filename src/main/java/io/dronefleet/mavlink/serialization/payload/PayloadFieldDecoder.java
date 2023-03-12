@@ -40,9 +40,12 @@ public class PayloadFieldDecoder {
     }
 
     public static BigInteger decodeUint64(ByteBuffer input) {
-        if (!input.hasRemaining()) return null;
+        int dataLength = Math.min(8, input.remaining());
+        if (dataLength == 0) {
+            return null;
+        }
 
-        byte[] data = new byte[8];
+        byte[] data = new byte[dataLength];
         input.get(data);
 
         // Invert to big-endian, for BigInteger constructor
@@ -56,22 +59,29 @@ public class PayloadFieldDecoder {
     }
 
     public static float decodeFloat(ByteBuffer input) {
-        if (!input.hasRemaining()) return 0;
+        if (input.remaining() == 0) {
+            return 0;
+        }
 
         return input.getFloat();
     }
 
     public static double decodeDouble(ByteBuffer input) {
-        if (!input.hasRemaining()) return 0;
+        if (input.remaining() == 0) {
+            return 0;
+        }
 
         return input.getDouble();
     }
 
     public static String decodeString(ByteBuffer input, int length) {
-        if (!input.hasRemaining()) return null;
+        int dataLength = Math.min(length, input.remaining());
+        if (dataLength == 0) {
+            return null;
+        }
 
-        byte[] data = new byte[length];
-        for (int i = 0; i < length; i++) {
+        byte[] data = new byte[dataLength];
+        for (int i = 0; i < dataLength; i++) {
             byte b = input.get();
             if (b == 0)
                 return new String(data, 0, i, StandardCharsets.UTF_8);
@@ -81,11 +91,11 @@ public class PayloadFieldDecoder {
         return new String(data, StandardCharsets.UTF_8);
     }
 
-    public static byte[] decodeUint8Array(ByteBuffer input, int dataLength) {
-        if (!input.hasRemaining()) return null;
-
-        if (dataLength == 0)
+    public static byte[] decodeUint8Array(ByteBuffer input, int length) {
+        int dataLength = Math.min(length, input.remaining());
+        if (dataLength == 0) {
             return null;
+        }
 
         byte[] result = new byte[dataLength];
         for (int i = 0; i < dataLength; ++i) {
@@ -95,46 +105,45 @@ public class PayloadFieldDecoder {
     }
 
     public static List<Integer> decodeInt8Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, int.class, dataLength, PayloadFieldDecoder::decodeInt8);
+        return decodeArray(input, dataLength, PayloadFieldDecoder::decodeInt8);
     }
 
     public static List<Integer> decodeUint16Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, int.class, dataLength / 2, PayloadFieldDecoder::decodeUint16);
+        return decodeArray(input, dataLength / 2, PayloadFieldDecoder::decodeUint16);
     }
 
     public static List<Integer> decodeInt16Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, int.class, dataLength / 2, PayloadFieldDecoder::decodeInt16);
+        return decodeArray(input, dataLength / 2, PayloadFieldDecoder::decodeInt16);
     }
 
     public static List<Long> decodeUint32Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, long.class, dataLength / 4, PayloadFieldDecoder::decodeUint32);
+        return decodeArray(input, dataLength / 4, PayloadFieldDecoder::decodeUint32);
     }
 
     public static List<Integer> decodeInt32Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, int.class, dataLength / 4, PayloadFieldDecoder::decodeInt32);
+        return decodeArray(input, dataLength / 4, PayloadFieldDecoder::decodeInt32);
     }
 
     public static List<BigInteger> decodeUint64Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, BigInteger.class, dataLength / 8, PayloadFieldDecoder::decodeUint64);
+        return decodeArray(input, dataLength / 8, PayloadFieldDecoder::decodeUint64);
     }
 
     public static List<Long> decodeInt64Array(ByteBuffer input, int dataLength) {
-        return decodeArray(input, long.class, dataLength / 8, PayloadFieldDecoder::decodeInt64);
+        return decodeArray(input, dataLength / 8, PayloadFieldDecoder::decodeInt64);
     }
 
     public static List<Float> decodeFloatArray(ByteBuffer input, int dataLength) {
-        return decodeArray(input, float.class, dataLength / 4, PayloadFieldDecoder::decodeFloat);
+        return decodeArray(input, dataLength / 4, PayloadFieldDecoder::decodeFloat);
     }
 
     public static List<Double> decodeDoubleArray(ByteBuffer input, int dataLength) {
-        return decodeArray(input, double.class, dataLength / 8, PayloadFieldDecoder::decodeDouble);
+        return decodeArray(input, dataLength / 8, PayloadFieldDecoder::decodeDouble);
     }
 
-    private static <T> List<T> decodeArray(ByteBuffer input, Class<T> type, int elementCount, Function<ByteBuffer, T> decoder) {
-        if (!input.hasRemaining()) return null;
-
-        if (elementCount == 0)
+    private static <T> List<T> decodeArray(ByteBuffer input, int elementCount, Function<ByteBuffer, T> decoder) {
+        if (elementCount == 0 || input.remaining() == 0) {
             return null;
+        }
 
         List<T> result = new ArrayList<>(elementCount);
         for (int i = 0; i < elementCount; ++i) {
@@ -144,24 +153,27 @@ public class PayloadFieldDecoder {
     }
 
     public static <T extends Enum<T>> EnumValue<T> decodeEnum(Class<T> enumType, ByteBuffer input, int length) {
-        if (!input.hasRemaining()) return null;
+        if (!input.hasRemaining()) {
+            return null;
+        }
 
         return EnumValue.create(enumType, (int) integerValue(input, length, false));
     }
 
     private static long unsignedIntegerValue(ByteBuffer input, int length) {
-        if (!input.hasRemaining()) return 0;
+        int dataLength = Math.min(length, input.remaining());
+        if (dataLength == 0) {
+            return 0;
+        }
 
         long value = 0;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < dataLength; i++) {
             value = value | ((long) ((input.get() & 0xff)) << (i * 8));
         }
         return value;
     }
 
     private static long signedIntegerValue(ByteBuffer input, int length) {
-        if (!input.hasRemaining()) return 0;
-
         long value = unsignedIntegerValue(input, length);
         int signBitIndex = length * Byte.SIZE - 1;
         if ((value >> signBitIndex) == 1) {
@@ -171,8 +183,6 @@ public class PayloadFieldDecoder {
     }
 
     private static long integerValue(ByteBuffer input, int length, boolean signed) {
-        if (!input.hasRemaining()) return 0;
-
         if (signed) {
             return signedIntegerValue(input, length);
         } else {
