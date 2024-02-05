@@ -81,14 +81,21 @@ public class PayloadFieldDecoder {
         }
 
         byte[] data = new byte[dataLength];
-        for (int i = 0; i < dataLength; i++) {
-            byte b = input.get();
-            if (b == 0)
-                return new String(data, 0, i, StandardCharsets.UTF_8);
+        input.get(data, 0, dataLength);
 
-            data[i] = b;
+        int stringLength = 0;
+        for (int i = 0; i < dataLength; i++) {
+            if (data[i] == 0) {
+                stringLength = i;
+                break;
+            }
         }
-        return new String(data, StandardCharsets.UTF_8);
+
+        if (stringLength > 0) {
+            return new String(data, 0, stringLength, StandardCharsets.UTF_8);
+        } else {
+            return null;
+        }
     }
 
     public static byte[] decodeUint8Array(ByteBuffer input, int length) {
